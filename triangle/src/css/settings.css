@@ -1,0 +1,17 @@
+.settingsTitle{
+    color: #0048a1;
+    font-size: 4rem;
+    text-align: center;
+}
+
+.settings{
+    background-color: #8eacd0;
+    border-radius: 40px;
+    
+    font-size: 2rem;
+    margin-top: 0.5rem;
+}
+
+.parametre{
+    margin-bottom: 3rem;
+}

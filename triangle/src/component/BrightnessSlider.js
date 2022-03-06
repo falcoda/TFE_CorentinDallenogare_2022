@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import RangeSlider from 'react-bootstrap-range-slider';
+import "../css/colorPicker.css";
 
 const Brightness = () => {
 
@@ -7,16 +8,16 @@ const Brightness = () => {
 
   return (
       <>
-    <div class="row containButton rangeSlider ">
-        <div class="col-2 col-md-4 align-self-stretch"><i class="bi bi-brightness-low"></i></div>
-        <div class="col-8 col-md-4 align-self-stretch">
+    <div className="row containButton rangeSlider ">
+        <div className="col-2 col-md-4 align-self-stretch"><i className="bi bi-brightness-low"></i></div>
+        <div className="col-8 col-md-4 align-self-stretch">
             <RangeSlider className='slider'
                 value={value}
                 variant='dark'
                 onChange={changeEvent => setValue(changeEvent.target.value)}
             />
         </div>
-        <div class="col-2 col-md-4 align-self-stretch"><i class="bi bi-brightness-high"></i></div>
+        <div className="col-2 col-md-4 align-self-stretch"><i className="bi bi-brightness-high"></i></div>
         
         
     </div>
