@@ -3,10 +3,20 @@ import {Link} from 'react-router-dom';
 import "../css/navbar.css";
 const Navbar = () => {
 
-  const [ value, setValue ] = useState(0); 
+  
   function handleClick(e) {
         e.preventDefault();    
         console.log('The link was clicked.');  
+        fetch("http://127.0.0.1:5000/",{
+        'methods':'GET',
+        headers: {
+            'Access-Control-Allow-Origin': '*'
+        },
+        mode: 'no-cors'
+        })
+        .then(response => response.json())
+        .then(response => console.log(response))
+        .catch(error => console.log(error));
   }
   return (
     
