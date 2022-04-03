@@ -17,6 +17,21 @@ class Color extends React.Component {
       color: color.hexString
     });
     console.log(color.hexString)
+   
+    let data = JSON.stringify(color.hexString);
+    fetch(`http://127.0.0.1:5000/changeColor`,{
+      method: "POST",
+      mode: "no-cors",
+      body: data,
+      datatype: "json",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+  .then(response => response.json())
+  .catch(error => console.log(error))
+  
     // console.log(color.hexString);
   };
   render() {
