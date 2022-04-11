@@ -3,6 +3,9 @@ import powerOff
 import changeColors
 import json
 import hextorgb
+import time
+import board
+import neopixel
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
@@ -10,6 +13,14 @@ from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
 
 
 app = Flask(__name__)
+
+num_pixels = 10
+pixel_pin = board.D18
+ORDER = neopixel.GRB
+
+pixels = neopixel.NeoPixel(
+    pixel_pin, num_pixels, brightness=1, auto_write=False, pixel_order=ORDER
+)
 
 app.config["JWT_SECRET_KEY"] = "helloCodaTriangle"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
@@ -56,6 +67,30 @@ def hello_world():
     powerOff.shutdown()
     return 'Hello, World!'
 
+
+
+
+
+
+
+
+def color(color):
+    print(color)
+    print(hextorgb.hex_to_rgb(color))
+    pixels.fill(hextorgb.hex_to_rgb(color))
+    pixels.show()
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/profile')
 @jwt_required() #new line
 def my_profile():
@@ -66,13 +101,15 @@ def my_profile():
 
     return response_body
 
+
 @app.route('/changeColor', methods=["POST"])
 def changeColor():
-    
     data = request.get_json(force = True)
-    data = hextorgb.hex_to_rgb(data)
-    changeColors.useColorPicker(data)
-    return("data")
+    color(data)
+    
+    return ('yes')
+    
+
 
 if __name__ == '__main__':
     app.run()
