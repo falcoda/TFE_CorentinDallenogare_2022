@@ -18,6 +18,20 @@ const Navbar = () => {
         .then(response => console.log(response))
         .catch(error => console.log(error));
   }
+  const changeMode = (mode) =>{
+    fetch(`http://127.0.0.1:5000/${mode}`,{
+        
+        mode: "no-cors",
+        datatype: "json",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+        },
+        })
+    .then(response => response.json())
+    .catch(error => console.log(error))
+
+} 
   return (
     
     <>
@@ -32,7 +46,7 @@ const Navbar = () => {
               <Link className="nav-link" to="/mode"><i className="bi bi-lightbulb navItem"></i></Link>
             </li>
             <li className="nav-item col-3">
-              <a className="nav-link" onClick={handleClick}><i className="bi bi-power navItem"></i></a>
+              <a className="nav-link" onClick={() => changeMode("off")}><i className="bi bi-power navItem"></i></a>
             </li>
             <li className="nav-item col-3">
               <Link className="nav-link" to="/settings"><i className="bi bi-sliders navItem"></i></Link>

@@ -6,15 +6,16 @@ import hextorgb
 import time
 import board
 import neopixel
+import wheel
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
                                unset_jwt_cookies, jwt_required, JWTManager
 
-
+status = True
 app = Flask(__name__)
 
-num_pixels = 10
+num_pixels = 30
 pixel_pin = board.D18
 ORDER = neopixel.GRB
 
@@ -72,25 +73,6 @@ def hello_world():
 
 
 
-
-
-def color(color):
-    print(color)
-    print(hextorgb.hex_to_rgb(color))
-    pixels.fill(hextorgb.hex_to_rgb(color))
-    pixels.show()
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route('/profile')
 @jwt_required() #new line
 def my_profile():
@@ -104,11 +86,30 @@ def my_profile():
 
 @app.route('/changeColor', methods=["POST"])
 def changeColor():
+    global status 
+    status = False
     data = request.get_json(force = True)
-    color(data)
+    wheel.color(data)
     
     return ('yes')
     
+@app.route('/wheel')
+def wheels():
+    global status 
+    status = True
+    while status :
+        wheel.rainbow_cycle(0.001)
+    
+    return ('yes')
+
+@app.route('/off')
+def setoff():
+    global status 
+    status = False
+    time.sleep(0.5)
+    wheel.powerOff()
+    
+    return ('yes')
 
 
 if __name__ == '__main__':

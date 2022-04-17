@@ -3,6 +3,21 @@ import "./css/mode.css"
 function Mode (){
      
 
+    const changeMode = (mode) =>{
+        fetch(`http://127.0.0.1:5000/${mode}`,{
+            
+            mode: "no-cors",
+            datatype: "json",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            })
+        .then(response => response.json())
+        .catch(error => console.log(error))
+
+    } 
+
     return (       
         
         <div className="voirPhoto container">
@@ -32,6 +47,14 @@ function Mode (){
                     </div>
                     <div className='modeName'>
                         Animé
+                    </div>
+                </div>
+                <div className="col-4" onClick={() => changeMode("wheel")}>
+                    <div className='modeItem'>
+                        <i class="bi bi-arrow-repeat"></i>
+                    </div>
+                    <div className='modeName'>
+                        Wheel
                     </div>
                 </div>
             </div>
