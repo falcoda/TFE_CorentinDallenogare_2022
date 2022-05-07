@@ -6,6 +6,14 @@ import board
 import neopixel
 import hextorgb
 
+from adafruit_led_animation.animation.comet import Comet
+from adafruit_led_animation.animation.rainbowcomet import RainbowComet
+from adafruit_led_animation.animation.rainbowchase import RainbowChase
+from adafruit_led_animation.animation.chase import Chase
+from adafruit_led_animation.animation.rainbow import Rainbow
+from adafruit_led_animation.sequence import AnimationSequence
+from adafruit_led_animation import helper
+from adafruit_led_animation.color import PURPLE, JADE, AMBER
 
 # On CircuitPlayground Express, and boards with built in status NeoPixel -> board.NEOPIXEL
 # Otherwise choose an open pin connected to the Data In of the NeoPixel strip, i.e. board.D1
@@ -15,21 +23,25 @@ pixel_pin = board.D18
 # pixel_pin = board.D18
 
 # The number of NeoPixels
-num_pixels = 30
+num_pixels = 60
+numTriangle = int(num_pixels/30)
 ORDER = neopixel.GRB
 
 pixels = neopixel.NeoPixel(
     pixel_pin, num_pixels, brightness=1, auto_write=False, pixel_order=ORDER
 )
-
+allColor =(255,0,255)
 def powerOff():
     pixels.fill((0, 0, 0))
     pixels.show()
     return('a')
 
 def color(color):
-    print(color)
+   # print(color)
     print(hextorgb.hex_to_rgb(color))
+    global allColor 
+    allColor= hextorgb.hex_to_rgb(color)
+    print(allColor)
     pixels.fill(hextorgb.hex_to_rgb(color))
     pixels.show()
 
@@ -66,28 +78,101 @@ def rainbow_cycle(wait):
 def red():
     pixels.fill((255, 0, 0))
     pixels.show()
-"""
-while True:
-    # Comment this line out if you have RGBW/GRBW NeoPixels
-    pixels.fill((255, 0, 0))
-    # Uncomment this line if you have RGBW/GRBW NeoPixels
-    # pixels.fill((255, 0, 0, 0))
-    pixels.show()
-    time.sleep(1)
 
-    # Comment this line out if you have RGBW/GRBW NeoPixels
-    pixels.fill((0, 255, 0))
-    # Uncomment this line if you have RGBW/GRBW NeoPixels
-    # pixels.fill((0, 255, 0, 0))
-    pixels.show()
-    time.sleep(1)
+def colorWipe( wait) :
+    global allColor
+    print(allColor)
+    for i in range(num_pixels):
+        time.sleep(wait)
+        pixels[i] = allColor
+        pixels[i-15] = (0,0,0)
+        pixels.show()
+  
+def colorWipeAllSameTime( color, wait) :
+    for i in range(num_pixels):
+        pixels[i] = color
+        pixels[i+30] = color
+        pixels[i-15] = (0,0,0)
+        pixels[i-45] = (0,0,0)
+        pixels.show()
+        
 
-    # Comment this line out if you have RGBW/GRBW NeoPixels
-    pixels.fill((0, 0, 255))
-    # Uncomment this line if you have RGBW/GRBW NeoPixels
-    # pixels.fill((0, 0, 255, 0))
-    pixels.show()
-    time.sleep(1)
+def colorWipeOneByOne( color, wait) :
+    for i in range(int(num_pixels/(num_pixels/30))):
+        pixels[i] = color
+        pixels[i+30] = color
+        pixels[i-15] = (0,0,0)
+        pixels[i-30] = (0,0,0)
+        pixels.show()
+        time.sleep(wait)
 
-    rainbow_cycle(0.01)  # rainbow cycle with 1ms delay per step
-    """
+def coteWipe2( wait) :
+    global allColor
+    for i in range(int(num_pixels/3)):
+       # pixels[i] = allColor
+        #pixels[i+30] = allColor
+        pixels[i:i+10] = [(255,0,0)] * 10
+        pixels[i-1:i-11] = [(255,0,0)] * 10
+        pixels.show()
+       # time.sleep(wait)
+
+
+def allChaseWindow( speed,size,spacing) :
+    global allColor
+    map1_1 = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
+    chase = Chase(map1_1, speed=speed ,size=size, spacing=spacing, color=allColor)
+    group1 = AnimationSequence(chase)
+    while True:
+        group1.animate()
+
+def comet( speed) :
+    global allColor
+    map1_2 = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
+    comet = Comet(map1_2, speed=speed, color=allColor, tail_length=10, bounce=True)
+    group1 = AnimationSequence(comet)
+    while True:
+        group1.animate()
+
+def rainbowChase( speed,size,spacing,colorStep) :
+    global allColor
+    map = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
+    rainbowChase= RainbowChase(map, speed=speed, size=size, spacing=spacing, step=colorStep)
+    group1 = AnimationSequence(rainbowChase)
+    while True:
+        group1.animate()
+
+def rainbow( speed) :
+    global allColor
+    map = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
+    rainbow= Rainbow(map, speed=0.01, period=1)
+    group1 = AnimationSequence(rainbow)
+    while True:
+        group1.animate()
+
+def twoTriangle( speed) :
+    global allColor
+    map1 = helper.PixelMap(pixels, [(x,) for x in range(0,30)], individual_pixels=True)
+    map2 = helper.PixelMap(pixels, [(x,) for x in range(31,60)], individual_pixels=True)
+    rainbow= Rainbow(map2, speed=0.01, period=1)
+    rainbow2= Rainbow(map1, speed=0.1, period=2)
+    group1 = AnimationSequence(rainbow)
+    group2 = AnimationSequence(rainbow2)
+    while True:
+        group1.animate()
+        group2.animate()
+
+def rainbowCommet( speed,length) :
+    global allColor
+    map1 = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
+    rainbowCommet= RainbowComet(map1, speed=speed, tail_length=length, bounce=True)
+    group1 = AnimationSequence(rainbowCommet)
+    while True:
+        group1.animate()
+
+def coteWipe( speed) :
+    global allColor
+    map1 = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
+    rainbowChase= RainbowChase(map1, speed=0.1, size=3, spacing=2, step=8)
+    group1 = AnimationSequence(rainbowChase)
+    while True:
+        group1.animate()

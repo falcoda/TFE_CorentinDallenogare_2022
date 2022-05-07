@@ -86,8 +86,8 @@ def my_profile():
 
 @app.route('/changeColor', methods=["POST"])
 def changeColor():
-    global status 
-    status = False
+   # global status 
+   # status = False
     data = request.get_json(force = True)
     wheel.color(data)
     
@@ -99,6 +99,24 @@ def wheels():
     status = True
     while status :
         wheel.rainbow_cycle(0.001)
+    
+    return ('yes')
+
+@app.route('/colorWipe')
+def colorWipe():
+    global status 
+    status = True
+    while status :
+        wheel.coteWipe(0.1)
+    
+    return ('yes')
+
+@app.route('/allChaseWindow')
+def allChaseWindow():
+    global status 
+    status = True
+    while status :
+        wheel.allChaseWindow(0.1,3,7)#speed size spacing 
     
     return ('yes')
 
