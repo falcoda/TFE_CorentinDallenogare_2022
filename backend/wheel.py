@@ -176,3 +176,4 @@ def coteWipe( speed) :
     group1 = AnimationSequence(rainbowChase)
     while True:
         group1.animate()
+        
