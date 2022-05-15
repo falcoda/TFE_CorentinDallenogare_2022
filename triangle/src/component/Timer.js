@@ -32,7 +32,7 @@ function MyTimer({ expiryTimestamp }) {
     <div style={{textAlign: 'center'}} className={"ms-1 me-1"}>
          
       
-          <label for="setTime" className="form-label" >Minuteur</label>
+          <label htmlFor="setTime" className="form-label" >Minuteur</label>
           <input type={"time"} className="form-control" id="setTime" placeholder='15'onChange={(e) => setValue(e.target.value)}/>
           
           

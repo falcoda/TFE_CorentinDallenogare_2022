@@ -55,9 +55,7 @@ pointer-events: none;
 
 
 @media only screen and (min-height: 750px) and (max-height: 1000px){
-    .rangeSlider{
-        margin-top: 5rem !important;
-    }
+    
     .colorButtons{
         margin-top: 4.5rem !important;
     }
@@ -66,9 +64,7 @@ pointer-events: none;
 
 
 @media only screen and (min-height: 721px)and (max-height: 750px){
-    .rangeSlider{
-        margin-top: 3rem;
-    }
+    
     .colorButtons{
         margin-top: 3rem !important;
     }

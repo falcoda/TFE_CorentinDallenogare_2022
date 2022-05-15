@@ -4,9 +4,11 @@ import changeColors
 import json
 import hextorgb
 import time
-import board
-import neopixel
-import wheel
+import test
+# import saveData
+# import board
+# import neopixel
+import mode
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
@@ -15,13 +17,26 @@ from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
 status = True
 app = Flask(__name__)
 
-num_pixels = 30
-pixel_pin = board.D18
-ORDER = neopixel.GRB
+function_mappings = {
+    'rainbowWheel': mode.rainbowWheel,
+    'color': mode.color,
+    'colorWipe': mode.colorWipe,
+    'colorWipeAllSameTime': mode.colorWipeAllSameTime,
+    'colorWipeOneByOne': mode.colorWipeOneByOne,
+    'coloreWipe2': mode.coloreWipe2,
+    'allChaseWindow': mode.allChaseWindow,
+    'comet': mode.comet,
+    'rainbowChase': mode.rainbowChase,
+    'rainbow': mode.rainbow,
+    'rainbowCommet': mode.rainbowCommet,
+}
+# num_pixels = 30
+# pixel_pin = board.D18
+# ORDER = neopixel.GRB
 
-pixels = neopixel.NeoPixel(
-    pixel_pin, num_pixels, brightness=1, auto_write=False, pixel_order=ORDER
-)
+# pixels = neopixel.NeoPixel(
+#     pixel_pin, num_pixels, brightness=1, auto_write=False, pixel_order=ORDER
+# )
 
 app.config["JWT_SECRET_KEY"] = "helloCodaTriangle"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
@@ -69,10 +84,6 @@ def hello_world():
     return 'Hello, World!'
 
 
-
-
-
-
 @app.route('/profile')
 @jwt_required() #new line
 def my_profile():
@@ -89,46 +100,73 @@ def changeColor():
    # global status 
    # status = False
     data = request.get_json(force = True)
-    wheel.color(data)
+    print(data)
+    mode.color(data)
     
     return ('yes')
-    
-@app.route('/wheel')
+
+@app.route('/mode', methods=["POST"])
 def wheels():
     global status 
     status = True
-    while status :
-        wheel.rainbow_cycle(0.001)
-    
+    data = request.get_json(force = True)
+    print(data)
+    # while status :
+    #     mode.rainbowWheel(0.001)
+    mode=data['mode']
+    print(mode)
+    try:
+        function_mappings[mode](data["speed"],data["length"],data["spacing"],data["period"])
+    except KeyError:
+            print('Invalid function, try again.')   
+    # test.mode(data["speed"],data["length"])
     return ('yes')
 
-@app.route('/colorWipe')
-def colorWipe():
-    global status 
-    status = True
-    while status :
-        wheel.coteWipe(0.1)
-    
-    return ('yes')
 
-@app.route('/allChaseWindow')
-def allChaseWindow():
-    global status 
-    status = True
-    while status :
-        wheel.allChaseWindow(0.1,3,7)#speed size spacing 
-    
-    return ('yes')
+# def select_function():
+#     while True:
+#         try:
+#             return function_mappings[raw_input('Please input the function you want to use')]
+#         except KeyError:
+#             print 'Invalid function, try again.'
 
-@app.route('/off')
-def setoff():
-    global status 
-    status = False
-    time.sleep(0.5)
-    wheel.powerOff()
+# @app.route('/colorWipe')
+# def colorWipe():
+#     global status 
+#     status = True
+#     while status :
+#         mode.colorWipe(0.1)
     
-    return ('yes')
+#     return ('yes')
 
+# @app.route('/allChaseWindow')
+# def allChaseWindow():
+#     global status 
+#     status = True
+#     while status :
+#         mode.allChaseWindow(0.1,3,7)#speed size spacing 
+    
+#     return ('yes')
+
+# @app.route('/off')
+# def setoff():
+#     global status 
+#     if(status):
+#         status = False
+#         time.sleep(0.5)
+#         mode.color((0, 0, 0))
+    
+#     else:
+#         status = True
+#         mode.color((255, 255, 255))
+    
+#     return ('yes')
+
+# @app.route('/changeNumber', methods=["POST"])
+# def changeNumber():
+#     data = request.get_json(force = True)
+#     saveData.saveCount(data['number'])
+#     return ('yes')
 
 if __name__ == '__main__':
     app.run()

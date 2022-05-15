@@ -4,9 +4,13 @@ function Mode (){
      
 
     const changeMode = (mode) =>{
-        fetch(`http://127.0.0.1:5000/${mode}`,{
+        console.log(mode)
+        let data = JSON.stringify({"length":0.1,"speed":1,"mode":mode,"spacing":8,"pediod":2});
+        fetch(`/mode`,{
             
+            method: "POST",
             mode: "no-cors",
+            body: data,
             datatype: "json",
             headers: {
                 "Accept": "application/json",
@@ -49,12 +53,84 @@ function Mode (){
                         Animé
                     </div>
                 </div>
-                <div className="col-4" onClick={() => changeMode("wheel")}>
+                <div className="col-4" onClick={() => changeMode("rainbowWheel")}>
                     <div className='modeItem'>
                         <i class="bi bi-arrow-repeat"></i>
                     </div>
                     <div className='modeName'>
-                        Wheel
+                    Rainbow Wheel
+                    </div>
+                </div>
+                <div className="col-4" onClick={() => changeMode("colorWipe")}>
+                    <div className='modeItem'>
+                        <i class="bi bi-rainbow"></i>
+                    </div>
+                    <div className='modeName'>
+                    Color Wipe
+                    </div>
+                </div>
+                <div className="col-4" onClick={() => changeMode("colorWipeAllSameTime")}>
+                    <div className='modeItem'>
+                        <i class="bi bi-upc-scan"></i>
+                    </div>
+                    <div className='modeName'>
+                    ColorWipeAllSameTime
+                    </div>
+                </div>
+                <div className="col-4" onClick={() => changeMode("colorWipeOneByOne")}>
+                    <div className='modeItem'>
+                        <i class="bi bi-upc-scan"></i>
+                    </div>
+                    <div className='modeName'>
+                    colorWipeOneByOne
+                    </div>
+                </div>
+                <div className="col-4" onClick={() => changeMode("coloreWipe2")}>
+                    <div className='modeItem'>
+                        <i class="bi bi-upc-scan"></i>
+                    </div>
+                    <div className='modeName'>
+                    coloreWipe2
+                    </div>
+                </div>
+                <div className="col-4" onClick={() => changeMode("allChaseWindow")}>
+                    <div className='modeItem'>
+                        <i class="bi bi-upc-scan"></i>
+                    </div>
+                    <div className='modeName'>
+                    allChaseWindow
+                    </div>
+                </div>
+                <div className="col-4" onClick={() => changeMode("comet")}>
+                    <div className='modeItem'>
+                        <i class="bi bi-upc-scan"></i>
+                    </div>
+                    <div className='modeName'>
+                    comet
+                    </div>
+                </div>
+                <div className="col-4" onClick={() => changeMode("rainbowChase")}>
+                    <div className='modeItem'>
+                        <i class="bi bi-upc-scan"></i>
+                    </div>
+                    <div className='modeName'>
+                    rainbowChase
+                    </div>
+                </div>
+                <div className="col-4" onClick={() => changeMode("rainbow")}>
+                    <div className='modeItem'>
+                        <i class="bi bi-upc-scan"></i>
+                    </div>
+                    <div className='modeName'>
+                    rainbow
+                    </div>
+                </div>
+                <div className="col-4" onClick={() => changeMode("rainbowCommet")}>
+                    <div className='modeItem'>
+                        <i class="bi bi-upc-scan"></i>
+                    </div>
+                    <div className='modeName'>
+                    rainbowCommet
                     </div>
                 </div>
             </div>

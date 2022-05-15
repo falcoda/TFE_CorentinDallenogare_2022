@@ -5,16 +5,44 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import TimerApp from './component/Timer';
-
+import Header from './component/Header';
 import React, { useState } from 'react';
-
+import useToken from './component/useToken'
 function Settings (){
+    const { token, removeToken, setToken } = useToken();
     const [value, setValue] = useState(null);
+    const [count, setCount] = useState(null);
     const onChange = time => {
         setValue(time);
         console.log('es')
       };
 
+    const uploadNumber = () => {
+        if (count === null) {
+            alert('Veuillez entrer un nombre');
+        }
+        else if (count <= 0) {
+            alert('Veuillez entrer un nombre positif');
+        }
+        else{
+            console.log(count)
+            let data = JSON.stringify({"number": count});
+            // console.log(data)
+            fetch(`/changeNumber`,{
+            method: "POST",
+            mode: "no-cors",
+            body: data,
+            datatype: "json",
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+            },
+            })
+        .then(response => response.json())
+        .catch(error => console.log(error))
+        return false
+        }
+    }
     return (
         
         <div className="parametre">
@@ -22,19 +50,20 @@ function Settings (){
                 <h1 className="settingsTitle" >Paramètres</h1>
                 
             </div>
+            <Header token={removeToken}/>
             <div className="settings">                
                 <form>
                     <div className="mb-3 ms-1 me-1">
-                        <label for="ipAdress" className="form-label" >Adresse IP</label>
-                        <input  className="form-control" id="ipAdress" placeholder='192.168.1.x'/>
+                        <label htmlFor="numberTriangles" className="form-label" >Nombre de triangles</label>
+                        <input type='number'  className="form-control" id="numberTriangles" onChange={(e) =>setCount(e.target.value)} placeholder='0'/>
                     </div> 
-                    <button type="submit" className="btn btn-primary">Valider</button>
+                    <button type="button" onClick={uploadNumber} className="btn btn-primary">Valider</button>
                 </form>
             </div>
             <div className="settings">
                 <form>
                     <div className="mb-3 ms-1 me-1">
-                        <label for="name" className="form-label" >Nom</label>
+                        <label htmlFor="name" className="form-label" >Nom</label>
                         <input  className="form-control" id="name" placeholder='Marc'/>
                     </div> 
                     <button type="submit" className="btn btn-primary">Valider</button>

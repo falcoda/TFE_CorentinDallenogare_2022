@@ -19,11 +19,13 @@ function Header(props) {
     })}
 
     return(
-        <header className="App-header">
-            <button onClick={logMeOut}> 
-                Logout
-            </button>
-        </header>
+        
+        <div className="settings">                
+            <form>
+                
+                <button type="button" onClick={logMeOut} className="btn btn-primary">Logout</button>
+            </form>
+        </div>
     )
 }
 

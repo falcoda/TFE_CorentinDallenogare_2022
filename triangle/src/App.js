@@ -22,27 +22,12 @@ function App() {
     <Router>
     <div className="App">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossOrigin="anonymous"></script>
-    <Header token={removeToken}/>
+    
         {!token && token!=="" &&token!== undefined?  
         <Login setToken={setToken} />
         :(
           <>
-            {/* 
-              <div>
-                
-                <div className="">
-                  <div className="container">
-                    </div>
-                    <Routes>
-                      <Route path="/" element={<Color/>}/>
-                      <Route path="/mode" element={<Mode/>}/>
-                      <Route path="/settings" element={<Settings/>}/>
-                    
-                  </Routes>
-                </div>
-                </div>
-                <Navbar></Navbar>
-            </Router> */}
+            
             <Routes>
               <Route path="/" element={<Color/>}/>
               <Route path="/mode" element={<Mode/>}/>

@@ -19,7 +19,7 @@ const Navbar = () => {
         .catch(error => console.log(error));
   }
   const changeMode = (mode) =>{
-    fetch(`http://127.0.0.1:5000/${mode}`,{
+    fetch(`/${mode}`,{
         
         mode: "no-cors",
         datatype: "json",
@@ -35,7 +35,7 @@ const Navbar = () => {
   return (
     
     <>
-    <div className='fixed-bottom' style={{'background-color': 'whitesmoke'}}>	
+    <div className='fixed-bottom' style={{'backgroundColor': 'whitesmoke'}}>	
 			<nav className="navbar navbar-expand navbar-light">        
         <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
           <ul className="navbar-nav mr-auto  mt-0 row navContent">
