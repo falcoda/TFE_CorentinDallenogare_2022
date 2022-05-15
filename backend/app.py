@@ -5,9 +5,9 @@ import json
 import hextorgb
 import time
 import test
-# import saveData
-# import board
-# import neopixel
+import saveData
+import board
+import neopixel
 import mode
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
@@ -108,7 +108,7 @@ def changeColor():
 @app.route('/mode', methods=["POST"])
 def wheels():
     global status 
-    status = True
+    status = False
     data = request.get_json(force = True)
     print(data)
     # while status :
@@ -116,7 +116,10 @@ def wheels():
     mode=data['mode']
     print(mode)
     try:
-        function_mappings[mode](data["speed"],data["length"],data["spacing"],data["period"])
+        print(function_mappings)
+        status = True
+        while status :
+            function_mappings[mode](data["speed"],data["length"],data["spacing"],data["period"])
     except KeyError:
             print('Invalid function, try again.')   
     # test.mode(data["speed"],data["length"])
@@ -148,25 +151,26 @@ def wheels():
     
 #     return ('yes')
 
-# @app.route('/off')
-# def setoff():
-#     global status 
-#     if(status):
-#         status = False
-#         time.sleep(0.5)
-#         mode.color((0, 0, 0))
+@app.route('/off')
+def setoff():
+    global status 
+    if(status):
+        status = False
+        time.sleep(0.5)
+        mode.color("#000000")  
+    else:
+        status = True
+        mode.color("#ffffff")
     
-#     else:
-#         status = True
-#         mode.color((255, 255, 255))
-    
-#     return ('yes')
+    return ('yes')
 
-# @app.route('/changeNumber', methods=["POST"])
-# def changeNumber():
-#     data = request.get_json(force = True)
-#     saveData.saveCount(data['number'])
-#     return ('yes')
+@app.route('/changeNumber', methods=["POST"])
+def changeNumber():
+    data = request.get_json(force = True)
+    print(data['number'])
+    saveData.saveCount(int(data['number']))
+    mode.num_pixels=int(data['number'])*30
+    return ('yes')
 
 if __name__ == '__main__':
     app.run()

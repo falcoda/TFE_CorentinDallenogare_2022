@@ -135,7 +135,7 @@ def allChaseWindow( speed,size,spacing,period) :
 def comet( speed,size,spacing,period) :
     global allColor
     map1_2 = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
-    comet = Comet(map1_2, speed=speed, color=allColor, tail_length=size, bounce=True)
+    comet = Comet(map1_2, speed=speed, color=allColor, tail_length=round(size), bounce=True)
     group1 = AnimationSequence(comet)
     while True:
         group1.animate()

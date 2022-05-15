@@ -5,7 +5,7 @@ function Mode (){
 
     const changeMode = (mode) =>{
         console.log(mode)
-        let data = JSON.stringify({"length":0.1,"speed":1,"mode":mode,"spacing":8,"pediod":2});
+        let data = JSON.stringify({"length":0.1,"speed":0.01,"mode":mode,"spacing":8,"period":2});
         fetch(`/mode`,{
             
             method: "POST",
