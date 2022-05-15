@@ -72,7 +72,7 @@ def wheel(pos):
     return (r, g, b) if ORDER in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
 
 
-def rainbowWheel(speed,size,spacing,period):
+def rainbowWheel(speed,size,spacing,period,map_1):
     for j in range(255):
         for i in range(num_pixels):
             pixel_index = (i * 256 // num_pixels) + j
@@ -84,7 +84,7 @@ def red():
     pixels.fill((255, 0, 0))
     pixels.show()
 
-def colorWipe( speed,size,spacing,period) :
+def colorWipe( speed,size,spacing,period,map_1) :
     global allColor
     print(allColor)
     for i in range(num_pixels):
@@ -93,7 +93,7 @@ def colorWipe( speed,size,spacing,period) :
         pixels[i-15] = (0,0,0)
         pixels.show()
   
-def colorWipeAllSameTime( speed,size,spacing,period) :
+def colorWipeAllSameTime( speed,size,spacing,period,map_1) :
     global allColor
     for i in range(num_pixels):
         pixels[i] = allColor
@@ -103,7 +103,7 @@ def colorWipeAllSameTime( speed,size,spacing,period) :
         pixels.show()
         
 
-def colorWipeOneByOne(speed,size,spacing,period) :
+def colorWipeOneByOne(speed,size,spacing,period,map_1) :
     global allColor
     for i in range(int(num_pixels/(num_pixels/30))):
         pixels[i] = allColor
@@ -113,7 +113,7 @@ def colorWipeOneByOne(speed,size,spacing,period) :
         pixels.show()
         time.sleep(speed)
 
-def coloreWipe2( speed,size,spacing,period) :
+def coloreWipe2( speed,size,spacing,period,map_1) :
     global allColor
     for i in range(int(num_pixels/3)):
        # pixels[i] = allColor
@@ -124,39 +124,36 @@ def coloreWipe2( speed,size,spacing,period) :
        # time.sleep(wait)
 
 
-def allChaseWindow( speed,size,spacing,period) :
+def allChaseWindow( speed,size,spacing,period,map_1) :
     global allColor
-    map1_1 = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
-    chase = Chase(map1_1, speed=speed ,size=size, spacing=spacing, color=allColor)
+    
+    chase = Chase(map_1, speed=speed ,size=size, spacing=spacing, color=allColor)
     group1 = AnimationSequence(chase)
-    while True:
-        group1.animate()
+    
+    group1.animate()
 
-def comet( speed,size,spacing,period) :
+def comet( speed,size,spacing,period,map_1) :
     global allColor
-    map1_2 = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
-    comet = Comet(map1_2, speed=speed, color=allColor, tail_length=round(size), bounce=True)
+    comet = Comet(map_1, speed=speed, color=allColor, tail_length=round(size), bounce=True)
     group1 = AnimationSequence(comet)
-    while True:
-        group1.animate()
+    
+    group1.animate()
 
-def rainbowChase( speed,size,spacing,period) :
+def rainbowChase( speed,size,spacing,period,map_1) :
     global allColor
-    map = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
-    rainbowChase= RainbowChase(map, speed=speed, size=size, spacing=spacing, step=period)
+    rainbowChase= RainbowChase(map_1, speed=speed, size=size, spacing=spacing, step=period)
     group1 = AnimationSequence(rainbowChase)
     while True:
         group1.animate()
 
-def rainbow(speed,size,spacing,period) :
+def rainbow(speed,size,spacing,period,map_1) :
     global allColor
-    map = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
-    rainbow= Rainbow(map, speed=speed, period=period)
+    rainbow= Rainbow(map_1, speed=speed, period=period)
     group1 = AnimationSequence(rainbow)
     while True:
         group1.animate()
 
-def twoTriangle( speed,size,spacing,period) :
+def twoTriangle( speed,size,spacing,period,map_1) :
     global allColor
     map1 = helper.PixelMap(pixels, [(x,) for x in range(0,30)], individual_pixels=True)
     map2 = helper.PixelMap(pixels, [(x,) for x in range(31,60)], individual_pixels=True)
@@ -168,18 +165,16 @@ def twoTriangle( speed,size,spacing,period) :
         group1.animate()
         group2.animate()
 
-def rainbowCommet( speed,size,spacing,period) :
+def rainbowCommet( speed,size,spacing,period,map_1) :
     global allColor
-    map1 = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
-    rainbowCommet= RainbowComet(map1, speed=speed, tail_length=size, bounce=True)
+    rainbowCommet= RainbowComet(map_1, speed=speed, tail_length=size, bounce=True)
     group1 = AnimationSequence(rainbowCommet)
     while True:
         group1.animate()
 
-def coteWipe( speed,size,spacing,period) :
+def coteWipe( speed,size,spacing,period,map_1) :
     global allColor
-    map1 = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
-    rainbowChase= RainbowChase(map1, speed=speed, size=size, spacing=spacing, step=8)
+    rainbowChase= RainbowChase(map_1, speed=speed, size=size, spacing=spacing, step=8)
     group1 = AnimationSequence(rainbowChase)
     while True:
         group1.animate()

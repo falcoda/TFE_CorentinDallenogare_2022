@@ -118,8 +118,9 @@ def wheels():
     try:
         print(function_mappings)
         status = True
+        map1 = mode.helper.PixelMap(mode.pixels, [(x,) for x in range(0,mode.num_pixels)], individual_pixels=True)
         while status :
-            function_mappings[mode](data["speed"],data["length"],data["spacing"],data["period"])
+            function_mappings[mode](data["speed"],data["length"],data["spacing"],data["period"],map1)
     except KeyError:
             print('Invalid function, try again.')   
     # test.mode(data["speed"],data["length"])
