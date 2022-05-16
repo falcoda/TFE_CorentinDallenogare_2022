@@ -87,7 +87,7 @@ def red():
 def colorWipe( speed,size,spacing,period,map_1) :
     global allColor
     print(allColor)
-    for i in range(num_pixels):
+    for i in range(num_pixels/2):
         time.sleep(speed)
         pixels[i] = allColor
         pixels[i-15] = (0,0,0)
@@ -127,7 +127,7 @@ def coloreWipe2( speed,size,spacing,period,map_1) :
 def allChaseWindow( speed,size,spacing,period,map_1) :
     global allColor
     
-    chase = Chase(map_1, speed=speed ,size=size, spacing=spacing, color=allColor)
+    chase = Chase(map_1, speed=speed ,size=round(size), spacing=round(spacing), color=allColor)
     group1 = AnimationSequence(chase)
     
     group1.animate()
@@ -143,15 +143,13 @@ def rainbowChase( speed,size,spacing,period,map_1) :
     global allColor
     rainbowChase= RainbowChase(map_1, speed=speed, size=size, spacing=spacing, step=period)
     group1 = AnimationSequence(rainbowChase)
-    while True:
-        group1.animate()
+    group1.animate()
 
 def rainbow(speed,size,spacing,period,map_1) :
     global allColor
     rainbow= Rainbow(map_1, speed=speed, period=period)
     group1 = AnimationSequence(rainbow)
-    while True:
-        group1.animate()
+    group1.animate()
 
 def twoTriangle( speed,size,spacing,period,map_1) :
     global allColor
@@ -167,15 +165,13 @@ def twoTriangle( speed,size,spacing,period,map_1) :
 
 def rainbowCommet( speed,size,spacing,period,map_1) :
     global allColor
-    rainbowCommet= RainbowComet(map_1, speed=speed, tail_length=size, bounce=True)
+    rainbowCommet= RainbowComet(map_1, speed=speed, tail_length=round(size+0.5), bounce=True)
     group1 = AnimationSequence(rainbowCommet)
-    while True:
-        group1.animate()
+    group1.animate()
 
 def coteWipe( speed,size,spacing,period,map_1) :
     global allColor
     rainbowChase= RainbowChase(map_1, speed=speed, size=size, spacing=spacing, step=8)
     group1 = AnimationSequence(rainbowChase)
-    while True:
-        group1.animate()
+    group1.animate()
         
