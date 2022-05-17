@@ -109,7 +109,7 @@ def rainbowWheel(speed,size,spacing,period,map_1,rainbow):
 def colorWipe( speed,size,spacing,period,map_1,rainbow) :
     global allColor
     print(allColor)
-    for i in range(num_pixels):
+    for i in range(num_pixels/2):
         time.sleep(speed)
         pixels[i] = allColor
         pixels[i-15] = (0,0,0)

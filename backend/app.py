@@ -9,6 +9,7 @@ import saveData
 import board
 import neopixel
 import mode
+from adafruit_led_animation import helper
 from flask import Flask, request, jsonify
 from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
@@ -16,7 +17,10 @@ from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
 
 status = True
 app = Flask(__name__)
-
+ORDER = neopixel.GRB
+pixels = neopixel.NeoPixel(
+    mode.pixel_pin, mode.num_pixels, brightness=1, auto_write=False, pixel_order=ORDER
+)
 function_mappings = {
     'rainbowWheel': mode.rainbowWheel,
     'color': mode.color,
@@ -118,15 +122,17 @@ def wheels():
     print(data)
     # while status :
     #     mode.rainbowWheel(0.001)
-    mode=data['mode']
+    modes=data['mode']
     print(mode)
     try:
         print("yes")
         print(function_mappings)
+        print(mode.num_pixels)
         status = True
-        map1 = mode.helper.PixelMap(mode.pixels, [(x,) for x in range(0,mode.num_pixels)], individual_pixels=True)
+        map1 = helper.PixelMap(pixels, [(x,) for x in range(0,mode.num_pixels)], individual_pixels=True)
+        mode.allColor=(255,255,255)
         while status :
-            function_mappings[mode](data["speed"],data["length"],data["spacing"],data["period"],data["rainbow"],map1)
+            function_mappings[modes](data["speed"],data["length"],data["spacing"],data["period"],map1)
     except KeyError:
             print('Invalid function, try again.')   
     # test.mode(data["speed"],data["length"])
@@ -138,7 +144,7 @@ def select_function():
         try:
             return function_mappings[raw_input('Please input the function you want to use')]
         except KeyError:
-            print 'Invalid function, try again.'
+            print('Invalid function, try again.')
 
 @app.route('/colorWipe')
 def colorWipe():
