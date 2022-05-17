@@ -1,6 +1,6 @@
 
 import './css/App.css';
-import Color from './ColorPicker';
+import Color from './Color';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -29,21 +29,14 @@ function App() {
           <>
             
             <Routes>
-              <Route path="/" element={<Color/>}/>
-              <Route path="/mode" element={<Mode/>}/>
-                <Route path="/settings" element={<Settings/>}/>
+              <Route path="/" element={<Color token={token} setToken={setToken}/>}/>
+              <Route path="/mode" element={<Mode  token={token}/>}/>
+                <Route path="/settings" element={<Settings token={token} setToken={setToken}/>}/>
               <Route exact path="/profile" element={<Profile token={token} setToken={setToken}/>}></Route>
             </Routes>
           </>
         )}
 
-
-
-
-   
-      
-      
-      
       </div>
       <Navbar></Navbar>
       </Router>

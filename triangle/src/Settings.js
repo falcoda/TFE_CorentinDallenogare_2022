@@ -8,8 +8,10 @@ import TimerApp from './component/Timer';
 import Header from './component/Header';
 import React, { useState } from 'react';
 import useToken from './component/useToken'
-function Settings (){
-    const { token, removeToken, setToken } = useToken();
+import axios from "axios";
+
+function Settings (props){
+    const { removeToken } = useToken();
     const [value, setValue] = useState(null);
     const [count, setCount] = useState(null);
     const onChange = time => {
@@ -25,22 +27,21 @@ function Settings (){
             alert('Veuillez entrer un nombre positif');
         }
         else{
-            console.log(count)
             let data = JSON.stringify({"number": count});
-            // console.log(data)
-            fetch(`/changeNumber`,{
-            method: "POST",
-            mode: "no-cors",
-            body: data,
-            datatype: "json",
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            },
-            })
-        .then(response => response.json())
-        .catch(error => console.log(error))
-        return false
+            axios({
+                method: "POST",
+                url:"/api/ChangeNumber",
+                data: data,
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: 'Bearer ' + props.token
+                }
+            }).then((response) => {
+                const res =response.data
+                console.log(res)
+            }).catch(error => console.log(error))
+            return false;
         }
     }
     return (

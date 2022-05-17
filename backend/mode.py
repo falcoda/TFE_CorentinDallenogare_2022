@@ -12,6 +12,10 @@ from adafruit_led_animation.animation.rainbowchase import RainbowChase
 from adafruit_led_animation.animation.chase import Chase
 from adafruit_led_animation.animation.rainbow import Rainbow
 from adafruit_led_animation.sequence import AnimationSequence
+from adafruit_led_animation.blink import Blink
+from adafruit_led_animation.solid import Solid
+from adafruit_led_animation.pulse import Pulse
+from adafruit_led_animation.colorcycle import Colorcycle
 from adafruit_led_animation import helper
 from adafruit_led_animation.color import PURPLE, JADE, AMBER
 
@@ -40,6 +44,21 @@ allColor =(255,255,255)
 #     pixels.fill((0, 0, 0))
 #     pixels.show()
 #     return('a')
+
+
+"""
+Utillity functions
+"""
+def setBrightness(data):
+    global pixels
+    pixels = neopixel.NeoPixel(
+    pixel_pin, num_pixels, brightness=(int(data)/100), auto_write=False, pixel_order=ORDER
+    )
+
+
+
+
+
 
 def color(color):
    # print(color)
@@ -72,7 +91,12 @@ def wheel(pos):
     return (r, g, b) if ORDER in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
 
 
-def rainbowWheel(speed,size,spacing,period,map_1):
+def rainbowWheel(speed,size,spacing,period,map_1,rainbow):
+    """Draw rainbow that fades across all pixels at the same time.
+
+    Keyword arguments:
+    speed -- how fast to fade the rainbow, in seconds
+    """
     for j in range(255):
         for i in range(num_pixels):
             pixel_index = (i * 256 // num_pixels) + j
@@ -80,11 +104,9 @@ def rainbowWheel(speed,size,spacing,period,map_1):
         pixels.show()
         time.sleep(speed)
 
-def red():
-    pixels.fill((255, 0, 0))
-    pixels.show()
 
-def colorWipe( speed,size,spacing,period,map_1) :
+
+def colorWipe( speed,size,spacing,period,map_1,rainbow) :
     global allColor
     print(allColor)
     for i in range(num_pixels):
@@ -93,7 +115,7 @@ def colorWipe( speed,size,spacing,period,map_1) :
         pixels[i-15] = (0,0,0)
         pixels.show()
   
-def colorWipeAllSameTime( speed,size,spacing,period,map_1) :
+def colorWipeAllSameTime( speed,size,spacing,period,map_1,rainbow) :
     global allColor
     for i in range(num_pixels):
         pixels[i] = allColor
@@ -103,7 +125,7 @@ def colorWipeAllSameTime( speed,size,spacing,period,map_1) :
         pixels.show()
         
 
-def colorWipeOneByOne(speed,size,spacing,period,map_1) :
+def colorWipeOneByOne(speed,size,spacing,period,map_1,rainbow) :
     global allColor
     for i in range(int(num_pixels/(num_pixels/30))):
         pixels[i] = allColor
@@ -113,7 +135,7 @@ def colorWipeOneByOne(speed,size,spacing,period,map_1) :
         pixels.show()
         time.sleep(speed)
 
-def coloreWipe2( speed,size,spacing,period,map_1) :
+def coloreWipe2( speed,size,spacing,period,map_1,rainbow) :
     global allColor
     for i in range(int(num_pixels/3)):
        # pixels[i] = allColor
@@ -124,36 +146,38 @@ def coloreWipe2( speed,size,spacing,period,map_1) :
        # time.sleep(wait)
 
 
-def allChaseWindow( speed,size,spacing,period,map_1) :
+def chase( speed,size,spacing,period,map_1,rainbow) :
     global allColor
-    
-    chase = Chase(map_1, speed=speed ,size=size, spacing=spacing, color=allColor)
-    group1 = AnimationSequence(chase)
-    
-    group1.animate()
-
-def comet( speed,size,spacing,period,map_1) :
-    global allColor
-    comet = Comet(map_1, speed=speed, color=allColor, tail_length=round(size), bounce=True)
-    group1 = AnimationSequence(comet)
+    if (rainbow == True):
+        rainbowChase= RainbowChase(map_1, speed=speed, size=size, spacing=spacing, step=period)
+        group1 = AnimationSequence(rainbowChase)
+    else :
+        chase = Chase(map_1, speed=speed ,size=size, spacing=spacing, color=allColor)
+        group1 = AnimationSequence(chase)
     
     group1.animate()
 
-def rainbowChase( speed,size,spacing,period,map_1) :
+def comet( speed,size,spacing,period,map_1,rainbow) :
     global allColor
-    rainbowChase= RainbowChase(map_1, speed=speed, size=size, spacing=spacing, step=period)
-    group1 = AnimationSequence(rainbowChase)
-    while True:
-        group1.animate()
+    if(rainbow):
+        comet = Comet(map_1, speed=speed, color=allColor, tail_length=round(size), bounce=True)
+        group1 = AnimationSequence(comet)
+    else : 
+        rainbowCommet= RainbowComet(map_1, speed=speed, tail_length=size, bounce=True)
+        group1 = AnimationSequence(rainbowCommet)
+    
+    group1.animate()
 
-def rainbow(speed,size,spacing,period,map_1) :
+
+
+def rainbow(speed,size,spacing,period,map_1,rainbow) :
     global allColor
     rainbow= Rainbow(map_1, speed=speed, period=period)
     group1 = AnimationSequence(rainbow)
-    while True:
-        group1.animate()
+    
+    group1.animate()
 
-def twoTriangle( speed,size,spacing,period,map_1) :
+def twoTriangle( speed,size,spacing,period,map_1,rainbow) :
     global allColor
     map1 = helper.PixelMap(pixels, [(x,) for x in range(0,30)], individual_pixels=True)
     map2 = helper.PixelMap(pixels, [(x,) for x in range(31,60)], individual_pixels=True)
@@ -161,21 +185,46 @@ def twoTriangle( speed,size,spacing,period,map_1) :
     rainbow2= Rainbow(map1, speed=speed, period=period)
     group1 = AnimationSequence(rainbow)
     group2 = AnimationSequence(rainbow2)
-    while True:
-        group1.animate()
-        group2.animate()
+    
+    group1.animate()
+    group2.animate()
 
-def rainbowCommet( speed,size,spacing,period,map_1) :
-    global allColor
-    rainbowCommet= RainbowComet(map_1, speed=speed, tail_length=size, bounce=True)
-    group1 = AnimationSequence(rainbowCommet)
-    while True:
-        group1.animate()
 
-def coteWipe( speed,size,spacing,period,map_1) :
+
+def coteWipe( speed,size,spacing,period,map_1,rainbow) :
     global allColor
     rainbowChase= RainbowChase(map_1, speed=speed, size=size, spacing=spacing, step=8)
     group1 = AnimationSequence(rainbowChase)
-    while True:
-        group1.animate()
-        
+    
+    group1.animate()
+
+def blink( speed,size,spacing,period,map_1,rainbow) :
+    global allColor
+    blink= Blink(map_1, speed=speed, color=allColor)
+    group1 = AnimationSequence(blink)
+    group1.animate()
+
+def solid( speed,size,spacing,period,map_1,rainbow) :
+    global allColor
+    solid= Solid(map_1, color=allColor)
+    group1 = AnimationSequence(solid)
+    group1.animate()
+
+def colorCycle( speed,size,spacing,period,map_1,rainbow) :
+    global allColor
+    colorcycle= Colorcycle(map_1, speed=speed, color=allColor)
+    group1 = AnimationSequence(colorcycle)
+    group1.animate()
+
+def pulse( speed,size,spacing,period,map_1,rainbow) :
+    global allColor
+    pulse= Pulse(map_1, speed=speed, color=allColor)
+    group1 = AnimationSequence(pulse)
+    group1.animate()
+
+# def sparkle( speed,size,spacing,period,map_1,rainbow) :
+#     global allColor
+#     sparkle= Sparkle(map_1, speed=speed, color=allColor)
+#     group1 = AnimationSequence(sparkle)
+#     group1.animate()
+

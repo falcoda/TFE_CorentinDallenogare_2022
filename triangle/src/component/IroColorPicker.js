@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import iro from "@jaames/iro";
 class IroColorPicker extends React.Component {
   componentDidMount() {
@@ -6,14 +6,13 @@ class IroColorPicker extends React.Component {
     // create a new iro color picker and pass component props to it
     this.colorPicker = new iro.ColorPicker(this.el, {
         width: 300,
-        color: "#f00",
-        // display: block,
+        color: "#FFFFFF",
         borderWidth : 0
     });
     // call onColorChange prop whenever the color changes
     this.colorPicker.on("color:change", color => {
       if (props.onColorChange) props.onColorChange(color);
-      console.log(color)
+      // console.log(color.hexString)
     });
   }
 
@@ -27,7 +26,7 @@ class IroColorPicker extends React.Component {
   }
 
   render() {
-    return <div ref={el => (this.el = el)} />;
+    return <div ref={el => (this.el = el)} className="sectionHome"/>;
   }
 }
 export default IroColorPicker;

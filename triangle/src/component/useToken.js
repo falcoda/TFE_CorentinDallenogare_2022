@@ -17,6 +17,7 @@ function useToken() {
   function removeToken() {
     localStorage.removeItem("token");
     setToken(null);
+    document.location.reload(true);
   }
 
   return {

@@ -1,17 +1,15 @@
 import { useState } from 'react';
 import axios from "axios";
+import "../css/login.css"
 
 function Login(props) {
 
-    const [loginForm, setloginForm] = useState({
-      email: "",
-      password: ""
-    })
+    const [loginForm, setloginForm] = useState({email: "",password: ""});
 
-    function logMeIn(event) {
+    function setLogin(event) {
       axios({
         method: "POST",
-        url:"/token",
+        url:"/api/Login",
         data:{
           email: loginForm.email,
           password: loginForm.password
@@ -42,22 +40,31 @@ function Login(props) {
 
     return (
       <div>
-        <h1>Login</h1>
-          <form className="login">
-            <input onChange={handleChange} 
-                  type="email"
-                  text={loginForm.email} 
-                  name="email" 
-                  placeholder="Email" 
-                  value={loginForm.email} />
-            <input onChange={handleChange} 
+        <h1 className='loginTitle'>Login</h1>
+          <form className="loginForm row">
+            <div className="col-12 loginInput">
+              <input onChange={handleChange} 
+                type="email"
+                text={loginForm.email} 
+                name="email" 
+                placeholder="Email" 
+                value={loginForm.email} 
+                className="inputLogin" />
+            </div>
+            
+            <div className="col-12 loginInput">
+              <input onChange={handleChange} 
                   type="password"
                   text={loginForm.password} 
                   name="password" 
                   placeholder="Password" 
-                  value={loginForm.password} />
-
-          <button onClick={logMeIn}>Submit</button>
+                  value={loginForm.password}
+                  className="inputLogin"/>
+            </div>
+            
+            <div className="col-12 ">
+              <button onClick={setLogin} className="buttonLogin">Submit</button>
+            </div>
         </form>
       </div>
     );
