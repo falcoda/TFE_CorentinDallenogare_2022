@@ -13,7 +13,7 @@ function Mode (props){
     const [mode, setModes] = useState([
         {identifiant:'un', nom : 'Rainbow Wheel',  param:["speed"], logo : "bi-arrow-repeat",mode:"rainbowWheel"},
         {identifiant:'deux', nom : 'Color Wipe',  param:["speed"], logo : "bi-rainbow",mode:"colorWipe"},
-        {identifiant:'trois', nom : 'Color Wipe All SameTime',  param:[], logo : "bi-upc-scan",mode:"colorWipeAllSameTime"},
+        {identifiant:'trois', nom : 'Color Wipe All SameTime',  param:["speed"], logo : "bi-upc-scan",mode:"colorWipeAllSameTime"},
         {identifiant:'quatre', nom : 'Color Wipe One ByOne',  param:["speed"], logo : "bi-upc-scan",mode:"colorWipeOneByOne"},
         {identifiant:'cinq', nom : 'Color Wipe 2',  param:[], logo : "bi-upc-scan",mode:"colorWipe2"},
         {identifiant:'six', nom : 'Chase',  param:["speed","size","spacing"], logo : "bi-upc-scan",mode:"chase"},
@@ -96,7 +96,7 @@ function Mode (props){
                             
                                 <div>
                                 <div className='paramSelect'>Spacing</div>
-                                    <Form.Range step={1} min={1} max={30} value={size} onChange={(e) =>setSpacing(e.target.value)}/>
+                                    <Form.Range step={1} min={1} max={30} value={spacing} onChange={(e) =>setSpacing(e.target.value)}/>
                                 </div>
                             }
                             {params === "size" && 
@@ -121,7 +121,7 @@ function Mode (props){
                         ))
                         }
                           <div className='col-12 c d-flex justify-content-center'>
-                            <button onClick={() => changeMode("rainbowWheel")} className="btnSetParam">Start</button>
+                            <button onClick={() => changeMode(item.mode)} className="btnSetParam">Start</button>
                           </div>
                           
                         </div>

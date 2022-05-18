@@ -9,7 +9,8 @@ with open(path, 'r+',encoding='utf8') as f:
     mode.numTriangle =data['number']
 
 def saveCount(count):
-    if(count!='' and count<=0):
+    print(count)
+    if(count!='' and count>=0):
         with open(path, 'r+',encoding='utf8') as f:
             data = json.load(f)
             print(count)

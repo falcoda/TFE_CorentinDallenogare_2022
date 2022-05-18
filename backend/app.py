@@ -15,7 +15,7 @@ from datetime import datetime, timedelta, timezone
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
                                unset_jwt_cookies, jwt_required, JWTManager
 
-status = True
+
 app = Flask(__name__)
 ORDER = neopixel.GRB
 pixels = neopixel.NeoPixel(
@@ -25,10 +25,11 @@ function_mappings = {
     'rainbowWheel': mode.rainbowWheel,
     'color': mode.color,
     'colorWipe': mode.colorWipe,
+    'coteWipe': mode.coteWipe,
     'colorWipeAllSameTime': mode.colorWipeAllSameTime,
     'colorWipeOneByOne': mode.colorWipeOneByOne,
-    'coloreWipe2': mode.coloreWipe2,
-    'allChaseWindow': mode.chase,
+    'colorWipe2': mode.colorWipe2,
+    'chase': mode.chase,
     'comet': mode.comet,
     'rainbow': mode.rainbow,
     'blink': mode.blink,
@@ -37,7 +38,11 @@ function_mappings = {
     'pulse': mode.pulse,
 
 }
-num_pixels = 30
+path='./config/config.json'
+with open(path, 'r+',encoding='utf8') as f:
+    data = json.load(f)
+    print(data['number']*30 )
+    num_pixels = data['number']*30
 pixel_pin = board.D18
 ORDER = neopixel.GRB
 
@@ -105,8 +110,8 @@ def my_profile():
 @app.route('/api/ChangeColor', methods=["POST"])
 @jwt_required()
 def changeColor():
-    global status 
-    status = False
+    
+    mode.status = False
     data = request.get_json(force = True)
     print(data)
     mode.color(data)
@@ -116,8 +121,8 @@ def changeColor():
 @app.route('/api/Mode', methods=["POST"])
 @jwt_required()
 def wheels():
-    global status 
-    status = False
+    
+    mode.status = False
     data = request.get_json(force = True)
     print(data)
     # while status :
@@ -126,13 +131,13 @@ def wheels():
     print(mode)
     try:
         print("yes")
-        print(function_mappings)
+        print(function_mappings[modes])
         print(mode.num_pixels)
-        status = True
+        mode.status = True
         map1 = helper.PixelMap(pixels, [(x,) for x in range(0,mode.num_pixels)], individual_pixels=True)
         mode.allColor=(255,255,255)
-        while status :
-            function_mappings[modes](data["speed"],data["length"],data["spacing"],data["period"],map1)
+        while mode.status :
+            function_mappings[modes](float(data["speed"]),int(data["length"]),int(data["spacing"]),int(data["period"]),map1,data["rainbow"] )
     except KeyError:
             print('Invalid function, try again.')   
     # test.mode(data["speed"],data["length"])
@@ -148,31 +153,32 @@ def select_function():
 
 @app.route('/colorWipe')
 def colorWipe():
-    global status 
-    status = True
-    while status :
+    
+    mode.status = False
+    while mode.status :
         mode.colorWipe(0.1)
     
     return ('yes')
 
 @app.route('/allChaseWindow')
 def allChaseWindow():
-    global status 
-    status = True
-    while status :
+    
+    mode.status = False
+    while mode.status :
         mode.allChaseWindow(0.1,3,7)#speed size spacing 
     
     return ('yes')
 
 @app.route('/off')
 def setoff():
-    global status 
-    if(status):
-        status = False
+    
+    mode.status = False
+    if(mode.status):
+        mode.status = False
         time.sleep(0.5)
         mode.color("#000000")  
     else:
-        status = True
+        mode.status = True
         mode.color("#ffffff")
     
     return ('yes')
@@ -188,11 +194,11 @@ def changeNumber():
     author: Corentin Dallenogare <corentda@hotmail.fr>  
 
     """
+    global num_pixels
 
     data = request.get_json(force = True)
-    print(data['number'])
     saveData.saveCount(int(data['number']))
-    mode.num_pixels=int(data['number'])*30
+    num_pixels=int(data['number'])*30
     return (data)
 
 
