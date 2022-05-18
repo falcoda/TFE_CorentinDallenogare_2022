@@ -38,17 +38,11 @@ function_mappings = {
     'pulse': mode.pulse,
 
 }
-path='./config/config.json'
-with open(path, 'r+',encoding='utf8') as f:
-    data = json.load(f)
-    print(data['number']*30 )
-    num_pixels = data['number']*30
-pixel_pin = board.D18
-ORDER = neopixel.GRB
 
-pixels = neopixel.NeoPixel(
-    pixel_pin, num_pixels, brightness=1, auto_write=False, pixel_order=ORDER
-)
+
+
+
+
 
 app.config["JWT_SECRET_KEY"] = "helloCodaTriangle"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
@@ -134,22 +128,17 @@ def wheels():
         print(function_mappings[modes])
         print(mode.num_pixels)
         mode.status = True
-        map1 = helper.PixelMap(pixels, [(x,) for x in range(0,mode.num_pixels)], individual_pixels=True)
+        map1 = helper.PixelMap(mode.pixels, [(x,) for x in range(0,mode.num_pixels)], individual_pixels=True)
         mode.allColor=(255,255,255)
-        while mode.status :
-            function_mappings[modes](float(data["speed"]),int(data["length"]),int(data["spacing"]),int(data["period"]),map1,data["rainbow"] )
+        
+        function_mappings[modes](float(data["speed"]),int(data["length"]),int(data["spacing"]),int(data["period"]),map1,data["rainbow"] )
     except KeyError:
             print('Invalid function, try again.')   
     # test.mode(data["speed"],data["length"])
     return (data)
 
 
-def select_function():
-    while True:
-        try:
-            return function_mappings[raw_input('Please input the function you want to use')]
-        except KeyError:
-            print('Invalid function, try again.')
+
 
 @app.route('/colorWipe')
 def colorWipe():
@@ -178,7 +167,7 @@ def setoff():
         time.sleep(0.5)
         mode.color("#000000")  
     else:
-        mode.status = True
+        mode.status = False
         mode.color("#ffffff")
     
     return ('yes')

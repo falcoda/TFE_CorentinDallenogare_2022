@@ -20,9 +20,14 @@ function Mode (props){
         {identifiant:'sept', nom : 'Comet',  param:["speed","size","rainbow"], logo : "bi-stars",mode:"comet"},
         {identifiant:'huit', nom : 'Rainbow',  param:["speed","period"], logo : "bi-stars",mode:"rainbow"},
         {identifiant:'neuf', nom : 'Cote Wipe',  param:["speed","size","spacing"], logo : "bi-stars",mode:"coteWipe"},
+        {identifiant:'dix', nom : 'Pulse',  param:["speed"], logo : "bi-stars",mode:"pulse"},
+        {identifiant:'onze', nom : 'Color Cycle',  param:["speed"], logo : "bi-stars",mode:"colorCycle"},
+        {identifiant:'douze', nom : 'Colid',  param:[], logo : "bi-stars",mode:"solid"},
+        {identifiant:'treize', nom : 'Blink',  param:["speed"], logo : "bi-stars",mode:"blink"},
 
 
     ]);
+
     const changeMode = (mode) =>{
         console.log(mode)
         let data = JSON.stringify({"length":size,"speed":speed,"mode":mode,"spacing":spacing,"period":period,"rainbow":rainbow});
@@ -83,7 +88,7 @@ function Mode (props){
                             {params === "speed" && 
                                 <div>
                                 <div className='paramSelect'>Speed</div>
-                                    <Form.Range step={0.01} min={0} max={1} value={speed} onChange={(e) =>setSpeed(e.target.value)}/>
+                                    <Form.Range step={0.01} min={0} max={0.1} value={speed} onChange={(e) =>setSpeed(e.target.value)}/>
                                 </div>
                             }
                             {params === "period" && 

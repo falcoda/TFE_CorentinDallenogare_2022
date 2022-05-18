@@ -5,6 +5,7 @@ import time
 import board
 import neopixel
 import hextorgb
+import json
 
 from adafruit_led_animation.animation.comet import Comet
 from adafruit_led_animation.animation.rainbowcomet import RainbowComet
@@ -27,7 +28,11 @@ pixel_pin = board.D18
 # pixel_pin = board.D18
 
 # The number of NeoPixels
-num_pixels = 60
+path='./config/config.json'
+with open(path, 'r+',encoding='utf8') as f:
+    data = json.load(f)
+    print(data['number']*30 )
+    num_pixels = data['number']*30
 numTriangle = int(num_pixels/30)
 ORDER = neopixel.GRB
 status = True
@@ -62,6 +67,8 @@ def setBrightness(data):
 
 def color(color):
    # print(color)
+    global status
+    status = False
     print(hextorgb.hex_to_rgb(color))
     global allColor 
     allColor= hextorgb.hex_to_rgb(color)
@@ -97,54 +104,63 @@ def rainbowWheel(speed,size,spacing,period,map_1,rainbow):
     Keyword arguments:
     speed -- how fast to fade the rainbow, in seconds
     """
-    for j in range(255):
-        for i in range(num_pixels):
-            pixel_index = (i * 256 // num_pixels) + j
-            pixels[i] = wheel(pixel_index & 255)
-        pixels.show()
-        time.sleep(speed)
+    convertSpeedToWait = 0.1 -speed
+    while status:
+        for j in range(255):
+            for i in range(num_pixels):
+                pixel_index = (i * 256 // num_pixels) + j
+                pixels[i] = wheel(pixel_index & 255)
+            pixels.show()
+            time.sleep(convertSpeedToWait)
 
 
 
 def colorWipe( speed,size,spacing,period,map_1,rainbow) :
     global allColor
     print(allColor)
-    for i in range(num_pixels/2):
-        time.sleep(speed)
-        pixels[i] = allColor
-        pixels[i-15] = (0,0,0)
-        pixels.show()
+    convertSpeedToWait = 0.1 -speed
+    while status:
+        for i in range(num_pixels/2):
+            time.sleep(convertSpeedToWait)
+            pixels[i] = allColor
+            pixels[i-15] = (0,0,0)
+            pixels.show()
   
 def colorWipeAllSameTime( speed,size,spacing,period,map_1,rainbow) :
     global allColor
-    for i in range(num_pixels):
-        pixels[i] = allColor
-        #pixels[i+15] = allColor
-        pixels[i-15] = (0,0,0)
-        pixels[i-45] = (0,0,0)
-        pixels.show()
-        time.sleep(speed)
+    convertSpeedToWait = 0.1 -speed
+    while status:
+        for i in range(num_pixels):
+            pixels[i] = allColor
+            #pixels[i+15] = allColor
+            pixels[i-15] = (0,0,0)
+            pixels[i-45] = (0,0,0)
+            pixels.show()
+            time.sleep(convertSpeedToWait)
         
 
 def colorWipeOneByOne(speed,size,spacing,period,map_1,rainbow) :
     global allColor
-    for i in range(int(num_pixels/(num_pixels/30))):
-        pixels[i] = allColor
-        pixels[i+30] = allColor
-        pixels[i-15] = (0,0,0)
-        pixels[i-30] = (0,0,0)
-        pixels.show()
-        time.sleep(speed)
+    convertSpeedToWait = 0.1 -speed
+    while status:
+        for i in range(int(num_pixels/(num_pixels/30))):
+            pixels[i] = allColor
+            pixels[i+30] = allColor
+            pixels[i-15] = (0,0,0)
+            pixels[i-30] = (0,0,0)
+            pixels.show()
+            time.sleep(convertSpeedToWait)
 
 def colorWipe2( speed,size,spacing,period,map_1,rainbow) :
     global allColor
-    for i in range(int(num_pixels/3)):
-       # pixels[i] = allColor
-        #pixels[i+30] = allColor
-        pixels[i:i+10] = [(255,0,0)] * 10
-        pixels[i-1:i-11] = [(255,0,0)] * 10
-        pixels.show()
-       # time.sleep(wait)
+    while status:
+        for i in range(int(num_pixels/3)):
+        # pixels[i] = allColor
+            #pixels[i+30] = allColor
+            pixels[i:i+10] = [(255,0,0)] * 10
+            pixels[i-1:i-11] = [(255,0,0)] * 10
+            pixels.show()
+        # time.sleep(wait)
 
 
 def chase( speed,size,spacing,period,map_1,rainbow) :
