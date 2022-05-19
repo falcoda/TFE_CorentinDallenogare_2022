@@ -2,8 +2,10 @@
     font-size: 3rem;
 }
 
-
-.navContent{
+.navbarContent{
+    background-color: #202124;
+}
+.navCol{
     margin-left: auto;
     margin-right: auto;
 }

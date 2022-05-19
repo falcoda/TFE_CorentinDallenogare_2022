@@ -1,12 +1,21 @@
 .App {
   text-align: center;
-  background-color: whitesmoke;
+  background-color: #202124;
   height: 100%;
 }
 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+.btnApp{
+  color: #fff;
+  background-color: #000000;
+  border-color: #000000;
+  margin: 0.5rem;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  padding: 0.5rem;
 }
 
 @media (prefers-reduced-motion: no-preference) {

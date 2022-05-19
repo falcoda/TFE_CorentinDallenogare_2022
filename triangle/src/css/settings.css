@@ -1,17 +1,28 @@
 .settingsTitle{
-    color: #0048a1;
+    color: white;
     font-size: 4rem;
     text-align: center;
+    
+    margin-top: 1rem;
 }
 
 .settings{
-    background-color: #8eacd0;
+    background-color: white;
     border-radius: 40px;
     
     font-size: 2rem;
     margin-top: 0.5rem;
+    margin: 0.5rem;
 }
 
 .parametre{
     margin-bottom: 3rem;
+    height: 70rem
+}
+
+.form-control{
+    height: 3rem;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
 }

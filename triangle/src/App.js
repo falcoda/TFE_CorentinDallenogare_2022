@@ -13,7 +13,6 @@ import Mode from './Mode';
 import Settings from './Settings';
 import useToken from './component/useToken'
 import Login from './component/Login';
-import Header from './component/Header';
 import Profile from './component/Profile';
 
 function App() {

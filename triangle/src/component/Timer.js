@@ -36,9 +36,9 @@ function MyTimer({ expiryTimestamp }) {
           <input type={"time"} className="form-control" id="setTime" placeholder='15'onChange={(e) => setValue(e.target.value)}/>
           
           
-          <button onClick={handleSubmit} className="btn btn-primary">Start</button>
-          <button onClick={()=>pause()} className="btn btn-primary ms-1 me-1">Pause</button>
-          <button onClick={resume} className="btn btn-primary">Resume</button>
+          <button onClick={handleSubmit} className="btnApp">Start</button>
+          <button onClick={()=>pause()} className="btnApp ms-1 me-1">Pause</button>
+          <button onClick={resume} className="btnApp">Resume</button>
         <div>
           <span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
         </div>

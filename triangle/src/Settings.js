@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import TimerApp from './component/Timer';
-import Header from './component/Header';
+import Logout from './component/Logout';
 import React, { useState } from 'react';
 import useToken from './component/useToken'
 import axios from "axios";
@@ -51,14 +51,14 @@ function Settings (props){
                 <h1 className="settingsTitle" >Paramètres</h1>
                 
             </div>
-            <Header token={removeToken}/>
+            <Logout token={removeToken}/>
             <div className="settings">                
                 <form>
                     <div className="mb-3 ms-1 me-1">
                         <label htmlFor="numberTriangles" className="form-label" >Nombre de triangles</label>
                         <input type='number'  className="form-control" id="numberTriangles" onChange={(e) =>setCount(e.target.value)} placeholder='0'/>
                     </div> 
-                    <button type="button" onClick={uploadNumber} className="btn btn-primary">Valider</button>
+                    <button type="button" onClick={uploadNumber} className="btnApp">Valider</button>
                 </form>
             </div>
             <div className="settings">
@@ -67,7 +67,7 @@ function Settings (props){
                         <label htmlFor="name" className="form-label" >Nom</label>
                         <input  className="form-control" id="name" placeholder='Marc'/>
                     </div> 
-                    <button type="submit" className="btn btn-primary">Valider</button>
+                    <button type="submit" className="btnApp">Valider</button>
                 </form>
             </div>
             <div className="settings">

@@ -1,7 +1,7 @@
 
 import axios from "axios";
 
-function Header(props) {
+function Logout(props) {
 
   function logMeOut() {
     axios({
@@ -23,10 +23,10 @@ function Header(props) {
         <div className="settings">                
             <form>
                 
-                <button type="button" onClick={logMeOut} className="btn btn-primary">Logout</button>
+                <button type="button" onClick={logMeOut} className=" btnApp">Logout</button>
             </form>
         </div>
     )
 }
 
-export default Header;
+export default Logout;

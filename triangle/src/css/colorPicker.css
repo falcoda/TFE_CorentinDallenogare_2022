@@ -5,8 +5,9 @@
 
 .button{
     border-radius: 15px;
-    width: 1.5rem;
-    height: 1.5rem;
+    border: 2px solid white;
+    width: 2rem;
+    height: 2rem;
 }
 
 .containButton{
@@ -46,7 +47,9 @@ pointer-events: none;
     margin-left: auto !important;
     margin-right: auto !important;
 }
-
+.IroSliderGradient{
+    border: 1px solid rgb(255, 255, 255) !important;
+}
 .sectionHome{
     margin-bottom: 10%;
 }

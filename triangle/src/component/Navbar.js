@@ -35,21 +35,21 @@ const Navbar = () => {
   return (
     
     <>
-    <div className='fixed-bottom' style={{'backgroundColor': 'whitesmoke'}}>	
+    <div className='fixed-bottom navbarContent' >	
 			<nav className="navbar navbar-expand navbar-light">        
         <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
-          <ul className="navbar-nav mr-auto  mt-0 row navContent">
+          <ul className="navbar-nav mr-auto  mt-0 row navCol">
             <li className="nav-item col-3">
-              <Link className="nav-link" to="/"><i className="bi bi-house navItem"></i></Link>
+              <Link className="nav-link" to="/"><i className="bi bi-house navItem logoBootstrap"></i></Link>
             </li>
             <li className="nav-item active  col-3">
-              <Link className="nav-link" to="/mode"><i className="bi bi-lightbulb navItem"></i></Link>
+              <Link className="nav-link" to="/mode"><i className="bi bi-lightbulb navItem logoBootstrap"></i></Link>
             </li>
             <li className="nav-item col-3">
-              <a className="nav-link" onClick={() => changeMode("off")}><i className="bi bi-power navItem"></i></a>
+              <a className="nav-link" onClick={() => changeMode("off")}><i className="bi bi-power navItem logoBootstrap"></i></a>
             </li>
             <li className="nav-item col-3">
-              <Link className="nav-link" to="/settings"><i className="bi bi-sliders navItem"></i></Link>
+              <Link className="nav-link" to="/settings"><i className="bi bi-sliders navItem logoBootstrap"></i></Link>
             </li>
             
            
