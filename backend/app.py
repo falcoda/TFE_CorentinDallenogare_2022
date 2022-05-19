@@ -25,8 +25,8 @@ function_mappings = {
     'rainbowWheel': mode.rainbowWheel,
     'color': mode.color,
     'colorWipe': mode.colorWipe,
-    'coteWipe': mode.coteWipe,
-    'colorWipeAllSameTime': mode.colorWipeAllSameTime,
+    'rainbowChase': mode.rainbowChase,
+    'cometAllSameTime': mode.cometAllSameTime,
     'colorWipeOneByOne': mode.colorWipeOneByOne,
     'colorWipe2': mode.colorWipe2,
     'chase': mode.chase,
@@ -45,7 +45,7 @@ function_mappings = {
 
 
 app.config["JWT_SECRET_KEY"] = "helloCodaTriangle"
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=24)
 jwt = JWTManager(app)
 
 @app.route('/api/Login', methods=["POST"])
@@ -105,32 +105,36 @@ def my_profile():
 @jwt_required()
 def changeColor():
     
-    mode.status = False
+    
     data = request.get_json(force = True)
     print(data)
-    mode.color(data)
+    mode.allColor=(hextorgb.hex_to_rgb(data))
+    if(mode.effectOnRun ==False):
+        mode.color(data)
     
     return (data)
 
 @app.route('/api/Mode', methods=["POST"])
 @jwt_required()
-def wheels():
+def changeMode():
     
     mode.status = False
     data = request.get_json(force = True)
     print(data)
-    # while status :
-    #     mode.rainbowWheel(0.001)
+    time.sleep(0.1)
     modes=data['mode']
     print(mode)
+    mode.pixels.fill(hextorgb.hex_to_rgb("#000000"))
+    mode.pixels.show()
     try:
         print("yes")
         print(function_mappings[modes])
         print(mode.num_pixels)
-        mode.status = True
-        map1 = helper.PixelMap(mode.pixels, [(x,) for x in range(0,mode.num_pixels)], individual_pixels=True)
-        mode.allColor=(255,255,255)
         
+        mode.effectOnRun = True
+        map1 = helper.PixelMap(mode.pixels, [(x,) for x in range(0,mode.num_pixels)], individual_pixels=True)
+       # mode.allColor=(255,255,255)
+        mode.status = True
         function_mappings[modes](float(data["speed"]),int(data["length"]),int(data["spacing"]),int(data["period"]),map1,data["rainbow"] )
     except KeyError:
             print('Invalid function, try again.')   
@@ -149,26 +153,23 @@ def colorWipe():
     
     return ('yes')
 
-@app.route('/allChaseWindow')
-def allChaseWindow():
-    
-    mode.status = False
-    while mode.status :
-        mode.allChaseWindow(0.1,3,7)#speed size spacing 
-    
-    return ('yes')
+
 
 @app.route('/off')
 def setoff():
-    
-    mode.status = False
-    if(mode.status):
+    if(mode.effectOnRun): 
+        mode.powerOff("#000000") 
         mode.status = False
-        time.sleep(0.5)
-        mode.color("#000000")  
+        mode.effectOnRun = False
+   # mode.status = False
+    elif(mode.status):
+        mode.status = False
+        mode.powerOff("#000000") 
+        
     else:
-        mode.status = False
-        mode.color("#ffffff")
+        mode.status = True
+        mode.powerOff("#ffffff")  
+       # mode.color("#ffffff")
     
     return ('yes')
 
@@ -184,10 +185,13 @@ def changeNumber():
 
     """
     global num_pixels
-
+    mode.pixels.fill(hextorgb.hex_to_rgb("#000000"))
+    mode.pixels.show()
     data = request.get_json(force = True)
     saveData.saveCount(int(data['number']))
     num_pixels=int(data['number'])*30
+    print("num", num_pixels)
+    mode.status = False
     return (data)
 
 
@@ -203,7 +207,7 @@ def changeBrightness():
     """
     data = request.get_json(force = True)
     print(data['brightness'])
-    #mode.setBrightness(data)
+    mode.setBrightness(data['brightness'])
     # mode.num_pixels=int(data['number'])*30
     return (data)
 

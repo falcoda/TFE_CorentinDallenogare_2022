@@ -4,22 +4,21 @@ import { Form  } from 'react-bootstrap';
 import axios from "axios";
 
 function Mode (props){
-    const [speed, setSpeed] = useState(0);
+    const [speed, setSpeed] = useState(0.01);
     const [size, setSize] = useState(1);
     const [rainbow, setRainbow] = useState(false);
-    const [period, setPeriod] = useState(0);
-    const [spacing, setSpacing] = useState(0);
+    const [period, setPeriod] = useState(1);
+    const [spacing, setSpacing] = useState(1);
 
     const [mode, setModes] = useState([
         {identifiant:'un', nom : 'Rainbow Wheel',  param:["speed"], logo : "bi-arrow-repeat",mode:"rainbowWheel"},
-        {identifiant:'deux', nom : 'Color Wipe',  param:["speed"], logo : "bi-rainbow",mode:"colorWipe"},
-        {identifiant:'trois', nom : 'Color Wipe All SameTime',  param:["speed"], logo : "bi-upc-scan",mode:"colorWipeAllSameTime"},
-        {identifiant:'quatre', nom : 'Color Wipe One ByOne',  param:["speed"], logo : "bi-upc-scan",mode:"colorWipeOneByOne"},
-        {identifiant:'cinq', nom : 'Color Wipe 2',  param:[], logo : "bi-upc-scan",mode:"colorWipe2"},
-        {identifiant:'six', nom : 'Chase',  param:["speed","size","spacing"], logo : "bi-upc-scan",mode:"chase"},
+        {identifiant:'deux', nom : 'Color Wipe',  param:["speed","spacing"], logo : "bi-rainbow",mode:"colorWipe"},
+        {identifiant:'trois', nom : 'Comet All SameTime',  param:["speed","size"], logo : "bi-upc-scan",mode:"cometAllSameTime"},
+        {identifiant:'quatre', nom : 'Color Wipe One ByOne',  param:["speed","size","spacing","rainbow","period"], logo : "bi-upc-scan",mode:"colorWipeOneByOne"},
+        {identifiant:'cinq', nom : 'Color Wipe 2',  param:["speed"], logo : "bi-upc-scan",mode:"colorWipe2"},
+        {identifiant:'six', nom : 'Chase',  param:["speed","size","spacing","rainbow","period"], logo : "bi-upc-scan",mode:"chase"},
         {identifiant:'sept', nom : 'Comet',  param:["speed","size","rainbow"], logo : "bi-stars",mode:"comet"},
         {identifiant:'huit', nom : 'Rainbow',  param:["speed","period"], logo : "bi-stars",mode:"rainbow"},
-        {identifiant:'neuf', nom : 'Cote Wipe',  param:["speed","size","spacing"], logo : "bi-stars",mode:"coteWipe"},
         {identifiant:'dix', nom : 'Pulse',  param:["speed"], logo : "bi-stars",mode:"pulse"},
         {identifiant:'onze', nom : 'Color Cycle',  param:["speed"], logo : "bi-stars",mode:"colorCycle"},
         {identifiant:'douze', nom : 'Colid',  param:[], logo : "bi-stars",mode:"solid"},
@@ -88,9 +87,10 @@ function Mode (props){
                             {params === "speed" && 
                                 <div>
                                 <div className='paramSelect'>Speed</div>
-                                    <Form.Range step={0.01} min={0} max={0.1} value={speed} onChange={(e) =>setSpeed(e.target.value)}/>
+                                    <Form.Range step={0.01} min={0.01} max={1} value={speed} onChange={(e) =>setSpeed(e.target.value)}/>
                                 </div>
                             }
+                            
                             {params === "period" && 
                                 <div>
                                 <div className='paramSelect'>Period</div>

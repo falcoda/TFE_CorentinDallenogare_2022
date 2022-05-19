@@ -7,9 +7,9 @@ import Brightness from "./component/Brightness";
 import axios from "axios";
 
 const Color = (auth) => {
-  const [color, setColor] = React.useState("#ffffff");
+  
 
-  useEffect(() => {
+  const displayColor =(color) => {
     let data = JSON.stringify(color);
  
     axios({
@@ -25,14 +25,14 @@ const Color = (auth) => {
       const res =response.data
       console.log(res)
     }).catch(error => console.log(error))
-  }, [color]);
+  }
 
   return (
     
       <div>  
         <IroColorPicker
-          color={color}
-          onColorChange={ (color) => { setColor(color.hexString) }}
+          
+          onColorChange={ (color) => { displayColor(color.hexString) }}
         />
         
         <ColorChoice token={auth.token}></ColorChoice>
