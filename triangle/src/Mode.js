@@ -37,17 +37,22 @@ function Mode (props){
         if(saveSpacing !== null){
             setSpacing(saveSpacing);
         }
-        let myModes = window.localStorage.getItem("mode")
-        console.log(myModes)
-        var myArray = myModes.split("/");
-        console.log(myArray)
-        for (var i = 0; i < myArray.length; i++) {
-            myArray[i] = myArray[i].split(",")
+        try{
+            let myModes = window.localStorage.getItem("mode")
+            console.log(myModes)
+            var myArray = myModes.split("/");
+            console.log(myArray)
+            for (var i = 0; i < myArray.length; i++) {
+                myArray[i] = myArray[i].split(",")
+            }
+            myArray.pop()
+            console.log(myArray )
+        
+            setModeList(myArray)
         }
-        myArray.pop()
-        console.log(myArray )
-       
-        setModeList(myArray)
+        catch(error){
+            console.log(error)
+        }
       }, []);
     
 
