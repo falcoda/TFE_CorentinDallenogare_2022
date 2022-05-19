@@ -6,12 +6,12 @@
     border-color: black;
     border-radius: 40px;
     text-align: center;
-    color: white !important;
+    color: black !important;
     font-size: 2rem !important;
 }
 
 .inputLogin::placeholder{    
-    color: white !important;
+    color: black !important;
     font-size: 2rem !important;
 }
 
