@@ -161,13 +161,13 @@ def cometAllSameTime( speed,size,spacing,period,map_1,rainbow) :
     speed = adaptSpeed(speed, 0.1)
     print(num_pixels)
     the_animations = []
-    print(size)
+    print(speed)
     if size ==1 :
         size +=1
     for i in range(0,numTriangle) :
         print("cest" ,i)
         map1=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)
-        comet = Comet(map1, speed=(0.1-speed), color=(allColor), tail_length=round(size), bounce=False,ring=True)
+        comet = Comet(map1, speed=(0.11-speed), color=(allColor), tail_length=round(size), bounce=False,ring=True)
         the_animations.append(comet)
 
     group = AnimationGroup(*the_animations)
@@ -195,7 +195,7 @@ def colorWipeOneByOne(speed,size,spacing,period,map_1,rainbow) :
         elif (choice == "comet"):
             print("comet")
             speedComet = adaptSpeed(speed, 0.1)
-            comet = Comet(map1, speed=(0.1-speedComet), color=(allColor), tail_length=round(size), bounce=False,ring=True)
+            comet = Comet(map1, speed=(0.11-speedComet), color=(allColor), tail_length=round(size), bounce=False,ring=True)
             the_animations.append(comet)
 
         elif (choice =="rainbowChase"):
@@ -340,7 +340,7 @@ def pulse( speed,size,spacing,period,map_1,rainbow) :
     global allColor
     speed=adaptSpeed(speed, 1)
     print(speed)
-    pulse= Pulse(map_1, speed=0.001, color=allColor,period=1-speed)
+    pulse= Pulse(map_1, speed=0.001, color=allColor,period=1.01-speed)
     group1 = AnimationSequence(pulse)
     while status:
         group1.color = allColor

@@ -54,6 +54,8 @@ function Mode (props){
             console.log(error)
         }
       }, []);
+
+    
     
 
     useEffect(() => {
@@ -137,7 +139,7 @@ function Mode (props){
             
             // let data = JSON.stringify({"length":size,"speed":speed,"mode":newMode,"spacing":spacing,"period":period,"rainbow":rainbow,"name":newModeName});
             
-            let data =`${size},${speed},${newMode},${spacing},${period},${rainbow},${newModeName}/`;
+            let data =`${size},${speed},${newMode[1]},${spacing},${period},${rainbow},${newModeName}/`;
             console.log(data)
             let oldMode = localStorage.getItem("mode");
             console.log(oldMode)
@@ -146,10 +148,10 @@ function Mode (props){
                 console.log('est null')
             }
             else{
-                let newMode =oldMode+ data;
-                console.log(newMode)
-                localStorage.setItem("mode", newMode);
-                // document.getElementById("closeNameBtn").click()
+                let newModes =oldMode+ data;
+                console.log(newModes)
+                localStorage.setItem("mode", newModes);
+                document.getElementById("closeNameBtn").click()
             }
     
         }
@@ -159,7 +161,22 @@ function Mode (props){
             document.getElementsByClassName("nameModeInput")[0].style.borderColor = "red";
             document.getElementsByClassName("nameModeInput")[0].classList.add('invalidName');
         }
-        //
+        try{
+            let myModes = window.localStorage.getItem("mode")
+            console.log(myModes)
+            var myArray = myModes.split("/");
+            console.log(myArray)
+            for (var i = 0; i < myArray.length; i++) {
+                myArray[i] = myArray[i].split(",")
+            }
+            myArray.pop()
+            console.log(myArray )
+        
+            setModeList(myArray)
+        }
+        catch(error){
+            console.log(error)
+        }
     } 
     const handleChange=(e) =>{
         let isChecked = e.target.checked;
@@ -241,7 +258,7 @@ function Mode (props){
                                         <button onClick={() => changeMode(item.mode)} className="btnSetParamMode">Start</button>                               
                                     </div>
                                     <div className='col-12 c d-flex justify-content-center'>
-                                        <button data-bs-toggle="modal" data-bs-target={"#modeName"} className="btnSetParamMode" onClick={() => setNewMode(item.nom)}>Save</button>
+                                        <button data-bs-toggle="modal" data-bs-target={"#modeName"} className="btnSetParamMode" onClick={() => setNewMode([item.nom,item.mode])}>Save</button>
                                     </div>
                                     
                                 </div>
@@ -257,7 +274,7 @@ function Mode (props){
                         <div className="modal-content ">
                             <div className="modal-header">
                                 <div className='col-10 modalTitle'>
-                                    Save {newMode} Mode
+                                    Save {newMode[0]} Mode
                                 </div>
                                 <div className='col-2 d-flex justify-content-end '>
                                     <button type="button" className="btn-close " id="closeNameBtn" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -281,7 +298,7 @@ function Mode (props){
             <div className="col-12 separator"> Saveds Modes</div>
             {modeList.map((item, k) => (
                 <div className='col-4 myOwnEffects' onClick={() => runMyMode(item[0],item[1],item[2],item[3],item[4],item[5],item[6])} key={k}>
-                {item[6]}aaaa
+                {item[6]}
                 </div>
             ))}
         </div>
