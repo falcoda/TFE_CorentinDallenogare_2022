@@ -75,9 +75,21 @@ def updatePixels(count):
     print(" count",count)
     global num_pixels
     num_pixels=count
+    global numTriangle
+    numTriangle =int(count/30)
+    print(numTriangle)
+    pixels.fill((0,0,0))
+    pixels.show()
     pixels = neopixel.NeoPixel(
     pixel_pin, count, brightness=brightness, auto_write=False, pixel_order=ORDER
     )
+    for i in range(numTriangle):
+        pixels.fill((255,255,255))
+        pixels.show()
+        time.sleep(0.2)
+        pixels.fill((0,0,0))
+        pixels.show()
+        time.sleep(0.2)
 
 
 
@@ -117,13 +129,15 @@ def wheel(pos):
     return (r, g, b) if ORDER in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
 
 
-def rainbowWheel(speed,size,spacing,period,map_1,rainbow):
+def rainbowWheela(speed,size,spacing,period,map_1,rainbow):
     """Draw rainbow that fades across all pixels at the same time.
 
     Keyword arguments:
     speed -- how fast to fade the rainbow, in seconds
     """
-    speed = adaptSpeed(speed, 0.01)
+    print(numTriangle)
+    speed = (0.007*numTriangle) -numTriangle*(adaptSpeed(speed, 0.007))
+    print(speed)
     global status
     print(num_pixels)
     while status:
@@ -134,10 +148,36 @@ def rainbowWheel(speed,size,spacing,period,map_1,rainbow):
                     pixels[i] = wheel(pixel_index & 255)
                 
                 pixels.show()
-                time.sleep(0.01-speed)
-    """if status ==False :
-        color("#000000") """
+                time.sleep(speed)
+    if status ==False :
+        pixels.fill((0,0,0))
+        pixels.show()
 
+def rainbowWheel(speed,size,spacing,period,map_1,rainbow):
+    """Draw rainbow that fades across all pixels at the same time.
+
+    Keyword arguments:
+    speed -- how fast to fade the rainbow, in seconds
+    """
+    print(numTriangle)
+    speed = (0.007*numTriangle) -numTriangle*(adaptSpeed(speed, 0.007))
+    print(speed)
+    global status
+    print(num_pixels)
+    while status:
+        count = int(30/numTriangle)
+        
+        for j in range(255):
+            for i in range(numTriangle):
+                for k in range (30):
+                    pixel_index = (((k)+i*k) *255 //30) + j
+                    pixels[i*30:(i*30)+30] = wheel(pixel_index & 255)
+            
+            pixels.show()
+       # time.sleep(speed)
+    if status ==False :
+        pixels.fill((0,0,0))
+        pixels.show()
 
 def colorWipe( speed,size,spacing,period,map_1,rainbow) :
     global allColor
