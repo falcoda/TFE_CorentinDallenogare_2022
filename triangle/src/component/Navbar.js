@@ -42,13 +42,13 @@ const Navbar = () => {
             <li className="nav-item col-3">
               <Link className="nav-link" to="/"><i className="bi bi-house navItem logoBootstrap"></i></Link>
             </li>
-            <li className="nav-item active  col-3">
+            <li className="nav-item active toModePage col-3">
               <Link className="nav-link" to="/mode"><i className="bi bi-lightbulb navItem logoBootstrap"></i></Link>
             </li>
-            <li className="nav-item col-3">
+            <li className="nav-item col-3 tourShutdown">
               <a className="nav-link" onClick={() => changeMode("off")}><i className="bi bi-power navItem logoBootstrap"></i></a>
             </li>
-            <li className="nav-item col-3">
+            <li className="nav-item col-3 tourSettings">
               <Link className="nav-link" to="/settings"><i className="bi bi-sliders navItem logoBootstrap"></i></Link>
             </li>
             

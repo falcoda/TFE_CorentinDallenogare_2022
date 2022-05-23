@@ -6,27 +6,32 @@ import 'bootstrap/dist/js/bootstrap.bundle.min';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import TimerApp from './component/Timer';
 import Logout from './component/Logout';
-import React, { useState } from 'react';
-import useToken from './component/useToken'
+import React, { useEffect, useState } from 'react';
+import useToken from './component/useToken';
 import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from "react-router-dom";
 
 function Settings (props){
     const { removeToken } = useToken();
     const [value, setValue] = useState(null);
     const [count, setCount] = useState(null);
+    const history = useNavigate()   
     const onChange = time => {
         setValue(time);
         console.log('es')
       };
 
     const uploadNumber = () => {
-        if (count === null) {
-            alert('Veuillez entrer un nombre');
+        console.log(count)
+        if (count === null || count === "") {
+            toast.error('Veuillez entrer un nombre');
         }
         else if (count <= 0) {
-            alert('Veuillez entrer un nombre positif');
+            toast.error('Veuillez entrer un nombre positif');
         }
         else{
+           
             let data = JSON.stringify({"number": count});
             axios({
                 method: "POST",
@@ -40,10 +45,19 @@ function Settings (props){
             }).then((response) => {
                 const res =response.data
                 console.log(res)
-            }).catch(error => console.log(error))
+                toast.success('Nombre mis à jour');
+            }).catch(error => toast.error('Erreur lors de la mise à jour'))
             return false;
         }
     }
+
+    useEffect(() => {
+
+        if(!localStorage.getItem('tutorial')){
+            history('/')
+
+        }
+    }, [])
     return (
         
         <div className="parametre">
@@ -73,7 +87,10 @@ function Settings (props){
             <div className="settings">
                 <TimerApp></TimerApp>            
             </div>
-            
+            <Toaster
+              position="top-center"
+              reverseOrder={false}
+            />
         </div>
     )
 }

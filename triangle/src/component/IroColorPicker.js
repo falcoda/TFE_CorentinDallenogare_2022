@@ -26,7 +26,7 @@ class IroColorPicker extends React.Component {
   }
 
   render() {
-    return <div ref={el => (this.el = el)} className="sectionHome"/>;
+    return <div ref={el => (this.el = el)} className="sectionHome colorPicker"/>;
   }
 }
 export default IroColorPicker;

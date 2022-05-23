@@ -54,7 +54,9 @@ pointer-events: none;
     margin-bottom: 10%;
 }
 
-    
+.homePage{
+    min-height: 40rem;
+}    
     
 @media only screen and (max-width: 1200px){
     /*Tablets [601px -> 1200px]*/

@@ -1,5 +1,5 @@
 .voirPhoto{
-    height: 1000px;
+    /* height: 1000px; */
 }
 
 .modeItem{
@@ -21,11 +21,25 @@
     margin-top: 1rem;
     margin-bottom: 1rem;
     background-color: black;
-    border-color: black;
+    border-color: white;
     border-radius: 40px;
     color: white;
     text-align: center;
     font-size: 2rem;
+
+}
+.btnModifiy{
+    width: 20rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: white;
+    border-color: white;
+    border-radius: 40px;
+    color: black;
+    text-align: center;
+    font-size: 2rem;
+    margin-left: auto;
+    margin-right: auto;
 
 }
 .modalTitle{
@@ -42,6 +56,21 @@
 
 .logoBootstrap{
     color:white;
+}
+.logoSavedModes{
+    font-size: 2rem;
+}
+.deleteMode{
+    font-size: 1.5rem;
+    color:rgb(191, 11, 11);
+    /* position: absolute; */
+    top: -0.5rem;
+    left: 2rem;
+    position:relative
+
+}
+.deleteModeDivLogo{
+    height: 0.2rem;
 }
 input[type=range]::-webkit-slider-thumb {
     box-shadow:none;
@@ -69,4 +98,8 @@ input[type=range]::-webkit-slider-thumb {
 .myOwnEffects{
     color: white;
     padding:1rem;
+}
+
+.savedModeText{
+    text-align: center;
 }

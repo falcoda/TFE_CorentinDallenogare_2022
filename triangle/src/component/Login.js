@@ -17,6 +17,7 @@ function Login(props) {
       })
       .then((response) => {
         props.setToken(response.data.access_token)
+        props.setAuth(response.data.access_token)
       }).catch((error) => {
         if (error.response) {
           console.log(error.response)
@@ -39,7 +40,7 @@ function Login(props) {
       )}
 
     return (
-      <div>
+      <div className='loginPage'>
         <h1 className='loginTitle'>Login</h1>
           <form className="loginForm row">
             <div className="col-12 loginInput">

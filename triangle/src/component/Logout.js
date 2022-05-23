@@ -23,7 +23,7 @@ function Logout(props) {
         <div className="settings">                
             <form>
                 
-                <button type="button" onClick={logMeOut} className=" btnApp">Logout</button>
+                <button type="button" onClick={logMeOut} className=" btnApp">Déconnexion</button>
             </form>
         </div>
     )

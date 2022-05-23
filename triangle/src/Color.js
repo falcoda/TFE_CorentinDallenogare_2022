@@ -5,13 +5,14 @@ import IroColorPicker from "./component/IroColorPicker";
 import ColorChoice from "./component/ColorChoice";
 import Brightness from "./component/Brightness";
 import axios from "axios";
+import { useLocation } from 'react-router-dom'
+import { useState } from "react";
+import Joyride, { ACTIONS, EVENTS, STATUS } from 'react-joyride';
 
-const Color = (auth) => {
-  
-
+const Color = ({auth,stepIndex,run, steps,setStepIndex,setRun}) => {
   const displayColor =(color) => {
     let data = JSON.stringify(color);
- 
+    
     axios({
       method: "POST",
       url:"/api/ChangeColor",
@@ -27,11 +28,35 @@ const Color = (auth) => {
     }).catch(error => console.log(error))
   }
 
+  const handleJoyrideCallback = data => {
+    const { action, index, status, type } = data;
+    console.log(action)
+    if (index === 4 ) {
+      // setStepIndex(index - (action === ACTIONS.PREV ? -1 : 1));
+      console.log(index,"est égal")
+  }
+    if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
+      setStepIndex(index + (action === ACTIONS.PREV ? -1 : 1));
+      console.log(index)
+      
+    }
+    else if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
+      setRun(false);
+      console.log("finitooo")
+
+      // localStorage.setItem('tutorial', true);
+    }
+
+    console.groupCollapsed(type);
+    console.log(data); //eslint-disable-line no-console
+    console.groupEnd();
+  };
+
   return (
     
-      <div>  
+      <div className="homePage">  
+      
         <IroColorPicker
-          
           onColorChange={ (color) => { displayColor(color.hexString) }}
         />
         
