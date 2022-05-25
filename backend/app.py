@@ -19,7 +19,7 @@ from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
                                unset_jwt_cookies, jwt_required, JWTManager
 
 
-app = Flask(__name__)
+app = Flask(__name__,static_folder='build', static_url_path='')
 ORDER = neopixel.GRB
 pixels = neopixel.NeoPixel(
     mode.pixel_pin, mode.num_pixels, brightness=1, auto_write=False, pixel_order=ORDER
@@ -43,7 +43,9 @@ function_mappings = {
 }
 
 
-
+@app.route('/')
+def index():
+    return app.send_static_file('./index.html')
 
 
 
@@ -81,14 +83,14 @@ def refresh_expiring_jwts(response):
         return response
 
 
-@app.route("/logout", methods=["POST"])
+@app.route("/api/logout", methods=["POST"])
 def logout():
     response = jsonify({"msg": "logout successful"})
     unset_jwt_cookies(response)
     return response
 
 
-@app.route('/profile')
+@app.route('/api/profile')
 @jwt_required() #new line
 def my_profile():
     response_body = {
