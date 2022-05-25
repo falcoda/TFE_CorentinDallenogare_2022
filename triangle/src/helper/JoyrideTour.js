@@ -91,7 +91,13 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
         },
         buttonNext: {
           display: 'none',
-        }
+        },
+
+      },
+      locale: { 
+        next: <span>Suivant</span>,
+        back: <span>Précédent</span>,
+        skip: <span>Passer</span>
       },
       target: ".toModePage",
       title: 'Menu',
@@ -293,7 +299,7 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
       content: "Cliquez sur le bouton pour éteindre ou allumer les leds",
       disableOverlayClose: true,
       hideCloseButton: true,
-      placement: 'right',
+      placement: 'top',
       styles: {
         options: {
           zIndex: 10000,
@@ -340,7 +346,7 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
       if(index ===1){
         
           let toScroll= document.getElementsByClassName("choseBrightness")[0].offsetTop
-          window.scrollTo(toScroll, toScroll)
+          // window.scrollTo(toScroll, toScroll)
       }
       if (index ===3 && action !== 'next' ){
           history("/");

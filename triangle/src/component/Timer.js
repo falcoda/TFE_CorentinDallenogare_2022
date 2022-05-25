@@ -49,30 +49,34 @@ const TimeApp = (props) => {
     let data ="";
     if (event === "start"){
       var setDate=new Date();
-      console.log(setDate.getDate())
-      let dateSet =(setDate.getMonth()+1 +"-"+setDate.getDate()+"-"+setDate.getFullYear()+" " );    
-      var date1=new Date(dateSet + value + ":00");   
+      console.log(setDate)
+      let dateSet =(setDate.getMonth()+1 +"/"+setDate.getDate()+"/"+setDate.getFullYear()+" " );  
+      console.log(dateSet+ value,"dateSet")  
+      var date1=new Date(dateSet + value );   
+      console.log(date1,"date1")
       timeStart = new Date();
+      let date2 = 0
       if (value === null || value === "") {
         toast.error('Veuillez entrer une heure');
       }
       else{
-        if(date1.getTime() < timeStart.getTime()){
-          date1 =(date1.setDate(date1.getDate() + 1))
+        
+        if(date1 < timeStart){
+          date2 =(date1.setDate(date1.getDate() + 1))
           localStorage.setItem('date', date1)
-          console.log("add 1 day",date1)
+          console.log("add 1 day",date2)
         }
         else{
-          console.log("no add")
-          date1 = date1.getTime()
-          localStorage.setItem('date', date1)
+          date2 = (date1.setDate(date1.getDate()))
+          localStorage.setItem('date', date2)
+          console.log("no add",Math.abs(date1.getTime()))
         }
         
         toast.success("Minuteur mis à " + value ) 
-        timeStart.setSeconds(timeStart.getSeconds() + 1000);
-        console.log(date1)
-        restart(date1);
-        data = JSON.stringify({"date":date1  });
+        console.log(timeStart.setSeconds(timeStart.getSeconds() + 1000));
+        console.log(date2)
+        restart(date2);
+        data = JSON.stringify({"date":date2  });
         console.log( data, "yes")
       }
     }
@@ -118,8 +122,8 @@ const TimeApp = (props) => {
           <input type={"time"} className="form-control" id="setTime" placeholder='15' onChange={(e) => setValue(e.target.value)}/>
           
           
-          <button onClick={()=>handleSubmit("start")} className="btnApp">Start</button>
-          <button onClick={()=>handleSubmit("stop")} className="btnApp ms-1 me-1">Stop</button>
+          <button onClick={()=>handleSubmit("start")} className="btnApp">Démarrer</button>
+          <button onClick={()=>handleSubmit("stop")} className="btnApp ms-1 me-1">Arreter</button>
         <div>
           <span>{hours}</span>:<span>{minutes}</span>:<span>{seconds}</span>
         </div>

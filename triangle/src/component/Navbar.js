@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import "../css/navbar.css";
 const Navbar = () => {
 
-  
+  // Set the color of the active li navbar
   useEffect(() => {
     if(window.location.pathname ==="/") {
       document.getElementsByClassName("tourColor")[0].classList.add("active");
@@ -11,12 +11,14 @@ const Navbar = () => {
     else if(window.location.pathname ==="/mode") {
       document.getElementsByClassName("toModePage")[0].classList.add("active");
     }
-    else{
-      document.getElementsByClassName("tourShutdown")[0].classList.add("active");
+    else if(window.location.pathname ==="/settings") {
+      document.getElementsByClassName("tourSettings")[0].classList.add("active");
     }
 
     
   }, [])
+
+  // Shut down the leds
   const changeMode = (mode) =>{
     fetch(`/${mode}`,{
         
@@ -31,6 +33,7 @@ const Navbar = () => {
     .catch(error => console.log(error))
 
   } 
+  // Set the color of the active li navbar
   const changeActiveNav = (element) =>{
     console.log(document.getElementsByClassName(element)[0])
     document.getElementsByClassName("active")[0].classList.remove("active");

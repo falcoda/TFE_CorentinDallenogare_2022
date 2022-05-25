@@ -49,11 +49,11 @@ function Mode ({auth,stepIndex,setStepIndex}){
     }, [spacing]);
 
     useEffect(() => {
-        let saveSpeed = JSON.parse(window.localStorage.getItem("speed"))
-        let saveSize = JSON.parse(window.localStorage.getItem("size"))
-        let saveRainbow = JSON.parse(window.localStorage.getItem("rainbow"))
-        let savePeriod = JSON.parse(window.localStorage.getItem("period"))
-        let saveSpacing = JSON.parse(window.localStorage.getItem("spacing"))
+        let saveSpeed = JSON.parse(window.localStorage.getItem("speed"));
+        let saveSize = JSON.parse(window.localStorage.getItem("size"));
+        let saveRainbow = JSON.parse(window.localStorage.getItem("rainbow"));
+        let savePeriod = JSON.parse(window.localStorage.getItem("period"));
+        let saveSpacing = JSON.parse(window.localStorage.getItem("spacing"));
 
         if(saveSpeed !== null){
             setSpeed(saveSpeed);
@@ -72,7 +72,6 @@ function Mode ({auth,stepIndex,setStepIndex}){
         }
         // set the tutorial mode
         if(!localStorage.getItem("tutorial")){
-            console.log("nexModetuto")
             saveMode(['Tutorial','chase'])
         }
         logoSavedModes();
@@ -84,37 +83,34 @@ function Mode ({auth,stepIndex,setStepIndex}){
         try{
             let myModes = window.localStorage.getItem("mode")
             if(myModes !== null){
-                console.log(myModes)
                 var myArray = myModes.split("/");
-                console.log(myArray)
                 if (myModes !=="/"){
-                    myArray.pop()
+                    myArray.pop();
                     var res = [];
                     console.log(myArray)
                     for(var i = 0; i < myArray.length; i++){
-                        res.push(myArray[i].split(","))
+                        res.push(myArray[i].split(","));
                     }
 
-                    console.log(res)
-                    console.log(myArray )
-                    setModeList(res)
+                    console.log(res);
+                    console.log(myArray );
+                    setModeList(res);
                 }
             }
             else{
-                console.log("no modes saved")
-                setModeList([])
+                setModeList([]);
             }
             
         }
         catch(error){
-            console.log(error)
+            console.log(error);
         }
         
     }
 
     const runMyMode= (size,speed,mode,spacing,period,rainbow) =>{
         if (rainbow === 'true'){
-            rainbow = true
+            rainbow = true;
         }
         rainbow = false
         let data = JSON.stringify({"length":Number(size),"speed":Number(speed),"mode":mode,"spacing":Number(spacing),"period":Number(period),"rainbow":rainbow});
@@ -169,23 +165,16 @@ function Mode ({auth,stepIndex,setStepIndex}){
             
             console.log(data)
             let oldMode = localStorage.getItem("mode");
-            
-            console.log(oldMode)
             if (oldMode === null){
                 localStorage.setItem("mode", data);
-                console.log('est null')
-                document.getElementById("closeNameBtn").click()
+                document.getElementById("closeNameBtn").click();
+                document.getElementsByClassName("nameModeInput")[0].style.borderColor = "black";
                 logoSavedModes();
             }
             else{
                 var myArray = oldMode.split("/");
-                console.log(myArray)
                 let isIn = false;
-                console.log(data.slice(0, -2))
-                console.log(myArray.find(v => data.slice(0, -2).includes(v)))
                 for (var i = 0; i < myArray.length; i++) {
-                    // if()
-                    console.log()
                     if(data.slice(-9,-1) =="Tutorial"){
                         return false;
                     }
@@ -200,9 +189,8 @@ function Mode ({auth,stepIndex,setStepIndex}){
                 else if(!isIn ){
                     toast.success('Mode bien enregistré')
                     let newModes =oldMode+ data;
-                    console.log(newModes)
                     localStorage.setItem("mode", newModes);
-                    document.getElementById("closeNameBtn").click()
+                    document.getElementById("closeNameBtn").click();
                     document.getElementsByClassName("nameModeInput")[0].style.borderColor = "black";
                     logoSavedModes();
                 }
@@ -210,8 +198,8 @@ function Mode ({auth,stepIndex,setStepIndex}){
     
         }
         else{
-            console.log("no name")
-            document.getElementsByClassName("nameModeInput")[0].setAttribute('placeholder', 'Please enter a name');
+            toast.error("Nom invalide");
+            document.getElementsByClassName("nameModeInput")[0].setAttribute('placeholder', 'Nom invalide');
             document.getElementsByClassName("nameModeInput")[0].style.borderColor = "red";
             document.getElementsByClassName("nameModeInput")[0].classList.add('invalidName');
         }
@@ -345,7 +333,7 @@ function Mode ({auth,stepIndex,setStepIndex}){
                         <div className="modal-content ">
                             <div className="modal-header">
                                 <div className='col-10 modalTitle'>
-                                    Save {newMode[0]} Mode
+                                    Sauvegarder le mode : {newMode[0]} 
                                 </div>
                                 <div className='col-2 d-flex justify-content-end '>
                                     <button type="button" className="btn-close " id="closeNameBtn" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -353,8 +341,8 @@ function Mode ({auth,stepIndex,setStepIndex}){
                             </div>
                             <div className="modal-body row d-flex justify-content-center">  
                                 <div className="mb-3 ms-1 me-1">
-                                    <label htmlFor="setModeName" className="form-label" >Mode name</label>
-                                    <input  className="form-control nameModeInput" id="setModeName" placeholder='Mode Name' onChange={(e) =>setNewModeName(e.target.value)} />
+                                    <label htmlFor="setModeName" className="form-label" >Nom du mode</label>
+                                    <input  className="form-control nameModeInput" id="setModeName" placeholder='Nom' onChange={(e) =>setNewModeName(e.target.value)} />
                                 </div> 
                                 <div className='col-12 c d-flex justify-content-center'>
                                     <button  onClick={() => saveMode()} className="btnSetParamMode">Sauvegarder</button>

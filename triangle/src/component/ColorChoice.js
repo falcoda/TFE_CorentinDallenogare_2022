@@ -43,6 +43,7 @@ const ColorChoice = (props) => {
 				toast.success("Couleur modifiée avec succès");
 				console.log(savedColors)
 				localStorage.setItem("savedColors",savedColors);
+				document.getElementsByClassName("buttonEditColor")[0].click();
 			
 			}
 			
