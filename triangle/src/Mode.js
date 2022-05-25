@@ -4,7 +4,8 @@ import { Form  } from 'react-bootstrap';
 import axios from "axios";
 import toast from 'react-hot-toast';
 
-function Mode ({props,stepIndex,setStepIndex}){
+function Mode ({token,stepIndex,setStepIndex}){
+    console.log(token)
     const [speed, setSpeed] = useState(0.01);
     const [size, setSize] = useState(1);
     const [rainbow, setRainbow] = useState(false);
@@ -121,7 +122,7 @@ function Mode ({props,stepIndex,setStepIndex}){
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
-                Authorization: 'Bearer ' + props.token
+                Authorization: 'Bearer ' + token
             }
         }).then((response) => {
             const res =response.data
@@ -140,7 +141,7 @@ function Mode ({props,stepIndex,setStepIndex}){
             headers: {
                 "Accept": "application/json",
                 "Content-Type": "application/json",
-                Authorization: 'Bearer ' + props.token
+                Authorization: 'Bearer ' + token
             }
         }).then((response) => {
             const res =response.data

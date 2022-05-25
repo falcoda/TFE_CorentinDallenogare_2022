@@ -19,8 +19,8 @@ const Navbar = () => {
   }, [])
 
   // Shut down the leds
-  const changeMode = (mode) =>{
-    fetch(`/${mode}`,{
+  const goOff = () =>{
+    fetch(`/api/Off`,{
         
         mode: "no-cors",
         datatype: "json",
@@ -55,7 +55,7 @@ const Navbar = () => {
               <Link className="nav-link" to="/mode"><i className="bi bi-lightbulb navItem logoBootstrap"></i></Link>
             </li>
             <li className="nav-item col-3 tourShutdown " onClick={() =>changeActiveNav("tourShutdown")}>
-              <a className="nav-link" onClick={() => changeMode("off")}><i className="bi bi-power navItem logoBootstrap"></i></a>
+              <a className="nav-link" onClick={() => goOff()}><i className="bi bi-power navItem logoBootstrap"></i></a>
             </li>
             <li className="nav-item col-3 tourSettings" onClick={() =>changeActiveNav("tourSettings")}>
               <Link className="nav-link" to="/settings"><i className="bi bi-sliders navItem logoBootstrap"></i></Link>

@@ -6,7 +6,7 @@ function Logout(props) {
   function logMeOut() {
     axios({
       method: "POST",
-      url:"/api/logout",
+      url:"/api/Logout",
     })
     .then((response) => {
        props.token()

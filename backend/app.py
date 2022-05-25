@@ -83,7 +83,7 @@ def refresh_expiring_jwts(response):
         return response
 
 
-@app.route("/api/logout", methods=["POST"])
+@app.route("/api/Logout", methods=["POST"])
 def logout():
     response = jsonify({"msg": "logout successful"})
     unset_jwt_cookies(response)
@@ -140,7 +140,7 @@ def changeMode():
     return (data)
 
 
-@app.route('/off')
+@app.route('api/Off')
 def setoff():
     if(mode.effectOnRun): 
         mode.powerOff("#000000") 
