@@ -1,23 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom';
 import "../css/navbar.css";
 const Navbar = () => {
 
   
-  function handleClick(e) {
-        e.preventDefault();    
-        console.log('The link was clicked.');  
-        fetch("http://127.0.0.1:5000/",{
-        'methods':'GET',
-        headers: {
-            'Access-Control-Allow-Origin': '*'
-        },
-        mode: 'no-cors'
-        })
-        .then(response => response.json())
-        .then(response => console.log(response))
-        .catch(error => console.log(error));
-  }
+  useEffect(() => {
+    if(window.location.pathname ==="/") {
+      document.getElementsByClassName("tourColor")[0].classList.add("active");
+    }
+    else if(window.location.pathname ==="/mode") {
+      document.getElementsByClassName("toModePage")[0].classList.add("active");
+    }
+    else{
+      document.getElementsByClassName("tourShutdown")[0].classList.add("active");
+    }
+
+    
+  }, [])
   const changeMode = (mode) =>{
     fetch(`/${mode}`,{
         
@@ -31,24 +30,31 @@ const Navbar = () => {
     .then(response => response.json())
     .catch(error => console.log(error))
 
-} 
+  } 
+  const changeActiveNav = (element) =>{
+    console.log(document.getElementsByClassName(element)[0])
+    document.getElementsByClassName("active")[0].classList.remove("active");
+    document.getElementsByClassName(element)[0].classList.add("active");
+    console.log("es")
+   
+  }
   return (
     
     <>
     <div className='fixed-bottom navbarContent' >	
 			<nav className="navbar navbar-expand navbar-light">        
-        <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
-          <ul className="navbar-nav mr-auto  mt-0 row navCol">
-            <li className="nav-item col-3">
+        <div className="collapse navbar-collapse d-flex justify-content-center" id="navbarTogglerDemo03">
+          <ul className="navbar-nav mr-auto  mt-0 row navCol" >
+            <li className="nav-item col-3 tourColor" onClick={() =>changeActiveNav("tourColor")}>
               <Link className="nav-link" to="/"><i className="bi bi-house navItem logoBootstrap"></i></Link>
             </li>
-            <li className="nav-item active toModePage col-3">
+            <li className="nav-item toModePage col-3" onClick={() =>changeActiveNav("toModePage")}>
               <Link className="nav-link" to="/mode"><i className="bi bi-lightbulb navItem logoBootstrap"></i></Link>
             </li>
-            <li className="nav-item col-3 tourShutdown">
+            <li className="nav-item col-3 tourShutdown " onClick={() =>changeActiveNav("tourShutdown")}>
               <a className="nav-link" onClick={() => changeMode("off")}><i className="bi bi-power navItem logoBootstrap"></i></a>
             </li>
-            <li className="nav-item col-3 tourSettings">
+            <li className="nav-item col-3 tourSettings" onClick={() =>changeActiveNav("tourSettings")}>
               <Link className="nav-link" to="/settings"><i className="bi bi-sliders navItem logoBootstrap"></i></Link>
             </li>
             

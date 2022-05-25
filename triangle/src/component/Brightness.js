@@ -26,12 +26,12 @@ const Brightness = (auth) => {
 
   return (
     <>
-      <div className="row containButton rangeSlider sectionHome choseBrightness">
+      <div className="row containButton rangeSlider choseBrightness d-flex justify-content-center">
           <div className="col-2 col-md-4 align-self-stretch" onClick={() =>setBrigthness(0)}>
             <i className="bi bi-brightness-low logoBootstrap"></i>
           </div>
           <div className="col-8 col-md-4 align-self-stretch">           
-              <Form.Range defaultValue={valueBrightness} value={valueBrightness} onChange={(e) =>setBrigthness(e.target.value)}/>
+              <Form.Range  value={valueBrightness} onChange={(e) =>setBrigthness(e.target.value)}/>
           </div>
           <div className="col-2 col-md-4 align-self-stretch" onClick={() =>setBrigthness(100)}>
             <i className="bi bi-brightness-high logoBootstrap"></i>

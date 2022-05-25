@@ -2,16 +2,16 @@
     width: 20rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    background-color: #ffffff !important;
-    border-color: black;
+    background-color: #242527 !important;
+    border-color: white;
     border-radius: 40px;
     text-align: center;
-    color: black !important;
+    color: white !important;
     font-size: 2rem !important;
 }
 
 .inputLogin::placeholder{    
-    color: black !important;
+    color: white !important;
     font-size: 2rem !important;
 }
 
@@ -27,6 +27,7 @@
     background-color: #ffffff;
     border-color: #ffffff;
     margin: 0.5rem;
+    margin-top: 2rem;
     border-radius: 10px;
     font-size: 1.5rem;
     padding: 0.5rem;

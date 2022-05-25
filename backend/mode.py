@@ -2,11 +2,14 @@
 # SPDX-License-Identifier: MIT
 
 import time
+
+from jinja2 import Undefined
 import board
 import neopixel
 import hextorgb
 import json
 import random
+import datetime
 
 from adafruit_led_animation.animation.comet import Comet
 from adafruit_led_animation.animation.rainbowcomet import RainbowComet
@@ -26,10 +29,9 @@ from adafruit_led_animation.color import PURPLE, JADE, AMBER
 # Otherwise choose an open pin connected to the Data In of the NeoPixel strip, i.e. board.D1
 pixel_pin = board.D18
 
-# On a Raspberry pi, use this instead, not all pins are supported
-# pixel_pin = board.D18
 
-# The number of NeoPixels
+
+# Define the number of NeoPixels
 path='./config/config.json'
 with open(path, 'r+',encoding='utf8') as f:
     data = json.load(f)
@@ -37,22 +39,24 @@ with open(path, 'r+',encoding='utf8') as f:
     num_pixels = data['number']*30
 numTriangle = int(num_pixels/30)
 ORDER = neopixel.GRB
+
+# Declare the states of the animation
 status = True
 effectOnRun = False
+
+# Declare the brightness of the pixels
 brightness =1
+
+# Declare the color variable
+allColor =(255,255,255)
+
+# Declare the stop time variable
+stopTime= Undefined
+
 pixels = neopixel.NeoPixel(
     pixel_pin, num_pixels, brightness=brightness, auto_write=False, pixel_order=ORDER
 )
-allColor =(255,255,255)
-# def powerOff():
-#     pixels.fill((0, 0, 0))
-#     pixels.show()
-#     return('a')
 
-# def powerOnn():
-#     pixels.fill((0, 0, 0))
-#     pixels.show()
-#     return('a')
 
 
 """
@@ -91,7 +95,16 @@ def updatePixels(count):
         pixels.show()
         time.sleep(0.2)
 
-
+def timeChecker() :
+    currentTime=(datetime.datetime.now())
+    global stopTime
+    if stopTime != Undefined:
+        if(currentTime<stopTime):
+            return True
+        else :
+            return False
+    elif stopTime == Undefined:
+        return True
 
 def color(color):
    # print(color)

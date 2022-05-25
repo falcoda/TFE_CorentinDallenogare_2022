@@ -17,3 +17,19 @@
 .tourShutdown, .toModePage,.tourShutdown, .toModePage{
     margin-left: auto;
 }
+.tourShutdown{
+    cursor: pointer;
+}
+
+.active{
+    background-color: white;
+    border-radius: 5px;
+    color: black !important;
+}
+.active .logoBootstrap {
+    color : black !important;
+}
+.navbarContent .row{
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}

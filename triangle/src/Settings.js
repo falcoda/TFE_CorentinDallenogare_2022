@@ -58,6 +58,13 @@ function Settings (props){
 
         }
     }, [])
+
+    const startTuto = () => {
+        localStorage.removeItem('tutorial');
+        history('/')
+    }
+
+
     return (
         
         <div className="parametre">
@@ -78,14 +85,13 @@ function Settings (props){
             <div className="settings">
                 <form>
                     <div className="mb-3 ms-1 me-1">
-                        <label htmlFor="name" className="form-label" >Nom</label>
-                        <input  className="form-control" id="name" placeholder='Marc'/>
+                        Tutoriel
                     </div> 
-                    <button type="submit" className="btnApp">Valider</button>
+                    <button  className="btnApp" onClick={startTuto}>Redémarrer le tutoriel</button>
                 </form>
             </div>
             <div className="settings">
-                <TimerApp></TimerApp>            
+                <TimerApp token={props.token}></TimerApp>            
             </div>
             <Toaster
               position="top-center"

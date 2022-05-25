@@ -17,7 +17,6 @@
 
 .parametre{
     margin-bottom: 3rem;
-    height: 70rem
 }
 
 .form-control{
@@ -25,4 +24,12 @@
     width: 80%;
     margin-left: auto;
     margin-right: auto;
+}
+
+@media only screen and (min-width: 750px){
+    .settings{
+        width: 30rem;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }

@@ -2,6 +2,7 @@
   text-align: center;
   background-color: #202124; 
   height: 100%;
+  font-family: 'Heebo', sans-serif;
 }
 
 .App-logo {
@@ -22,12 +23,17 @@
 }
 .home {
   padding-bottom: 7rem;
+  font-family: 'Heebo', sans-serif;
   }
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+.row{
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 .App-header {

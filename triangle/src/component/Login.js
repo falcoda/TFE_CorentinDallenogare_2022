@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from "axios";
+import toast from 'react-hot-toast';
 import "../css/login.css"
 
 function Login(props) {
@@ -18,8 +19,10 @@ function Login(props) {
       .then((response) => {
         props.setToken(response.data.access_token)
         props.setAuth(response.data.access_token)
+        toast.success("Connexion réussie")
       }).catch((error) => {
         if (error.response) {
+          toast.error("Erreur d'authentification")
           console.log(error.response)
           console.log(error.response.status)
           console.log(error.response.headers)

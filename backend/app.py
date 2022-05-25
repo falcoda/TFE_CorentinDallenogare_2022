@@ -1,17 +1,20 @@
 from flask import Flask
+from jinja2 import Undefined
 import powerOff
 import changeColors
 import json
 import hextorgb
 import time
 import test
+
 # import saveData
 # import board
 # import neopixel
 # import mode
 # from adafruit_led_animation import helper
 from flask import Flask, request, jsonify
-from datetime import datetime, timedelta, timezone
+from datetime import  timedelta, timezone
+import datetime
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
                                unset_jwt_cookies, jwt_required, JWTManager
 
@@ -64,8 +67,8 @@ def create_token():
 def refresh_expiring_jwts(response):
     try:
         exp_timestamp = get_jwt()["exp"]
-        now = datetime.now(timezone.utc)
-        target_timestamp = datetime.timestamp(now + timedelta(minutes=30))
+        now = datetime.datetime.now(timezone.utc)
+        target_timestamp = datetime.datetime.timestamp(now + timedelta(minutes=30))
         if target_timestamp > exp_timestamp:
             access_token = create_access_token(identity=get_jwt_identity())
             data = response.get_json()
@@ -83,11 +86,6 @@ def logout():
     response = jsonify({"msg": "logout successful"})
     unset_jwt_cookies(response)
     return response
-
-@app.route('/')
-def hello_world():
-    powerOff.shutdown()
-    return 'Hello, World!'
 
 
 @app.route('/profile')
@@ -140,19 +138,6 @@ def my_profile():
 #             print('Invalid function, try again.')   
 #     # test.mode(data["speed"],data["length"])
 #     return (data)
-
-
-
-
-# @app.route('/colorWipe')
-# def colorWipe():
-    
-#     mode.status = False
-#     while mode.status :
-#         mode.colorWipe(0.1)
-    
-#     return ('yes')
-
 
 
 # @app.route('/off')
@@ -211,10 +196,41 @@ def my_profile():
 #     # mode.num_pixels=int(data['number'])*30
 #     return (data)
 
-@app.route('/test')
+@app.route('/api/Timer', methods=["POST"])
 @jwt_required()
-def test():
- 
-    return ('yes')
+def timer():
+    """
+    Update the timer
+    Call this api passing a json with the time
+    ---
+    author: Corentin Dallenogare <corentda@hotmail.fr>  
+
+    """
+    data = request.get_json(force = True)
+    print(data)
+    # if data['date'] =="undefined":
+    #     mode.stopTime = Undefined
+    
+    # else:
+    #     mode.stopTime =(datetime.datetime.fromtimestamp(data['date'] / 1000.0))
+    
+    
+    return (data)
+
+
+@app.route('/api/GetTimer', methods=["POST"])
+@jwt_required()
+def getTimer():
+    """
+    get the timer value 
+    ---
+    author: Corentin Dallenogare <corentda@hotmail.fr>  
+
+    """
+    return("undefined")
+    # if mode.stopTime == Undefined:
+    #     return ("undefined")
+    # else: 
+    #     return (mode.stopTime)
 if __name__ == '__main__':
     app.run(debug=True)

@@ -2,11 +2,9 @@ import React, { useState,useEffect } from 'react';
 import "./css/mode.css"
 import { Form  } from 'react-bootstrap';
 import axios from "axios";
-import toast, { Toaster } from 'react-hot-toast';
-import Joyride, { ACTIONS, EVENTS, STATUS } from 'react-joyride';
-import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
 
-function Mode ({auth,stepIndex,run, steps,setStepIndex,setRun}){
+function Mode ({auth,stepIndex,setStepIndex}){
     const [speed, setSpeed] = useState(0.01);
     const [size, setSize] = useState(1);
     const [rainbow, setRainbow] = useState(false);
@@ -32,8 +30,6 @@ function Mode ({auth,stepIndex,run, steps,setStepIndex,setRun}){
 
 
     ]);
-    const history = useNavigate()
-    const [counter, setCounter] = useState(0);
     
     // useEffect for setting the properties of the mode
     useEffect(() => {
@@ -74,9 +70,8 @@ function Mode ({auth,stepIndex,run, steps,setStepIndex,setRun}){
         if(saveSpacing !== null){
             setSpacing(saveSpacing);
         }
-        if(localStorage.getItem("tutorial") !== true){
-            // setNewModeName('Tutorial')
-            // setNewMode(['chase','chase'])
+        // set the tutorial mode
+        if(!localStorage.getItem("tutorial")){
             console.log("nexModetuto")
             saveMode(['Tutorial','chase'])
         }
@@ -93,11 +88,6 @@ function Mode ({auth,stepIndex,run, steps,setStepIndex,setRun}){
                 var myArray = myModes.split("/");
                 console.log(myArray)
                 if (myModes !=="/"){
-                    // for (var i = 0; i < myArray.length; i++) {
-                    //     console.log(myArray[i].split(","))
-                    //     myArray[i] = myArray[i].split(",")
-                        
-                    // }
                     myArray.pop()
                     var res = [];
                     console.log(myArray)
@@ -165,7 +155,7 @@ function Mode ({auth,stepIndex,run, steps,setStepIndex,setRun}){
     } 
     const saveMode = (demoMode) =>{
 
-        if((newModeName !== ""  && (/^[A-Za-z1-9-'\s]+$/.test(newModeName)))||demoMode[0] === 'Tutorial'){
+        if((newModeName !== ""  && (/^[A-Za-z1-9-'\s]+$/.test(newModeName)))||demoMode !== undefined){
             let data ="";
             // let data = JSON.stringify({"length":size,"speed":speed,"mode":newMode,"spacing":spacing,"period":period,"rainbow":rainbow,"name":newModeName});
             console.log(demoMode)
@@ -185,6 +175,7 @@ function Mode ({auth,stepIndex,run, steps,setStepIndex,setRun}){
                 localStorage.setItem("mode", data);
                 console.log('est null')
                 document.getElementById("closeNameBtn").click()
+                logoSavedModes();
             }
             else{
                 var myArray = oldMode.split("/");
@@ -203,7 +194,8 @@ function Mode ({auth,stepIndex,run, steps,setStepIndex,setRun}){
                     }
                 }
                 if (isIn ){
-                    toast.error("Ce mode existe déjà")
+                    toast.error("Ce mode existe déjà");
+                    document.getElementsByClassName("nameModeInput")[0].style.borderColor = "red";
                 }
                 else if(!isIn ){
                     toast.success('Mode bien enregistré')
@@ -211,6 +203,7 @@ function Mode ({auth,stepIndex,run, steps,setStepIndex,setRun}){
                     console.log(newModes)
                     localStorage.setItem("mode", newModes);
                     document.getElementById("closeNameBtn").click()
+                    document.getElementsByClassName("nameModeInput")[0].style.borderColor = "black";
                     logoSavedModes();
                 }
             }
@@ -222,22 +215,6 @@ function Mode ({auth,stepIndex,run, steps,setStepIndex,setRun}){
             document.getElementsByClassName("nameModeInput")[0].style.borderColor = "red";
             document.getElementsByClassName("nameModeInput")[0].classList.add('invalidName');
         }
-        // try{
-        //     let myModes = window.localStorage.getItem("mode")
-        //     console.log(myModes)
-        //     var myArray = myModes.split("/");
-        //     console.log(myArray)
-        //     for (var i = 0; i < myArray.length; i++) {
-        //         myArray[i] = myArray[i].split(",")
-        //     }
-        //     myArray.pop()
-        //     console.log(myArray )
-        
-        //     setModeList(myArray)
-        // }
-        // catch(error){
-        //     console.log(error)
-        // }
     } 
 
     const removeMode = (mode) =>{
@@ -271,81 +248,10 @@ function Mode ({auth,stepIndex,run, steps,setStepIndex,setRun}){
     const handleChange=(e) =>{
         let isChecked = e.target.checked;
         setRainbow(isChecked);
-        // do whatever you want with isChecked value
       }
 
 
-    useState(() => {
-        console.log(counter)
-
-    }, [counter])
-     
-    //   const handleJoyrideCallback = data => {
-    //       console.log(stepIndex)
-    //       const { action, index, status, type } = data;
-          
-        
-    //     // if (stepIndex ===4){
-    //     //     history("/");
-    //     //     // setStepIndex(0)
-    //     // }
-        
-    //     if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
-            
-    //       setStepIndex(index + (action === ACTIONS.PREV ? -1 : 1))
-    //     //   console.log("yes")
-    //       setCounter(counter + 1)
-    //     //   console.log(conter)
-    //     //   if(stepIndex === 6){
-           
-    //     // }
-    //         console.log(action, index,ACTIONS.PREV)
-    //         if (index ===4 && action !== 'next' ){
-    //             // document.getElementById("deuxBtnClose").click()
-    //             history("/");
-    //             // setStepIndex(0)
-    //         }
-    //         if (index ===5  && action === 'prev'){
-    //             // document.getElementById("deuxBtnClose").click()
-    //             history("/");
-    //             // setStepIndex(0)
-    //         }
-    //         if (index === 5  && action === 'next') {
-    //             document.getElementById("modalNum1").click()
-    //             console.log("nexxssss")
-    //         }
-    //         if (index === 6 && action === 'prev') {
-    //             document.getElementById("deuxBtnClose").click()
-    //             console.log("yes")
-    //         }
-    //         if (index === 12 && action === 'next') {
-    //             saveMode()
-    //             document.getElementById("deuxBtnClose").click()
-    //             let toScroll= document.getElementsByClassName("separator")[0].offsetTop
-    //             window.scrollTo(toScroll, toScroll)
-    //             console.log("saved")
-    //         }
-    //         if (index === 11 ) {
-    //             setNewModeName('Tutorial')
-    //             setNewMode(['chase','chase'])
-                
-    //         }
-    //         if (index === 13 && action === 'prev') {
-    //             document.getElementById("modalNum1").click()
-    //             let toScroll= document.getElementById("modePageId").offsetTop
-    //             window.scrollTo(toScroll, toScroll)
-    //             console.log("yes")
-    //         }
-    //     }
-    //     else if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {
-    //       setRun(false);
-    //     //   localStorage.setItem('tutorial', true);
-    //     }
-        
-    //     // console.groupCollapsed(type);
-    //     // console.log(data); //eslint-disable-line no-console
-    //     // console.groupEnd();
-    //   };
+    
 
     return (       
         
@@ -484,20 +390,18 @@ function Mode ({auth,stepIndex,run, steps,setStepIndex,setRun}){
                     </div>
                 ))}
             
-
-            {visibility &&
-                <button className="col-12 btnModifiy d-flex justify-content-center" onClick={changeVisibilityDelete}> Sauvegarder</button>
-            }
-            {!visibility &&
-                <button className="col-12 btnModifiy d-flex justify-content-center" onClick={changeVisibilityDelete}> Supprimer</button>
-            }
+            <div className="col-12 ">
+                {visibility &&
+                    <button className="col-12 btnModifiy d-flex justify-content-center" onClick={changeVisibilityDelete}> Sauvegarder</button>
+                }
+                {!visibility &&
+                    <button className="col-12 btnModifiy d-flex justify-content-center" onClick={changeVisibilityDelete}> Supprimer</button>
+                }
+            </div>
             </>
         }
         </div>
-        <Toaster
-        position="top-center"
-        reverseOrder={false}
-        />
+        
         
     </div>
     )
