@@ -109,6 +109,11 @@ def timeChecker() :
     elif stopTime == Undefined:
         return True
 
+def adaptSpeed(speed, maxSpeed): 
+    return maxSpeed/1*speed
+
+
+# Modes functions
 def color(color):
    # print(color)
     global status
@@ -145,48 +150,45 @@ def wheel(pos):
     return (r, g, b) if ORDER in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
 
 
-def rainbowWheelOne(speed,size,spacing,period,map_1,rainbow):
-    """Draw rainbow that fades across all pixels at the same time.
 
-    Keyword arguments:
-    speed -- how fast to fade the rainbow, in seconds
-    """
-    speed = (0.007*numTriangle) -numTriangle*(adaptSpeed(speed, 0.007))
-    global status
-    while status:
-        for j in range(255):
-            if(status):
-                for i in range(num_pixels):
-                    pixel_index = (i * 256 // num_pixels) + j
-                    pixels[i] = wheel(pixel_index & 255)
-                
-                pixels.show()
-                time.sleep(speed)
-    if status ==False :
-        pixels.fill((0,0,0))
-        pixels.show()
 
-def rainbowWheelAll(speed,size,spacing,period,map_1,rainbow):
+def rainbowWheel(speed,size,spacing,period,map_1,rainbow,onAll):
     """
     Draw rainbow that fades across all triangles at the same time.
 
     Keyword arguments:
     speed -- how fast to fade the rainbow, in seconds
     """
-    speed = (adaptSpeed(speed, 0.007))
-    global status
-    while status:        
-        for j in range(255):
-            if status :
-                for i in range(numTriangle):
-                    for k in range (30):
-                        pixel_index = (((k)+i*k) *255 //30) + j
-                        pixels[i*30+k] = wheel(pixel_index & 255)
-                
-                pixels.show()
-                time.sleep(0.007-speed)
+    if (onAll):
+        speed = (adaptSpeed(speed, 0.007))
+        global status
+        while status:        
+            for j in range(255):
+                if status :
+                    for i in range(numTriangle):
+                        for k in range (30):
+                            pixel_index = (((k)+i*k) *255 //30) + j
+                            pixels[i*30+k] = wheel(pixel_index & 255)
+                    
+                    pixels.show()
+                    time.sleep(0.007-speed)
+    else :
+        speed = (0.007*numTriangle) -numTriangle*(adaptSpeed(speed, 0.007))
+        global status
+        while status:
+            for j in range(255):
+                if(status):
+                    for i in range(num_pixels):
+                        pixel_index = (i * 256 // num_pixels) + j
+                        pixels[i] = wheel(pixel_index & 255)
+                    
+                    pixels.show()
+                    time.sleep(speed)
+        if status ==False :
+            pixels.fill((0,0,0))
+            pixels.show()
 
-def colorWipe( speed,size,spacing,period,map_1,rainbow) :
+def colorWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     global status
     speed = adaptSpeed(speed, 0.1)
@@ -203,7 +205,7 @@ def colorWipe( speed,size,spacing,period,map_1,rainbow) :
                 time.sleep(0.1- speed)
               
   
-def cometAllSameTime( speed,size,spacing,period,map_1,rainbow) :
+def cometAllSameTime( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     speed = adaptSpeed(speed, 0.1)
     print(num_pixels)
@@ -224,7 +226,7 @@ def cometAllSameTime( speed,size,spacing,period,map_1,rainbow) :
    
         
 
-def randomEffects(speed,size,spacing,period,map_1,rainbow) :
+def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     global status
     global numTriangle
@@ -278,7 +280,7 @@ def randomEffects(speed,size,spacing,period,map_1,rainbow) :
         group.animate()
     
 
-def colorWipe2( speed,size,spacing,period,map_1,rainbow) :
+def colorWipe2( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     speed = adaptSpeed(speed, 0.1)
     while status:
@@ -292,49 +294,85 @@ def colorWipe2( speed,size,spacing,period,map_1,rainbow) :
                 time.sleep(0.1-speed)
 
 
-def chase( speed,size,spacing,period,map_1,rainbow) :
+def chase( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     global status
     status =False
     speed = adaptSpeed(speed, 0.2)
     print(speed)
-    if (rainbow == True):
-        status = True
-        rainbowChase= RainbowChase(map_1, speed=0.2-speed, size=size, spacing=spacing, step=round(period)+10)
-        group1 = AnimationSequence(rainbowChase)
-        while status:
-            group1.animate()
+    if (onAll== False):
+        if (rainbow == True):
+            status = True
+            rainbowChase= RainbowChase(map_1, speed=0.2-speed, size=size, spacing=spacing, step=round(period)+10)
+            group1 = AnimationSequence(rainbowChase)
+            while status:
+                group1.animate()
+        else :
+            status = True
+            chase = Chase(map_1, speed=0.2-speed ,size=size, spacing=spacing, color=allColor)
+            group1 = AnimationSequence(chase)
+            while status:
+                group1.color = allColor
+                group1.animate()
+
     else :
-        status = True
-        chase = Chase(map_1, speed=0.2-speed ,size=size, spacing=spacing, color=allColor)
-        group1 = AnimationSequence(chase)
+        global numTriangle
+        the_animations = []
+        for i in range(0,numTriangle) :
+            maps=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)  
+            if(rainbow==False):
+                chase = Chase(maps, speed=0.2-speed ,size=size, spacing=spacing, color=allColor)
+                the_animations.append(chase)
+                
+            else : 
+                rainbowChase= RainbowChase(maps, speed=0.2-speed, size=size, spacing=spacing, step=round(period)+10)
+                the_animations.append(rainbowChase)
+
+        group = AnimationGroup(*the_animations)
         while status:
-            group1.color = allColor
-            group1.animate()
+            group.animate()
     
 
-def comet( speed,size,spacing,period,map_1,rainbow) :
+def comet( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     print(size)
     speed = adaptSpeed(speed, 0.1)
     if(size ==1):
         size +=1
-    if(rainbow==False):
-        
-        comet = Comet(map_1, speed=(0.1-speed), color=(allColor), tail_length=round(size), bounce=False,ring=True)
-        group1 = AnimationSequence(comet)
+    if (onAll== False):
+        if(rainbow==False):
+            
+            comet = Comet(map_1, speed=(0.1-speed), color=(allColor), tail_length=round(size), bounce=False,ring=True)
+            group1 = AnimationSequence(comet)
+            while status:
+                group1.color = allColor
+                group1.animate()
+        else : 
+            rainbowCommet= RainbowComet(map_1, speed=(0.1-speed), tail_length=size, bounce=True)
+            group1 = AnimationSequence(rainbowCommet)
+            while status:
+                group1.animate()
+    
+    else :
+        global numTriangle
+        the_animations = []
+        for i in range(0,numTriangle) :
+            maps=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)  
+            if(rainbow==False):
+                comet = Comet(maps, speed=(0.1-speed), color=(allColor), tail_length=round(size), bounce=False,ring=True)
+                the_animations.append(comet)
+                
+            else : 
+                rainbowCommet= RainbowComet(maps, speed=(0.1-speed), tail_length=size, bounce=True)
+                the_animations.append(rainbowCommet)
+
+        group = AnimationGroup(*the_animations)
         while status:
-            group1.color = allColor
-            group1.animate()
-    else : 
-        rainbowCommet= RainbowComet(map_1, speed=(0.1-speed), tail_length=size, bounce=True)
-        group1 = AnimationSequence(rainbowCommet)
-        while status:
-            group1.animate()
+            group.animate()
 
 
 
-def rainbow(speed,size,spacing,period,map_1,rainbow) :
+def rainbow(speed,size,spacing,period,map_1,rainbow,onAll) :
     """
     The classic rainbow color wheel.
     :param pixel_object: The initialised LED object.
@@ -349,37 +387,26 @@ def rainbow(speed,size,spacing,period,map_1,rainbow) :
     print(speed)
     speed = adaptSpeed(speed, 0.3)
     period =int(period+1/2)
-    rainbow= Rainbow(map_1, speed=0.3-speed, period=period)
-    group1 = AnimationSequence(rainbow)
-    
-    while status:
-        group1.animate()
-
-def twoTriangle( speed,size,spacing,period,map_1,rainbow) :
-    global allColor
-    map1 = helper.PixelMap(pixels, [(x,) for x in range(0,30)], individual_pixels=True)
-    map2 = helper.PixelMap(pixels, [(x,) for x in range(31,60)], individual_pixels=True)
-    rainbow= Rainbow(map2, speed=speed, period=period)
-    rainbow2= Rainbow(map1, speed=speed, period=period)
-    group1 = AnimationSequence(rainbow)
-    group2 = AnimationSequence(rainbow2)
-    
-    while status:
-        group1.animate()
-   
-        group2.animate()
-
-
-
-def rainbowChase( speed,size,spacing,period,map_1,rainbow) :
-    global allColor
-    rainbowChase= RainbowChase(map_1, speed=speed, size=size, spacing=spacing, step=8)
-    group1 = AnimationSequence(rainbowChase)
-    while status:
+    if (onAll== False):
+        rainbow= Rainbow(map_1, speed=0.3-speed, period=period)
+        group1 = AnimationSequence(rainbow)
         
-        group1.animate()
+        while status:
+            group1.animate()
+    else :
+        global numTriangle
+        the_animations = []
+        for i in range(0,numTriangle) :
+            maps=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)  
+            rainbow= Rainbow(maps, speed=0.3-speed, period=period)
+            the_animations.append(rainbow)
 
-def blink( speed,size,spacing,period,map_1,rainbow) :
+        group = AnimationGroup(*the_animations)
+        while status:
+            group.animate()
+
+
+def blink( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     if(speed ==1):
         speed -=0.02
@@ -389,7 +416,7 @@ def blink( speed,size,spacing,period,map_1,rainbow) :
         group1.color = allColor
         group1.animate()
 
-def solid( speed,size,spacing,period,map_1,rainbow) :
+def solid( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     solid= Solid(map_1, color=allColor)
     group1 = AnimationSequence(solid)
@@ -397,15 +424,30 @@ def solid( speed,size,spacing,period,map_1,rainbow) :
         group1.color = allColor
         group1.animate()
 
-def colorCycle( speed,size,spacing,period,map_1,rainbow) :
+def colorCycle( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     speed = adaptSpeed(speed, 1)
-    colorcycle= ColorCycle(map_1, speed=1-speed)
-    group1 = AnimationSequence(colorcycle)
-    while status:
-        group1.animate()
+    if(onAll):
+        colorcycle= ColorCycle(map_1, speed=1-speed)
+        group1 = AnimationSequence(colorcycle)
+        while status:
+            group1.animate()
+    
+    else :
+        global numTriangle
+        the_animations = []
+        color = (0,0,0)
+        for i in range(0,numTriangle) :
+            maps=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)         
+        
+            colorcycle= ColorCycle(maps, speed=1-speed,color=wheel(round(255/i)))
+            the_animations.append(colorcycle)
 
-def pulse( speed,size,spacing,period,map_1,rainbow) :
+        group = AnimationGroup(*the_animations)
+        while status:
+            group.animate()
+
+def pulse( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     speed=adaptSpeed(speed, 1)
     print(speed)
@@ -415,32 +457,64 @@ def pulse( speed,size,spacing,period,map_1,rainbow) :
         group1.color = allColor
         group1.animate()
 
-def sparklePulse( speed,size,spacing,period,map_1,rainbow) :
+def sparklePulse( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     speed=adaptSpeed(speed, 0.2)
-    sparkle= SparklePulse(map_1, speed=0.1-speed, color=allColor, period=period)
-    group1 = AnimationSequence(sparkle)
-    while status:
-        group1.color = allColor
-        group1.animate()
-
-def sparkle( speed,size,spacing,period,map_1,rainbow) :
-    global allColor
-    speed=adaptSpeed(speed, 0.2)
-    print(rainbow)
-    if (rainbow == False):
-        sparkle= Sparkle(map_1, speed=0.1-speed, color=allColor,num_sparkles=5)
+    if (onAll == False):
+        sparkle= SparklePulse(map_1, speed=0.1-speed, color=allColor, period=period)
         group1 = AnimationSequence(sparkle)
         while status:
             group1.color = allColor
             group1.animate()
     else :
-        print("rainboooow")
-        sparkle= RainbowSparkle(map_1, speed=0.1-speed, period = period, step =1)
-        group1 = AnimationSequence(sparkle)
-        while status:
-            group1.color = allColor
-            group1.animate()
+        global numTriangle
+        the_animations = []
+        for i in range(0,numTriangle) :
+            maps=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)   
+            sparkle= SparklePulse(map_1, speed=0.1-speed, color=allColor, period=period)
+            the_animations.append(sparkle)
 
-def adaptSpeed(speed, maxSpeed): 
-    return maxSpeed/1*speed
+        group = AnimationGroup(*the_animations)
+        while status:
+            for i in range(0,numTriangle):
+                the_animations[i].color = allColor
+            group.animate()
+
+def sparkle( speed,size,spacing,period,map_1,rainbow,onAll) :
+    global allColor
+    speed=adaptSpeed(speed, 0.2)
+    print(rainbow)
+    if (onAll == False):
+        if (rainbow == False):
+            sparkle= Sparkle(map_1, speed=0.1-speed, color=allColor,num_sparkles=5)
+            group1 = AnimationSequence(sparkle)
+            while status:
+                group1.color = allColor
+                group1.animate()
+        else :
+            sparkle= RainbowSparkle(map_1, speed=0.1-speed, period = period, step =1)
+            group1 = AnimationSequence(sparkle)
+            while status:
+                group1.color = allColor
+                group1.animate()
+    else :
+        global numTriangle
+        the_animations = []
+        for i in range(0,numTriangle) :
+            maps=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)         
+            if (rainbow == False):
+                sparkle= Sparkle(maps, speed=0.1-speed, color=allColor,num_sparkles=5)  
+                the_animations.append(sparkle)
+            else:
+                sparkle= RainbowSparkle(maps, speed=0.1-speed, period = period, step =1)
+                the_animations.append(sparkle)
+
+        group = AnimationGroup(*the_animations)
+        while status:
+            for i in range(0,numTriangle):
+                try:
+                    the_animations[i].color = allColor
+                except :
+                    pass
+            group.animate()
+

@@ -7,11 +7,11 @@ import hextorgb
 import time
 import test
 
-import saveData
-import board
-import neopixel
-import mode
-from adafruit_led_animation import helper
+# import saveData
+# import board
+# import neopixel
+# import mode
+# from adafruit_led_animation import helper
 from flask import Flask, request, jsonify
 from datetime import  timedelta, timezone
 import datetime
@@ -20,30 +20,28 @@ from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
 
 
 app = Flask(__name__,static_folder='build', static_url_path='')
-ORDER = neopixel.GRB
-pixels = neopixel.NeoPixel(
-    mode.pixel_pin, mode.num_pixels, brightness=1, auto_write=False, pixel_order=ORDER
-)
-function_mappings = {
-    'rainbowWheel': mode.rainbowWheelOne,
-    'rainbowWheelAll': mode.rainbowWheelAll,# 
-    'color': mode.color,
-    'colorWipe': mode.colorWipe,
-    'rainbowChase': mode.rainbowChase,
-    'cometAllSameTime': mode.cometAllSameTime,
-    'randomEffects': mode.randomEffects,# 
-    'colorWipe2': mode.colorWipe2,
-    'chase': mode.chase,
-    'comet': mode.comet,
-    'rainbow': mode.rainbow,
-    'blink': mode.blink,
-    'solid': mode.solid,
-    'colorCycle': mode.colorCycle,
-    'pulse': mode.pulse,
-    'sparklePulse': mode.sparklePulse,
-    'sparkle': mode.sparkle,
+# ORDER = neopixel.GRB
+# pixels = neopixel.NeoPixel(
+#     mode.pixel_pin, mode.num_pixels, brightness=1, auto_write=False, pixel_order=ORDER
+# )
+# function_mappings = {
+#     'rainbowWheel': mode.rainbowWheel,
+#     'color': mode.color,
+#     'colorWipe': mode.colorWipe,
+#     'cometAllSameTime': mode.cometAllSameTime,
+#     'randomEffects': mode.randomEffects,# 
+#     'colorWipe2': mode.colorWipe2,
+#     'chase': mode.chase,
+#     'comet': mode.comet,
+#     'rainbow': mode.rainbow,
+#     'blink': mode.blink,
+#     'solid': mode.solid,
+#     'colorCycle': mode.colorCycle,
+#     'pulse': mode.pulse,
+#     'sparklePulse': mode.sparklePulse,
+#     'sparkle': mode.sparkle,
 
-}
+# }
 
 
 @app.route('/')
@@ -104,136 +102,136 @@ def my_profile():
     return response_body
 
 
-@app.route('/api/ChangeColor', methods=["POST"])
-@jwt_required()
-def changeColor():
-    data = request.get_json(force = True)
-    print(data)
-    mode.allColor=(hextorgb.hex_to_rgb(data))
-    if(mode.effectOnRun ==False):
-        mode.color(data)
+# @app.route('/api/ChangeColor', methods=["POST"])
+# @jwt_required()
+# def changeColor():
+#     data = request.get_json(force = True)
+#     print(data)
+#     mode.allColor=(hextorgb.hex_to_rgb(data))
+#     if(mode.effectOnRun ==False):
+#         mode.color(data)
     
-    return (data)
+#     return (data)
 
 @app.route('/api/Mode', methods=["POST"])
 @jwt_required()
 def changeMode():
     
-    mode.status = False
+    # mode.status = False
     data = request.get_json(force = True)
     print(data)
     time.sleep(0.1)
-    modes=data['mode']
-    print(mode)
-    mode.pixels.fill(hextorgb.hex_to_rgb("#000000"))
-    mode.pixels.show()
-    try:
-        print("yes")
-        print(function_mappings[modes])
-        print(mode.num_pixels)
+    # modes=data['mode']
+    # print(mode)
+    # mode.pixels.fill(hextorgb.hex_to_rgb("#000000"))
+    # mode.pixels.show()
+    # try:
+    #     print("yes")
+    #     print(function_mappings[modes])
+    #     print(mode.num_pixels)
         
-        mode.effectOnRun = True
-        map1 = helper.PixelMap(mode.pixels, [(x,) for x in range(0,mode.num_pixels)], individual_pixels=True)
-       # mode.allColor=(255,255,255)
-        mode.status = True
-        function_mappings[modes](float(data["speed"]),int(data["length"]),int(data["spacing"]),int(data["period"]),map1,data["rainbow"] )
-    except KeyError:
-            print('Invalid function, try again.')   
-    # test.mode(data["speed"],data["length"])
+    #     mode.effectOnRun = True
+    #     map1 = helper.PixelMap(mode.pixels, [(x,) for x in range(0,mode.num_pixels)], individual_pixels=True)
+    #    # mode.allColor=(255,255,255)
+    #     mode.status = True
+    #     function_mappings[modes](float(data["speed"]),int(data["length"]),int(data["spacing"]),int(data["period"]),map1,data["rainbow"] )
+    # except KeyError:
+    #         print('Invalid function, try again.')   
+    # # test.mode(data["speed"],data["length"])
     return (data)
 
 
-@app.route('/api/Off')
-def setoff():
-    if(mode.effectOnRun): 
-        mode.powerOff("#000000") 
-        mode.status = False
-        mode.effectOnRun = False
-   # mode.status = False
-    elif(mode.status):
-        mode.status = False
-        mode.powerOff("#000000") 
+# @app.route('/api/Off')
+# def setoff():
+#     if(mode.effectOnRun): 
+#         mode.powerOff("#000000") 
+#         mode.status = False
+#         mode.effectOnRun = False
+#    # mode.status = False
+#     elif(mode.status):
+#         mode.status = False
+#         mode.powerOff("#000000") 
         
-    else:
-        mode.status = True
-        mode.powerOff("#ffffff")  
-       # mode.color("#ffffff")
+#     else:
+#         mode.status = True
+#         mode.powerOff("#ffffff")  
+#        # mode.color("#ffffff")
     
-    return ('yes')
+#     return ('yes')
 
 
-@app.route('/api/ChangeNumber', methods=["POST"])
-@jwt_required()
-def changeNumber():
-    """
-    Update the number of pixels 
-    Call this api passing a json with the number of pixels
-    ---
-    author: Corentin Dallenogare <corentda@hotmail.fr>  
+# @app.route('/api/ChangeNumber', methods=["POST"])
+# @jwt_required()
+# def changeNumber():
+#     """
+#     Update the number of pixels 
+#     Call this api passing a json with the number of pixels
+#     ---
+#     author: Corentin Dallenogare <corentda@hotmail.fr>  
 
-    """
-    global num_pixels
-    mode.pixels.fill(hextorgb.hex_to_rgb("#000000"))
-    mode.pixels.show()
-    data = request.get_json(force = True)
-    saveData.saveCount(int(data['number']))
-    num_pixels=int(data['number'])*30
-    print("num", num_pixels)
-    mode.status = False
-    return (data)
+#     """
+#     global num_pixels
+#     mode.pixels.fill(hextorgb.hex_to_rgb("#000000"))
+#     mode.pixels.show()
+#     data = request.get_json(force = True)
+#     saveData.saveCount(int(data['number']))
+#     num_pixels=int(data['number'])*30
+#     print("num", num_pixels)
+#     mode.status = False
+#     return (data)
 
 
-@app.route('/api/ChangeBrightness', methods=["POST"])
-@jwt_required()
-def changeBrightness():
-    """
-    Update the brightness of pixels 
-    Call this api passing a json with the brightness
-    ---
-    author: Corentin Dallenogare <corentda@hotmail.fr>  
+# @app.route('/api/ChangeBrightness', methods=["POST"])
+# @jwt_required()
+# def changeBrightness():
+#     """
+#     Update the brightness of pixels 
+#     Call this api passing a json with the brightness
+#     ---
+#     author: Corentin Dallenogare <corentda@hotmail.fr>  
 
-    """
-    data = request.get_json(force = True)
-    print(data['brightness'])
-    mode.setBrightness(data['brightness'])
-    # mode.num_pixels=int(data['number'])*30
-    return (data)
+#     """
+#     data = request.get_json(force = True)
+#     print(data['brightness'])
+#     mode.setBrightness(data['brightness'])
+#     # mode.num_pixels=int(data['number'])*30
+#     return (data)
 
-@app.route('/api/Timer', methods=["POST"])
-@jwt_required()
-def timer():
-    """
-    Update the timer
-    Call this api passing a json with the time
-    ---
-    author: Corentin Dallenogare <corentda@hotmail.fr>  
+# @app.route('/api/Timer', methods=["POST"])
+# @jwt_required()
+# def timer():
+#     """
+#     Update the timer
+#     Call this api passing a json with the time
+#     ---
+#     author: Corentin Dallenogare <corentda@hotmail.fr>  
 
-    """
-    data = request.get_json(force = True)
-    print(data)
-    if data['date'] =="undefined":
-        mode.stopTime = Undefined
+#     """
+#     data = request.get_json(force = True)
+#     print(data)
+#     if data['date'] =="undefined":
+#         mode.stopTime = Undefined
     
-    else:
-        mode.stopTime =(datetime.datetime.fromtimestamp(data['date'] / 1000.0))
+#     else:
+#         mode.stopTime =(datetime.datetime.fromtimestamp(data['date'] / 1000.0))
     
     
-    return (data)
+#     return (data)
 
 
-@app.route('/api/GetTimer', methods=["POST"])
-@jwt_required()
-def getTimer():
-    """
-    get the timer value 
-    ---
-    author: Corentin Dallenogare <corentda@hotmail.fr>  
+# @app.route('/api/GetTimer', methods=["POST"])
+# @jwt_required()
+# def getTimer():
+#     """
+#     get the timer value 
+#     ---
+#     author: Corentin Dallenogare <corentda@hotmail.fr>  
 
-    """
-    # return("undefined")
-    if mode.stopTime == Undefined:
-        return ("undefined")
-    else: 
-        return (mode.stopTime)
+#     """
+#     # return("undefined")
+#     if mode.stopTime == Undefined:
+#         return ("undefined")
+#     else: 
+#         return (mode.stopTime)
 if __name__ == '__main__':
     app.run(debug=True)

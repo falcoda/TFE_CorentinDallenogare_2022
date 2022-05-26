@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect,useRef } from 'react';
 import "./css/mode.css"
 import { Form  } from 'react-bootstrap';
 import axios from "axios";
@@ -6,59 +6,44 @@ import toast from 'react-hot-toast';
 
 function Mode ({token,stepIndex,setStepIndex}){
     console.log(token)
-    const [speed, setSpeed] = useState(null);
-    const [size, setSize] = useState(null);
-    const [rainbow, setRainbow] = useState(null);
-    const [period, setPeriod] = useState(null);
-    const [spacing, setSpacing] = useState(null);
+    const [speed, setSpeed] = useState(0.01);
+    const [size, setSize] = useState(1);
+    const [rainbow, setRainbow] = useState(false);
+    const [period, setPeriod] = useState(1);
+    const [spacing, setSpacing] = useState(1);
+    const [onAll, setOnAll] = useState(false);
     const [newModeName, setNewModeName] = useState("");
     const [newMode , setNewMode] = useState("");
     const [modeList, setModeList] = useState([]);
     const [visibility, setVisibility] = useState(false);
     const [mode, setModes] = useState([
-        {identifiant:'un', nom : 'Rainbow Wheel',  param:["speed"], logo : "bi-bullseye",mode:"rainbowWheel"},
-        
-        {identifiant:'deux', nom : 'Chase',  param:["speed","size","spacing","rainbow","period"], logo : "bi-shuffle",mode:"chase"},
+        {identifiant:'un', nom : 'Rainbow Wheel',  param:["speed","onAll"], logo : "bi-bullseye",mode:"rainbowWheel"},
+        {identifiant:'deux', nom : 'Chase',  param:["speed","size","spacing","rainbow","period" ,"onAll"], logo : "bi-shuffle",mode:"chase"},
         {identifiant:'trois', nom : 'Comet All SameTime',  param:["speed","size"], logo : "bi-star",mode:"cometAllSameTime"},
         {identifiant:'quatre', nom : 'randomEffects',  param:["speed","size","spacing","rainbow","period"], logo : "bi-qr-code-scan",mode:"randomEffects"},
         {identifiant:'cinq', nom : 'Color Wipe 2',  param:["speed"], logo : "bi-upc-scan",mode:"colorWipe2"},
         {identifiant:'six', nom : 'Color Wipe',  param:["speed","spacing"], logo : "bi-rainbow",mode:"colorWipe"},
-        {identifiant:'sept', nom : 'Comet',  param:["speed","size","rainbow"], logo : "bi-stars",mode:"comet"},
-        {identifiant:'huit', nom : 'Rainbow',  param:["speed","period"], logo : "bi-rainbow",mode:"rainbow"},
+        {identifiant:'sept', nom : 'Comet',  param:["speed","size","rainbow","onAll"], logo : "bi-stars",mode:"comet"},
+        {identifiant:'huit', nom : 'Rainbow',  param:["speed","period","onAll"], logo : "bi-rainbow",mode:"rainbow"},
         {identifiant:'dix', nom : 'Pulse',  param:["speed"], logo : "bi-heart-pulse",mode:"pulse"},
-        {identifiant:'onze', nom : 'Color Cycle',  param:["speed"], logo : "bi-arrow-repeat",mode:"colorCycle"},
+        {identifiant:'onze', nom : 'Color Cycle',  param:["speed","onAll"], logo : "bi-arrow-repeat",mode:"colorCycle"},
         {identifiant:'douze', nom : 'Solid',  param:[], logo : "bi-bricks",mode:"solid"},
         {identifiant:'treize', nom : 'Blink',  param:["speed"], logo : "bi-sun",mode:"blink"},
-        {identifiant:'quatorze', nom : 'Sparkle',  param:["speed","rainbow","period"], logo : "bi-sun",mode:"sparkle"},
-        {identifiant:'quinze', nom : 'Sparkle Pulse',  param:["speed","period"], logo : "bi-sun",mode:"sparklePulse"},
-        {identifiant:'seize', nom : 'Rainbow Wheel all',  param:["speed"], logo : "bi-bullseye",mode:"rainbowWheelAll"},
+        {identifiant:'quatorze', nom : 'Sparkle',  param:["speed","rainbow","period","onAll"], logo : "bi-sun",mode:"sparkle"},
+        {identifiant:'quinze', nom : 'Sparkle Pulse',  param:["speed","period","onAll"], logo : "bi-sun",mode:"sparklePulse"},
 
 
     ]);
     
-    // useEffect for setting the properties of the mode
-    useEffect(() => {
-        window.localStorage.setItem("speed", speed);
-    }, [speed]);
-    useEffect(() => {
-        window.localStorage.setItem("size", size);
-    }, [size]);
-    useEffect(() => {
-        window.localStorage.setItem("rainbow", rainbow);
-    }, [rainbow]);
-    useEffect(() => {
-        window.localStorage.setItem("period", period);
-    }, [period]);
-    useEffect(() => {
-        window.localStorage.setItem("spacing", spacing);
-    }, [spacing]);
-
+    
     useEffect(() => {
         let saveSpeed = JSON.parse(window.localStorage.getItem("speed"));
         let saveSize = JSON.parse(window.localStorage.getItem("size"));
         let saveRainbow = JSON.parse(window.localStorage.getItem("rainbow"));
         let savePeriod = JSON.parse(window.localStorage.getItem("period"));
         let saveSpacing = JSON.parse(window.localStorage.getItem("spacing"));
+        let saveOnAll = JSON.parse(window.localStorage.getItem("onall"));
+
 
         if(saveSpeed !== null){
             setSpeed(saveSpeed);
@@ -76,6 +61,9 @@ function Mode ({token,stepIndex,setStepIndex}){
         }
         if(saveSpacing !== null){
             setSpacing(saveSpacing);
+        }
+        if(saveOnAll !== null){
+            setOnAll(saveOnAll);
         }
         // set the tutorial mode
         if(!localStorage.getItem("tutorial")){
@@ -115,12 +103,12 @@ function Mode ({token,stepIndex,setStepIndex}){
         
     }
 
-    const runMyMode= (size,speed,mode,spacing,period,rainbow) =>{
+    const runMyMode= (size,speed,mode,spacing,onAll,period,rainbow) =>{
         if (rainbow === 'true'){
             rainbow = true;
         }
         rainbow = false
-        let data = JSON.stringify({"length":Number(size),"speed":Number(speed),"mode":mode,"spacing":Number(spacing),"period":Number(period),"rainbow":rainbow});
+        let data = JSON.stringify({"length":Number(size),"speed":Number(speed),"mode":mode,"spacing":Number(spacing),"period":Number(period),"rainbow":rainbow,"onAll":onAll});
         axios({
             method: "POST",
             url:"/api/Mode",
@@ -138,8 +126,15 @@ function Mode ({token,stepIndex,setStepIndex}){
     }
 
     const changeMode = (mode) =>{
+        // Setting the properties of the mode
+        window.localStorage.setItem("speed", speed);
+        window.localStorage.setItem("size", size);
+        window.localStorage.setItem("rainbow", rainbow);
+        window.localStorage.setItem("period", period);
+        window.localStorage.setItem("spacing", spacing);
+        window.localStorage.setItem("onall", onAll);
         console.log(mode)
-        let data = JSON.stringify({"length":size,"speed":speed,"mode":mode,"spacing":spacing,"period":period,"rainbow":rainbow});
+        let data = JSON.stringify({"length":size,"speed":speed,"mode":mode,"spacing":spacing,"period":period,"rainbow":rainbow,"onAll":onAll});
         axios({
             method: "POST",
             url:"/api/Mode",
@@ -164,10 +159,10 @@ function Mode ({token,stepIndex,setStepIndex}){
             console.log(demoMode)
             if(demoMode !== undefined &&demoMode[0] === 'Tutorial'  ){
                 console.log("tuto")
-                data =`${size},${speed},${demoMode[1]},${spacing},${period},${demoMode[1]},${demoMode[0]}/`;
+                data =`${size},${speed},${demoMode[1]},${spacing},${onAll},${period},${demoMode[1]},${demoMode[0]}/`;
             }
             else{
-                data =`${size},${speed},${newMode[1]},${spacing},${period},${rainbow},${newModeName}/`;
+                data =`${size},${speed},${newMode[1]},${spacing},${onAll},${period},${rainbow},${newModeName}/`;
             }
             
             console.log(data)
@@ -243,10 +238,12 @@ function Mode ({token,stepIndex,setStepIndex}){
     const handleChange=(e) =>{
         let isChecked = e.target.checked;
         setRainbow(isChecked);
-      }
+    }
 
-
-    
+    const changeOnAll=(e) =>{
+        let isChecked = e.target.checked;
+        setOnAll(isChecked);
+    }
 
     return (       
         
@@ -312,6 +309,12 @@ function Mode ({token,stepIndex,setStepIndex}){
                                                 <Form.Range step={1} min={1} max={30} value={period} onChange={(e) =>setPeriod(e.target.value)}/>
                                             </div>
                                         }
+                                        {params === "onAll" && 
+                                            <div className={`${"tourSepare"+item.identifiant}`}>
+                                                <div className='paramSelect'>Séparés</div>
+                                                <input className="form-check-input" type="checkbox" checked={onAll}  id="flexCheckDefault" onChange={e => changeOnAll(e)}></input>
+                                            </div>
+                                        }
                                         
 
 
@@ -366,19 +369,19 @@ function Mode ({token,stepIndex,setStepIndex}){
             <div className="col-12 separator">Modes Sauvegardés</div>
             
                 {modeList.map((item, k) => (
-                    <div className={`col-4 myOwnEffects ${"myOwnEffects" +item[6]}`}  key={k}>
+                    <div className={`col-4 myOwnEffects ${"myOwnEffects" +item[7]}`}  key={k}>
                         <div className='col-12 deleteModeDivLogo' >
                             {visibility &&
                                 <i className="bi bi-trash deleteMode" onClick={() =>removeMode(item)}></i>
                             }
                         </div>
-                        <div className='col-12 row' onClick={() => runMyMode(item[0],item[1],item[2],item[3],item[4],item[5],item[6])}>
+                        <div className='col-12 row' onClick={() => runMyMode(item[0],item[1],item[2],item[3],item[4],item[5],item[6],item[7])}>
                             <div className='col-12'>
                                 
                                 <i className={`bi ${mode.find(o => o.mode === item[2])["logo"]} logoSavedModes`}></i>
                             </div>
                             <div className='col-12 savedModeText'>
-                            {item[6]}
+                            {item[7]}
                             </div>
                         </div>
                         
