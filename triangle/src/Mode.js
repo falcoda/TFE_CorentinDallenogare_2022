@@ -18,7 +18,7 @@ function Mode ({token,stepIndex,setStepIndex}){
     const [visibility, setVisibility] = useState(false);
     const [mode, setModes] = useState([
         {identifiant:'un', nom : 'Rainbow Wheel',  param:["speed","onAll"], logo : "bi-bullseye",mode:"rainbowWheel"},
-        {identifiant:'deux', nom : 'Chase',  param:["speed","size","spacing","rainbow","period" ,"onAll"], logo : "bi-shuffle",mode:"chase"},
+        {identifiant:'deux', nom : 'Chase',  param:["speed","size","spacing","rainbow","period"], logo : "bi-shuffle",mode:"chase"},
         {identifiant:'trois', nom : 'Comet All SameTime',  param:["speed","size"], logo : "bi-star",mode:"cometAllSameTime"},
         {identifiant:'quatre', nom : 'randomEffects',  param:["speed","size","spacing","rainbow","period"], logo : "bi-qr-code-scan",mode:"randomEffects"},
         {identifiant:'cinq', nom : 'Color Wipe 2',  param:["speed"], logo : "bi-upc-scan",mode:"colorWipe2"},
@@ -30,7 +30,7 @@ function Mode ({token,stepIndex,setStepIndex}){
         {identifiant:'douze', nom : 'Solid',  param:[], logo : "bi-bricks",mode:"solid"},
         {identifiant:'treize', nom : 'Blink',  param:["speed"], logo : "bi-sun",mode:"blink"},
         {identifiant:'quatorze', nom : 'Sparkle',  param:["speed","rainbow","period","onAll"], logo : "bi-sun",mode:"sparkle"},
-        {identifiant:'quinze', nom : 'Sparkle Pulse',  param:["speed","period","onAll"], logo : "bi-sun",mode:"sparklePulse"},
+        {identifiant:'quinze', nom : 'Sparkle Pulse',  param:["speed","period"], logo : "bi-sun",mode:"sparklePulse"},
 
 
     ]);
