@@ -6,20 +6,21 @@ import toast from 'react-hot-toast';
 
 function Mode ({token,stepIndex,setStepIndex}){
     console.log(token)
-    const [speed, setSpeed] = useState(0.01);
-    const [size, setSize] = useState(1);
-    const [rainbow, setRainbow] = useState(false);
-    const [period, setPeriod] = useState(1);
-    const [spacing, setSpacing] = useState(1);
+    const [speed, setSpeed] = useState(null);
+    const [size, setSize] = useState(null);
+    const [rainbow, setRainbow] = useState(null);
+    const [period, setPeriod] = useState(null);
+    const [spacing, setSpacing] = useState(null);
     const [newModeName, setNewModeName] = useState("");
     const [newMode , setNewMode] = useState("");
     const [modeList, setModeList] = useState([]);
     const [visibility, setVisibility] = useState(false);
     const [mode, setModes] = useState([
         {identifiant:'un', nom : 'Rainbow Wheel',  param:["speed"], logo : "bi-bullseye",mode:"rainbowWheel"},
+        
         {identifiant:'deux', nom : 'Chase',  param:["speed","size","spacing","rainbow","period"], logo : "bi-shuffle",mode:"chase"},
         {identifiant:'trois', nom : 'Comet All SameTime',  param:["speed","size"], logo : "bi-star",mode:"cometAllSameTime"},
-        {identifiant:'quatre', nom : 'Color Wipe One ByOne',  param:["speed","size","spacing","rainbow","period"], logo : "bi-qr-code-scan",mode:"colorWipeOneByOne"},
+        {identifiant:'quatre', nom : 'randomEffects',  param:["speed","size","spacing","rainbow","period"], logo : "bi-qr-code-scan",mode:"randomEffects"},
         {identifiant:'cinq', nom : 'Color Wipe 2',  param:["speed"], logo : "bi-upc-scan",mode:"colorWipe2"},
         {identifiant:'six', nom : 'Color Wipe',  param:["speed","spacing"], logo : "bi-rainbow",mode:"colorWipe"},
         {identifiant:'sept', nom : 'Comet',  param:["speed","size","rainbow"], logo : "bi-stars",mode:"comet"},
@@ -28,6 +29,9 @@ function Mode ({token,stepIndex,setStepIndex}){
         {identifiant:'onze', nom : 'Color Cycle',  param:["speed"], logo : "bi-arrow-repeat",mode:"colorCycle"},
         {identifiant:'douze', nom : 'Solid',  param:[], logo : "bi-bricks",mode:"solid"},
         {identifiant:'treize', nom : 'Blink',  param:["speed"], logo : "bi-sun",mode:"blink"},
+        {identifiant:'quatorze', nom : 'Sparkle',  param:["speed","rainbow","period"], logo : "bi-sun",mode:"sparkle"},
+        {identifiant:'quinze', nom : 'Sparkle Pulse',  param:["speed","period"], logo : "bi-sun",mode:"sparklePulse"},
+        {identifiant:'seize', nom : 'Rainbow Wheel all',  param:["speed"], logo : "bi-bullseye",mode:"rainbowWheelAll"},
 
 
     ]);
@@ -58,6 +62,8 @@ function Mode ({token,stepIndex,setStepIndex}){
 
         if(saveSpeed !== null){
             setSpeed(saveSpeed);
+            console.log('aaaa')
+            console.log(saveSpeed)
         }
         if(saveSize !== null){
             setSize(saveSize);

@@ -25,12 +25,13 @@ pixels = neopixel.NeoPixel(
     mode.pixel_pin, mode.num_pixels, brightness=1, auto_write=False, pixel_order=ORDER
 )
 function_mappings = {
-    'rainbowWheel': mode.rainbowWheel,
+    'rainbowWheel': mode.rainbowWheelOne,
+    'rainbowWheelAll': mode.rainbowWheelAll,# 
     'color': mode.color,
     'colorWipe': mode.colorWipe,
     'rainbowChase': mode.rainbowChase,
     'cometAllSameTime': mode.cometAllSameTime,
-    'colorWipeOneByOne': mode.colorWipeOneByOne,
+    'randomEffects': mode.randomEffects,# 
     'colorWipe2': mode.colorWipe2,
     'chase': mode.chase,
     'comet': mode.comet,
@@ -39,6 +40,8 @@ function_mappings = {
     'solid': mode.solid,
     'colorCycle': mode.colorCycle,
     'pulse': mode.pulse,
+    'sparklePulse': mode.sparklePulse,
+    'sparkle': mode.sparkle,
 
 }
 
@@ -140,7 +143,7 @@ def changeMode():
     return (data)
 
 
-@app.route('api/Off')
+@app.route('/api/Off')
 def setoff():
     if(mode.effectOnRun): 
         mode.powerOff("#000000") 
