@@ -1,18 +1,18 @@
 
 import "./css/colorPicker.css";
-import React from "react";
+import React ,{useState}  from "react";
 import IroColorPicker from "./component/IroColorPicker";
 import ColorChoice from "./component/ColorChoice";
 import Brightness from "./component/Brightness";
 import axios from "axios";
 
 const Color = (props) => {
-  
-  
+  let didCancel = false
 
   const displayColor =(color) => {
     let data = JSON.stringify(color);
-    
+    if(didCancel == false ){
+    didCancel =true;
     axios({
       method: "POST",
       url:"/api/ChangeColor",
@@ -24,8 +24,9 @@ const Color = (props) => {
       }
     }).then((response) => {
       const res =response.data
-      console.log(res)
+      didCancel = false;
     }).catch(error => console.log(error))
+  }
   }
 
   

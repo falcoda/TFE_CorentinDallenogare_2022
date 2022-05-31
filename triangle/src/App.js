@@ -53,7 +53,7 @@ function App() {
               <Route path="/settings" element={<Settings token={token} setToken={setToken}/>}/>
               <Route exact path="/profile" element={<Profile token={token} setToken={setToken} setStepIndex={setStepIndex}/>}></Route>
             </Routes>
-            <Navbar></Navbar>
+            <Navbar token={token}></Navbar>
           </div>
           
         )}

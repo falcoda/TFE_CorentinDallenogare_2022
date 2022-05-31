@@ -21,7 +21,7 @@ function Mode ({token,stepIndex,setStepIndex}){
         {identifiant:'deux', nom : 'Chase',  param:["speed","size","spacing","rainbow","period"], logo : "bi-shuffle",mode:"chase"},
         {identifiant:'trois', nom : 'Comet All SameTime',  param:["speed","size"], logo : "bi-star",mode:"cometAllSameTime"},
         {identifiant:'quatre', nom : 'randomEffects',  param:["speed","size","spacing","rainbow","period"], logo : "bi-qr-code-scan",mode:"randomEffects"},
-        {identifiant:'cinq', nom : 'Color Wipe 2',  param:["speed"], logo : "bi-upc-scan",mode:"colorWipe2"},
+        {identifiant:'cinq', nom : 'cote Wipe',  param:["speed","rainbow"], logo : "bi-upc-scan",mode:"colorWipe2"},
         {identifiant:'six', nom : 'Color Wipe',  param:["speed","spacing"], logo : "bi-rainbow",mode:"colorWipe"},
         {identifiant:'sept', nom : 'Comet',  param:["speed","size","rainbow","onAll"], logo : "bi-stars",mode:"comet"},
         {identifiant:'huit', nom : 'Rainbow',  param:["speed","period","onAll"], logo : "bi-rainbow",mode:"rainbow"},
@@ -34,7 +34,7 @@ function Mode ({token,stepIndex,setStepIndex}){
 
 
     ]);
-    
+    let didCancel = false;
     
     useEffect(() => {
         let saveSpeed = JSON.parse(window.localStorage.getItem("speed"));
@@ -109,20 +109,24 @@ function Mode ({token,stepIndex,setStepIndex}){
         }
         rainbow = false
         let data = JSON.stringify({"length":Number(size),"speed":Number(speed),"mode":mode,"spacing":Number(spacing),"period":Number(period),"rainbow":rainbow,"onAll":onAll});
-        axios({
-            method: "POST",
-            url:"/api/Mode",
-            data: data,
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                Authorization: 'Bearer ' + token
-            }
-        }).then((response) => {
-            const res =response.data
-            console.log(res)
-        }).catch(error => console.log(error))
-        return false;
+        if(didCancel == false ){
+            didCancel =true;
+            axios({
+                method: "POST",
+                url:"/api/Mode",
+                data: data,
+                headers: {
+                    "Accept": "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: 'Bearer ' + token
+                }
+            }).then((response) => {
+                const res =response.data
+                console.log(res);
+                didCancel = false;
+            }).catch(error => console.log(error));
+        } 
+            return false;
     }
 
     const changeMode = (mode) =>{

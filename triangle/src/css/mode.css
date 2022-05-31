@@ -7,7 +7,7 @@
 }
 .modeName{
     font-size: 1.2rem;
-    color:white
+    color:white;
 }
 .paramSelect{
     font-size: 1.5rem;
@@ -15,6 +15,7 @@
 }
 .effetDiv{
     padding: 0.5rem;
+    cursor: pointer;
 }
 .btnSetParamMode{
     width: 20rem;

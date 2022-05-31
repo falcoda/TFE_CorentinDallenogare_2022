@@ -3,7 +3,6 @@ import iro from "@jaames/iro";
 class IroColorPicker  extends React.Component{
   
   componentDidMount() {
-    console.log(this.props.taille)
     const { props } = this;
     // create a new iro color picker and pass component props to it
     this.colorPicker = new iro.ColorPicker(this.el, {

@@ -6,7 +6,7 @@ import toast, { Toaster } from 'react-hot-toast';
 const TimeApp = (props) => {
   const [value, setValue] = useState(null);
   let timeStart = new Date();
-  
+  let expiryTimestamp = new Date()
  
   timeStart.setSeconds(timeStart.getSeconds() );
   const {
@@ -19,7 +19,7 @@ const TimeApp = (props) => {
     pause,
     resume,
     restart,
-  } = useTimer({ timeStart, onExpire: () => console.warn('onExpire called') });
+  } = useTimer({expiryTimestamp, timeStart, onExpire: () => console.warn('onExpire called') });
 
   useEffect(() => {
 
@@ -35,11 +35,11 @@ const TimeApp = (props) => {
       const res =response.data
 
 
-      console.log(res)
+      console.log(new Date(res))
       
       timeStart = new Date();
       timeStart.setSeconds(timeStart.getSeconds() + 1000);
-      restart(Number(res));
+      restart(new Date(res));
 		}).catch(error => console.log(error));
     
   }, [])
@@ -84,6 +84,7 @@ const TimeApp = (props) => {
       console.log(hours)
       if(hours === 0 || minutes === 0 || seconds === 0){
         toast.error('Pas de minuteur en cours');
+        data = JSON.stringify({"date":"undefined"  });
         
       }
       else{

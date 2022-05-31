@@ -5,10 +5,8 @@ import changeColors
 import json
 import hextorgb
 import time
-import test
 
 import saveData
-import board
 import neopixel
 import mode
 from adafruit_led_animation import helper
@@ -17,12 +15,14 @@ from datetime import  timedelta, timezone
 import datetime
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
                                unset_jwt_cookies, jwt_required, JWTManager
-
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 app = Flask(__name__,static_folder='build', static_url_path='')
-ORDER = neopixel.GRB
-pixels = neopixel.NeoPixel(
-    mode.pixel_pin, mode.num_pixels, brightness=1, auto_write=False, pixel_order=ORDER
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"]
 )
 function_mappings = {
     'rainbowWheel': mode.rainbowWheel,
@@ -30,7 +30,7 @@ function_mappings = {
     'colorWipe': mode.colorWipe,
     'cometAllSameTime': mode.cometAllSameTime,
     'randomEffects': mode.randomEffects,# 
-    'colorWipe2': mode.colorWipe2,
+    'colorWipe2': mode.coteWipe,
     'chase': mode.chase,
     'comet': mode.comet,
     'rainbow': mode.rainbow,
@@ -55,6 +55,7 @@ app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=24)
 jwt = JWTManager(app)
 
 @app.route('/api/Login', methods=["POST"])
+@limiter.limit("1/second", override_defaults=False)
 def create_token():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
@@ -91,15 +92,6 @@ def logout():
     return response
 
 
-@app.route('/api/profile')
-@jwt_required() #new line
-def my_profile():
-    response_body = {
-        "name": "Nagato",
-        "about" :"Hello! I'm a full stack developer that loves python and javascript"
-    }
-
-    return response_body
 
 
 @app.route('/api/ChangeColor', methods=["POST"])
@@ -108,8 +100,9 @@ def changeColor():
     data = request.get_json(force = True)
     print(data)
     mode.allColor=(hextorgb.hex_to_rgb(data))
-    if(mode.effectOnRun ==False):
+    if(mode.effectOnRun ==False ):
         mode.color(data)
+        mode.status = True
     
     return (data)
 
@@ -123,6 +116,7 @@ def changeMode():
     time.sleep(0.1)
     modes=data['mode']
     print(mode)
+    mode.stopTime = Undefined
     mode.pixels.fill(hextorgb.hex_to_rgb("#000000"))
     mode.pixels.show()
     try:
@@ -142,6 +136,7 @@ def changeMode():
 
 
 @app.route('/api/Off')
+@jwt_required()
 def setoff():
     if(mode.effectOnRun): 
         mode.powerOff("#000000") 
@@ -157,7 +152,7 @@ def setoff():
         mode.powerOff("#ffffff")  
        # mode.color("#ffffff")
     
-    return ('yes')
+    return ('off')
 
 
 @app.route('/api/ChangeNumber', methods=["POST"])
@@ -232,6 +227,6 @@ def getTimer():
     if mode.stopTime == Undefined:
         return ("undefined")
     else: 
-        return (mode.stopTime)
+        return (str(mode.stopTime))
 if __name__ == '__main__':
     app.run(debug=True)

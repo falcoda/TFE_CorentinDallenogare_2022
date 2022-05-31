@@ -47,6 +47,7 @@
     margin: 2rem !important;
     margin-left: auto !important;
     margin-right: auto !important;
+    cursor: pointer;
 }
 .IroSliderGradient{
     border: 1px solid rgb(255, 255, 255) !important;

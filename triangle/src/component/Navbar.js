@@ -1,8 +1,9 @@
 import React, { useEffect} from 'react';
 import {Link} from 'react-router-dom';
 import "../css/navbar.css";
-const Navbar = () => {
-
+import axios from "axios";
+const Navbar = (props) => {
+  console.log(props)
   // Set the color of the active li navbar
   useEffect(() => {
     if(window.location.pathname ==="/") {
@@ -20,25 +21,25 @@ const Navbar = () => {
 
   // Shut down the leds
   const goOff = () =>{
-    fetch(`/api/Off`,{
-        
-        mode: "no-cors",
-        datatype: "json",
-        headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-        },
-        })
-    .then(response => response.json())
-    .catch(error => console.log(error))
+    
+    axios({
+      method: "GET",
+      url:"/api/Off",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        Authorization: 'Bearer ' + props.token
+      }
+    }).then((response) => {
+      const res =response.data
+      console.log(res)
+    }).catch(error => console.log(error))
 
   } 
   // Set the color of the active li navbar
   const changeActiveNav = (element) =>{
-    console.log(document.getElementsByClassName(element)[0])
     document.getElementsByClassName("active")[0].classList.remove("active");
     document.getElementsByClassName(element)[0].classList.add("active");
-    console.log("es")
    
   }
   return (
