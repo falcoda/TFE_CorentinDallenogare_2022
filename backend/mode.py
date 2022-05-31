@@ -33,10 +33,11 @@ import RPi.GPIO as GPIO
 # Otherwise choose an open pin connected to the Data In of the NeoPixel strip, i.e. board.D1
 pixel_pin = board.D18
 
+# Define the pin for the microphone
+# Actually the microphone is not used in this case, but it is useful to know
 MicPin = 3
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
-
 GPIO.setup(MicPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 # Define the number of NeoPixels
@@ -70,7 +71,13 @@ pixels = neopixel.NeoPixel(
 """
 Utillity functions
 """
+
 def setBrightness(data): 
+    """
+    Return the brightness of the pixels
+    param: data: the brightness of the pixels
+
+    """
     global brightness
     brightness = int(data)/100
     global pixels
@@ -81,9 +88,12 @@ def setBrightness(data):
 
 
 def updatePixels(count):
+    """
+    Update the pixels count
+    param: count: the number of pixels
+    """
     global brightness
     global pixels
-    print(" count",count)
     global num_pixels
     num_pixels=count
     global numTriangle
@@ -104,6 +114,9 @@ def updatePixels(count):
     return True
 
 def timeChecker() :
+    """
+    Update the status of the animation when the time is over
+    """
     currentTime=(datetime.datetime.now())
     global stopTime
     global status
@@ -121,9 +134,14 @@ def adaptSpeed(speed, maxSpeed):
     return maxSpeed/1*speed
 
 
-# Modes functions
+""" 
+Modes functions
+"""
 def color(color):
-   # print(color)
+    """
+    Change the color of the pixels
+    param: color: the color of the pixels
+    """
     global status
     status = False
     global allColor 
@@ -133,13 +151,20 @@ def color(color):
     return allColor
 
 def powerOff(state):
+    """
+    Power off/on the pixels
+    param: state: the color of the pixels
+    """
     pixels.fill(hextorgb.hex_to_rgb(state))
     pixels.show()
     return state 
 
 def wheel(pos):
-    # Input a value 0 to 255 to get a color value.
-    # The colours are a transition r - g - b - back to r.
+    """ 
+    Generate rainbow colors across 0-255 positions.
+    The colours are a transition r - g - b - back to r.
+    param: pos: the position of the color
+    """
     if pos < 0 or pos > 255:
         r = g = b = 0
     elif pos < 85:
@@ -156,7 +181,7 @@ def wheel(pos):
         r = 0
         g = int(pos * 3)
         b = int(255 - pos * 3)
-    return (r, g, b) if ORDER in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
+    return (r, g, b) 
 
 
 
@@ -167,6 +192,7 @@ def rainbowWheel(speed,size,spacing,period,map_1,rainbow,onAll):
 
     Keyword arguments:
     speed -- how fast to fade the rainbow, in seconds
+    onAll --  turn on all triangles on same time or just turn one
     """
     global status
     if (onAll):
@@ -200,6 +226,11 @@ def rainbowWheel(speed,size,spacing,period,map_1,rainbow,onAll):
         return False
 
 def colorWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
+    """
+    Draw a line in the specified color across the whole display.
+    param : speed: the speed of the animation
+    param : spacing: the spacing between leds on
+    """
     global allColor
     global status
     speed = adaptSpeed(speed, 0.1)
@@ -220,6 +251,10 @@ def colorWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
               
   
 def cometAllSameTime( speed,size,spacing,period,map_1,rainbow,onAll) :
+    """
+    Actually do nothing
+    it is for use a microphone
+    """
     global allColor
     
     while status:
@@ -235,6 +270,9 @@ def cometAllSameTime( speed,size,spacing,period,map_1,rainbow,onAll) :
         
 
 def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :
+    """
+    Display random effects
+    """
     global allColor
     global status
     global numTriangle
@@ -292,6 +330,9 @@ def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :
     
 
 def coteWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
+    """
+    Draw a line that turns into a triangle
+    """
     global allColor
     global numTriangle
     global status
@@ -320,8 +361,6 @@ def coteWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
                             
                             else :
                                 break
-                            
-                    
                     else :
                         break
                     time.sleep(0.2-speed)
