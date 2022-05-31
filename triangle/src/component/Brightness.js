@@ -4,9 +4,11 @@ import "../css/colorPicker.css";
 import axios from "axios";
 
 const Brightness = (auth) => {
-
+  // This component is used to change the brightness of the leds
   const [valueBrightness, setValueBrightness] = useState(100); 
+
   const setBrigthness=(brigthness) => {
+    // This function call the API to change the brightness of the leds
     setValueBrightness(brigthness);
     let data = JSON.stringify({"brightness": brigthness});
     axios({

@@ -1,14 +1,17 @@
 import React, { useState,useEffect} from 'react';
 import axios from "axios";
-import "../css/colorPicker.css";
 import IroColorPicker from "./IroColorPicker";
 import toast from 'react-hot-toast';
-
+import "../css/colorPicker.css";
 
 const ColorChoice = (props) => {
-	
+
+	// This component is used to change the color of the leds
+	// The component is composed of 6 buttons, each one representing a color
+	// It is possible to change the color of the button by clicking on the pencil icon
+
 	const [ onEdit, setOnEdit ] = useState([false,"#FFFFFF"]); 
-	const [btnOnEdit, setBtnOnEdit] = useState("");
+	const [ btnOnEdit, setBtnOnEdit] = useState("");
 	const [ modal, setModal] = useState(["",""]);
 	const [newColor, setNewColor] = useState("");
 	const [btns, setBtns ]= useState([{ nom : 'btn1',  couleur:'#FFFF00'},
@@ -19,7 +22,9 @@ const ColorChoice = (props) => {
 									{ nom : 'btn6',  couleur:'#FFFFFF'},]);
 
 	function setColor(color,nom) {
+		// This function is use to change the color of the button or the leds
 		if(onEdit[0]){
+			// If the user is editing a button
 			if (nom !== ""){
 				setBtnOnEdit(nom);
 			}
@@ -37,20 +42,17 @@ const ColorChoice = (props) => {
 					savedColors += temp_state[i].couleur + ",";
 				
 				}
-				console.log(temp_state);
 				setBtns(temp_state);
 				document.getElementById("closeNameBtn").click();
 				toast.success("Couleur modifiée avec succès");
-				console.log(savedColors)
 				localStorage.setItem("savedColors",savedColors);
 				document.getElementsByClassName("buttonEditColor")[0].click();
 			
 			}
 			
-			
 		}
 		else{
-			console.log(color)
+			// If the user is editing the leds
 			let data = JSON.stringify(color);
 			axios({
 				method: "POST",
@@ -62,9 +64,8 @@ const ColorChoice = (props) => {
 					Authorization: 'Bearer ' + props.token
 				}
 			}).then((response) => {
-			const res =response.data
-			console.log(res)
-			}).catch(error => console.log(error))
+			const res =response.data;
+			}).catch(error => console.log(error));
 		}
 
   	}
@@ -106,23 +107,23 @@ const ColorChoice = (props) => {
 			}
 			setBtns(temp_state);
 		}
-	}, [])
+	}, []);
 
 	return (
 		
 		<div className='d-flex justify-content-center row btnColorDiv'>	
 			<div className='colorChoice row col-11'>
-				<div className='col-8'>Choisissez une couleur :	 </div>
+				<div className='col-8 d-flex align-items-center'>Choisissez une couleur :	 </div>
 			
-				<div className='col-4 d-flex justify-content-end'>
-					<button onClick={displayEdit} className="buttonEditColor ">éditer <i class="bi bi-pencil-fill"></i></button>
+				<div className='col-4 d-flex justify-content-end align-items-center'>
+					<button onClick={displayEdit} className="buttonEditColor ">éditer <i className="bi bi-pencil-fill"></i></button>
 				</div>
 			</div>
 			<div className="row containButton sectionHome col-11">
 			{btns.map((item, k) => (
 				<div key={k} className="col-2 col-md-4">
 					<button data-bs-toggle={modal[0]} data-bs-target={modal[1]} className='button' onClick={() =>setColor(item.couleur, item.nom)} style={{backgroundColor:item.couleur }}>
-						<i class="bi bi-check-circle-fill activeEdit"></i>
+						<i className="bi bi-check-circle-fill activeEdit"></i>
 					</button>
 				</div>
 			))}

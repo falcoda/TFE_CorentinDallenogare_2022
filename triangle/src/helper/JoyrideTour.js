@@ -2,10 +2,14 @@ import Joyride, { ACTIONS, EVENTS, STATUS } from 'react-joyride';
 import { useNavigate } from "react-router-dom";
 import { useState } from 'react';
 
+// this comonent is used to show the tour guide
+
 const JoyrideTour = ({stepIndex,setStepIndex}) => {
   
   const history = useNavigate();  
   const [ run, setRun] = useState(false);
+  
+  // The different steps of the tour
   const [steps, setSteps] =useState([
     {
       content: 'Vous pouvez choisir une couleur via le color picker',
@@ -343,19 +347,31 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
     const { action, index, status, type } = data;
     if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
       setStepIndex(index + (action === ACTIONS.PREV ? -1 : 1))
-      if(index ===1){
+      if(index ===1 && window.location.pathname ==="/"){
         
           let toScroll= document.getElementsByClassName("choseBrightness")[0].offsetTop
-          // window.scrollTo(toScroll, toScroll)
+          window.scrollTo(toScroll, toScroll)
       }
       if (index ===3 && action !== 'next' ){
           history("/");
+          document.getElementsByClassName("active")[0].classList.remove("active");
+          document.getElementsByClassName("tourColor")[0].classList.add("active");
       }
       if (index ===4  && action === 'prev'){
           history("/");
+          document.getElementsByClassName("active")[0].classList.remove("active");
+          document.getElementsByClassName("tourColor")[0].classList.add("active");
       }
       if (window.location.pathname ==="/mode" && action === "next" && index===2){
-        history("/");
+          history("/");
+          document.getElementsByClassName("active")[0].classList.remove("active");
+          document.getElementsByClassName("tourColor")[0].classList.add("active");
+          
+      }
+      if (window.location.pathname ==="/mode" && action === "next" && index===3){
+        let toScroll= document.getElementsByClassName("settingsTitle")[0].offsetTop
+        window.scrollTo(toScroll, toScroll)
+        
       }
       if (index === 4  && action === 'next') {
           document.getElementById("modalNum1").click()
@@ -365,11 +381,15 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
       }
       if (index === 9 && action === 'next') {
           document.getElementById("deuxBtnClose").click()
+          console.log("ok")
           let toScroll= document.getElementsByClassName("separator")[0].offsetTop
           window.scrollTo(toScroll, toScroll)
       }
-      if (index === 9 && action === 'prev') {
-        let toScroll= document.getElementById("btnStart").offsetTop
+      
+      if (index === 10 && action === 'next') {
+       console.log("ok")
+        console.log(document.getElementsByClassName("btnModifiy")[0])
+        let toScroll= document.getElementsByClassName("btnModifiy")[0].offsetTop
         window.scrollTo(toScroll, toScroll)
           
       }

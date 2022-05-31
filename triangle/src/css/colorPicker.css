@@ -68,6 +68,7 @@
     text-align: left;
     padding-bottom: 0.5rem;
     padding-left: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .activeEdit{
@@ -102,10 +103,6 @@
 @media only screen and (max-width: 1200px){
     /*Tablets [601px -> 1200px]*/
 }
-
-
-
-
 
 @media only screen and (max-height: 720px){
 	/*Small smartphones [325px -> 425px]*/

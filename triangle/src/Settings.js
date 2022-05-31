@@ -1,9 +1,4 @@
 import './css/settings.css'
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min';
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import TimerApp from './component/Timer';
 import Logout from './component/Logout';
 import React, { useEffect, useState } from 'react';
@@ -13,17 +8,14 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
 
 function Settings (props){
+    // This component is used to change the settings of the user
+
     const { removeToken } = useToken();
-    const [value, setValue] = useState(null);
     const [count, setCount] = useState(null);
     const history = useNavigate()   
-    const onChange = time => {
-        setValue(time);
-        console.log('es')
-      };
 
     const uploadNumber = () => {
-        console.log(count)
+        // This function is used to upload the number of the triangles
         if (count === null || count === "") {
             toast.error('Veuillez entrer un nombre');
         }
@@ -31,7 +23,7 @@ function Settings (props){
             toast.error('Veuillez entrer un nombre positif');
         }
         else{
-           
+            // If the number is valid, upload it to the API
             let data = JSON.stringify({"number": count});
             axios({
                 method: "POST",
@@ -43,8 +35,8 @@ function Settings (props){
                     Authorization: 'Bearer ' + props.token
                 }
             }).then((response) => {
-                const res =response.data
-                console.log(res)
+                const res =response.data;
+                console.log(res);
                 toast.success('Nombre mis à jour');
             }).catch(error => toast.error('Erreur lors de la mise à jour'))
             return false;
@@ -52,15 +44,17 @@ function Settings (props){
     }
 
     useEffect(() => {
-
+        // Redirect to home page if the tutorial is not finished
         if(!localStorage.getItem('tutorial')){
-            history('/')
-
+            history('/');
         }
     }, [])
 
     const startTuto = () => {
+        // Restart the tutorial if the user clicks on the button
         localStorage.removeItem('tutorial');
+        document.getElementsByClassName("active")[0].classList.remove("active");
+        document.getElementsByClassName("tourColor")[0].classList.add("active");
         history('/')
     }
 
@@ -70,7 +64,6 @@ function Settings (props){
         <div className="parametre">
             <div >
                 <h1 className="settingsTitle" >Paramètres</h1>
-                
             </div>
             <Logout token={removeToken}/>
             <div className="settings">                

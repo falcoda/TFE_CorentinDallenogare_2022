@@ -1,11 +1,20 @@
-import React, { useState,useEffect,useRef } from 'react';
+import React, { useState,useEffect } from 'react';
 import "./css/mode.css"
-import { Form  } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import axios from "axios";
 import toast from 'react-hot-toast';
 
 function Mode ({token,stepIndex,setStepIndex}){
-    console.log(token)
+    // This component is used to change the mode of the leds 
+    // the mode takes the following values :
+    // Speed : the animation speed of the leds
+    // Period : the period of the color change
+    // Size : the number of leds on
+    // Spacing : the space between the leds (number of led off)
+    // Rainbow : if the leds are rainbow or not
+    // OnAll : if the triangle is on all or not
+
+
     const [speed, setSpeed] = useState(0.01);
     const [size, setSize] = useState(1);
     const [rainbow, setRainbow] = useState(false);
@@ -16,12 +25,14 @@ function Mode ({token,stepIndex,setStepIndex}){
     const [newMode , setNewMode] = useState("");
     const [modeList, setModeList] = useState([]);
     const [visibility, setVisibility] = useState(false);
+
+    // The list of modes
     const [mode, setModes] = useState([
         {identifiant:'un', nom : 'Rainbow Wheel',  param:["speed","onAll"], logo : "bi-bullseye",mode:"rainbowWheel"},
         {identifiant:'deux', nom : 'Chase',  param:["speed","size","spacing","rainbow","period"], logo : "bi-shuffle",mode:"chase"},
         {identifiant:'trois', nom : 'Comet All SameTime',  param:["speed","size"], logo : "bi-star",mode:"cometAllSameTime"},
         {identifiant:'quatre', nom : 'randomEffects',  param:["speed","size","spacing","rainbow","period"], logo : "bi-qr-code-scan",mode:"randomEffects"},
-        {identifiant:'cinq', nom : 'cote Wipe',  param:["speed","rainbow"], logo : "bi-upc-scan",mode:"colorWipe2"},
+        {identifiant:'cinq', nom : 'cote Wipe',  param:["speed","rainbow"], logo : "bi-upc-scan",mode:"coteWipe"},
         {identifiant:'six', nom : 'Color Wipe',  param:["speed","spacing"], logo : "bi-rainbow",mode:"colorWipe"},
         {identifiant:'sept', nom : 'Comet',  param:["speed","size","rainbow","onAll"], logo : "bi-stars",mode:"comet"},
         {identifiant:'huit', nom : 'Rainbow',  param:["speed","period","onAll"], logo : "bi-rainbow",mode:"rainbow"},
@@ -32,11 +43,14 @@ function Mode ({token,stepIndex,setStepIndex}){
         {identifiant:'quatorze', nom : 'Sparkle',  param:["speed","rainbow","period","onAll"], logo : "bi-sun",mode:"sparkle"},
         {identifiant:'quinze', nom : 'Sparkle Pulse',  param:["speed","period"], logo : "bi-sun",mode:"sparklePulse"},
 
-
     ]);
+
+    // use for check if an other api call is in progress
     let didCancel = false;
     
     useEffect(() => {
+        // Get all parameters of the mode
+        // The parameters are saved in the local storage
         let saveSpeed = JSON.parse(window.localStorage.getItem("speed"));
         let saveSize = JSON.parse(window.localStorage.getItem("size"));
         let saveRainbow = JSON.parse(window.localStorage.getItem("rainbow"));
@@ -44,11 +58,9 @@ function Mode ({token,stepIndex,setStepIndex}){
         let saveSpacing = JSON.parse(window.localStorage.getItem("spacing"));
         let saveOnAll = JSON.parse(window.localStorage.getItem("onall"));
 
-
+        // Set the parameters if they are not null
         if(saveSpeed !== null){
             setSpeed(saveSpeed);
-            console.log('aaaa')
-            console.log(saveSpeed)
         }
         if(saveSize !== null){
             setSize(saveSize);
@@ -57,7 +69,7 @@ function Mode ({token,stepIndex,setStepIndex}){
             setRainbow(saveRainbow);
         }
         if(savePeriod !== null){
-                setPeriod(savePeriod);
+            setPeriod(savePeriod);
         }
         if(saveSpacing !== null){
             setSpacing(saveSpacing);
@@ -67,7 +79,7 @@ function Mode ({token,stepIndex,setStepIndex}){
         }
         // set the tutorial mode
         if(!localStorage.getItem("tutorial")){
-            saveMode(['Tutorial','chase'])
+            saveMode(['Tutorial','chase']);
         }
         logoSavedModes();
         setStepIndex(stepIndex + 1);
@@ -75,6 +87,8 @@ function Mode ({token,stepIndex,setStepIndex}){
 
     
     function logoSavedModes(){
+        // Get the list of saved modes
+        // The list is saved in the local storage
         try{
             let myModes = window.localStorage.getItem("mode")
             if(myModes !== null){
@@ -82,28 +96,29 @@ function Mode ({token,stepIndex,setStepIndex}){
                 if (myModes !=="/"){
                     myArray.pop();
                     var res = [];
-                    console.log(myArray)
                     for(var i = 0; i < myArray.length; i++){
                         res.push(myArray[i].split(","));
                     }
-
-                    console.log(res);
-                    console.log(myArray );
                     setModeList(res);
                 }
             }
             else{
+                // If the list is empty
                 setModeList([]);
             }
             
         }
         catch(error){
+            //If error
             console.log(error);
         }
         
     }
 
     const runMyMode= (size,speed,mode,spacing,onAll,period,rainbow) =>{
+        // This function is used to run the saved mode
+        // The function call the api to run the saved mode
+        // The function send a json with the parameters of the mode
         if (rainbow === 'true'){
             rainbow = true;
         }
@@ -121,7 +136,7 @@ function Mode ({token,stepIndex,setStepIndex}){
                     Authorization: 'Bearer ' + token
                 }
             }).then((response) => {
-                const res =response.data
+                const res =response.data;
                 console.log(res);
                 didCancel = false;
             }).catch(error => console.log(error));
@@ -130,6 +145,10 @@ function Mode ({token,stepIndex,setStepIndex}){
     }
 
     const changeMode = (mode) =>{
+        // This function is used to run the mode
+        // The function call the api to run the mode
+        // The function send a json with the parameters of the mode
+
         // Setting the properties of the mode
         window.localStorage.setItem("speed", speed);
         window.localStorage.setItem("size", size);
@@ -155,23 +174,24 @@ function Mode ({token,stepIndex,setStepIndex}){
         return false;
 
     } 
+
     const saveMode = (demoMode) =>{
+        // This function is used to save the mode
+        // Thhe mode is saved in the local storage
 
         if((newModeName !== ""  && (/^[A-Za-z1-9-'\s]+$/.test(newModeName)))||demoMode !== undefined){
             let data ="";
-            // let data = JSON.stringify({"length":size,"speed":speed,"mode":newMode,"spacing":spacing,"period":period,"rainbow":rainbow,"name":newModeName});
-            console.log(demoMode)
             if(demoMode !== undefined &&demoMode[0] === 'Tutorial'  ){
-                console.log("tuto")
+                // if the mode is a tutorial mode
                 data =`${size},${speed},${demoMode[1]},${spacing},${onAll},${period},${demoMode[1]},${demoMode[0]}/`;
             }
             else{
                 data =`${size},${speed},${newMode[1]},${spacing},${onAll},${period},${rainbow},${newModeName}/`;
             }
             
-            console.log(data)
             let oldMode = localStorage.getItem("mode");
             if (oldMode === null){
+                // If the list is empty
                 localStorage.setItem("mode", data);
                 document.getElementById("closeNameBtn").click();
                 document.getElementsByClassName("nameModeInput")[0].style.borderColor = "black";
@@ -189,11 +209,13 @@ function Mode ({token,stepIndex,setStepIndex}){
                     }
                 }
                 if (isIn ){
+                    // If the mode is already saved
                     toast.error("Ce mode existe déjà");
                     document.getElementsByClassName("nameModeInput")[0].style.borderColor = "red";
                 }
                 else if(!isIn ){
-                    toast.success('Mode bien enregistré')
+                    // If the mode is not already saved
+                    toast.success('Mode bien enregistré');
                     let newModes =oldMode+ data;
                     localStorage.setItem("mode", newModes);
                     document.getElementById("closeNameBtn").click();
@@ -212,15 +234,13 @@ function Mode ({token,stepIndex,setStepIndex}){
     } 
 
     const removeMode = (mode) =>{
-        mode =(mode.join(",").toString())
-        console.log(mode)
+        // This function is used to remove the mode
+        // The mode is removed from the local storage
+        mode =(mode.join(",").toString());
         var myArray = localStorage.getItem("mode").split("/");
-        console.log(myArray)
         myArray.pop()
         let index = myArray.indexOf(mode);
         myArray.splice(index, 1);
-        console.log(myArray)
-        console.log(myArray.join("/")+"/")
         if(myArray.length !== 0){
             localStorage.setItem("mode", myArray.join("/")+"/");
         }
@@ -232,6 +252,7 @@ function Mode ({token,stepIndex,setStepIndex}){
     }
 
     const changeVisibilityDelete =() =>{
+        // This function is used to change the visibility of the delete button
         if (visibility) {
             setVisibility(false)
         }
@@ -239,12 +260,15 @@ function Mode ({token,stepIndex,setStepIndex}){
             setVisibility(true)
         }
     }
+
     const handleChange=(e) =>{
+        // This function is used to change the value of the rainbow input
         let isChecked = e.target.checked;
         setRainbow(isChecked);
     }
 
     const changeOnAll=(e) =>{
+        // This function is used to change the value of the onAll input
         let isChecked = e.target.checked;
         setOnAll(isChecked);
     }
@@ -277,63 +301,58 @@ function Mode ({token,stepIndex,setStepIndex}){
                                         </div>
                                     </div>
                                     <div className="modal-body row d-flex justify-content-center">  
-                                    {item.param.map((params, l) => (
-                                        <div key={l+99 }>
-                                        {params === "speed" && 
-                                            <div className={`${"tourSpeed"+item.identifiant}`}>
-                                            <div className={`paramSelect`}>Speed</div>
-                                                <Form.Range step={0.01} min={0.01} max={1} value={speed} onChange={(e) =>setSpeed(e.target.value)}/>
+                                    {/* All the modes */}
+                                        {item.param.map((params, l) => (
+                                            <div key={l+99 }>
+                                            {params === "speed" && 
+                                                <div className={`${"tourSpeed"+item.identifiant}`}>
+                                                <div className={`paramSelect`}>Vitesse</div>
+                                                    <Form.Range step={0.01} min={0.01} max={1} value={speed} onChange={(e) =>setSpeed(e.target.value)}/>
+                                                </div>
+                                            }
+                                            
+                                            {params === "spacing" && 
+                                            
+                                                <div className={`${"tourSpacing"+item.identifiant}`}>
+                                                <div className='paramSelect'>Espacement</div>
+                                                    <Form.Range step={1} min={1} max={30} value={spacing} onChange={(e) =>setSpacing(e.target.value)}/>
+                                                </div>
+                                            }
+                                            {params === "size" && 
+                                            
+                                                <div className={`${"tourSize"+item.identifiant}`}>
+                                                <div className='paramSelect'>Taille</div>
+                                                    <Form.Range step={1} min={1} max={30} value={size} onChange={(e) =>setSize(e.target.value)}/>
+                                                </div>
+                                            }
+                                            {params === "rainbow" && 
+                                                <div className={`${"tourRainbow"+item.identifiant}`}>
+                                                    <div className='paramSelect'>Arc-En-Ciel</div>
+                                                    <input className="form-check-input" type="checkbox" checked={rainbow}  id="flexCheckDefault" onChange={e => handleChange(e)}></input>
+                                                </div>
+                                            }
+                                            {params === "period" && 
+                                                <div className={`${"tourPeriod"+item.identifiant}`}>
+                                                <div className='paramSelect'>Période</div>
+                                                    <Form.Range step={1} min={1} max={30} value={period} onChange={(e) =>setPeriod(e.target.value)}/>
+                                                </div>
+                                            }
+                                            {params === "onAll" && 
+                                                <div className={`${"tourSepare"+item.identifiant}`}>
+                                                    <div className='paramSelect'>Séparés</div>
+                                                    <input className="form-check-input" type="checkbox" checked={onAll}  id="flexCheckDefault" onChange={e => changeOnAll(e)}></input>
+                                                </div>
+                                            }
                                             </div>
+                                        ))
                                         }
-                                        
-                                        
-                                        {params === "spacing" && 
-                                        
-                                            <div className={`${"tourSpacing"+item.identifiant}`}>
-                                            <div className='paramSelect'>Spacing</div>
-                                                <Form.Range step={1} min={1} max={30} value={spacing} onChange={(e) =>setSpacing(e.target.value)}/>
-                                            </div>
-                                        }
-                                        {params === "size" && 
-                                        
-                                            <div className={`${"tourSize"+item.identifiant}`}>
-                                            <div className='paramSelect'>Size</div>
-                                                <Form.Range step={1} min={1} max={30} value={size} onChange={(e) =>setSize(e.target.value)}/>
-                                            </div>
-                                        }
-                                        {params === "rainbow" && 
-                                            <div className={`${"tourRainbow"+item.identifiant}`}>
-                                                <div className='paramSelect'>Rainbow</div>
-                                                <input className="form-check-input" type="checkbox" checked={rainbow}  id="flexCheckDefault" onChange={e => handleChange(e)}></input>
-                                            </div>
-                                        }
-                                        {params === "period" && 
-                                            <div className={`${"tourPeriod"+item.identifiant}`}>
-                                            <div className='paramSelect'>Period</div>
-                                                <Form.Range step={1} min={1} max={30} value={period} onChange={(e) =>setPeriod(e.target.value)}/>
-                                            </div>
-                                        }
-                                        {params === "onAll" && 
-                                            <div className={`${"tourSepare"+item.identifiant}`}>
-                                                <div className='paramSelect'>Séparés</div>
-                                                <input className="form-check-input" type="checkbox" checked={onAll}  id="flexCheckDefault" onChange={e => changeOnAll(e)}></input>
-                                            </div>
-                                        }
-                                        
-
-
+                                        <div className={`col-12 c d-flex justify-content-center ${"tourStart"+item.identifiant}`}>
+                                            <button onClick={() => changeMode(item.mode)} id="btnStart" className="btnSetParamMode">Démarrer</button>                               
                                         </div>
-                                        
-                                    ))
-                                    }
-                                    <div className={`col-12 c d-flex justify-content-center ${"tourStart"+item.identifiant}`}>
-                                        <button onClick={() => changeMode(item.mode)} id="btnStart" className="btnSetParamMode">Démarrer</button>                               
+                                        <div className={`col-12 c d-flex justify-content-center ${"tourSave"+item.identifiant}`}>
+                                            <button data-bs-toggle="modal" data-bs-target={"#modeName"} className="btnSetParamMode" onClick={() => setNewMode([item.nom,item.mode])}>Sauvegarder</button>
+                                        </div>
                                     </div>
-                                    <div className={`col-12 c d-flex justify-content-center ${"tourSave"+item.identifiant}`}>
-                                        <button data-bs-toggle="modal" data-bs-target={"#modeName"} className="btnSetParamMode" onClick={() => setNewMode([item.nom,item.mode])}>Sauvegarder</button>
-                                    </div>
-                                    
-                                </div>
                                 </div>
                             </div>
                         </div>
@@ -370,41 +389,37 @@ function Mode ({token,stepIndex,setStepIndex}){
             {/* Div with saved modes */}
             { modeList.length > 0 &&
             <>
-            <div className="col-12 separator">Modes Sauvegardés</div>
-            
-                {modeList.map((item, k) => (
-                    <div className={`col-4 myOwnEffects ${"myOwnEffects" +item[7]}`}  key={k}>
-                        <div className='col-12 deleteModeDivLogo' >
-                            {visibility &&
-                                <i className="bi bi-trash deleteMode" onClick={() =>removeMode(item)}></i>
-                            }
-                        </div>
-                        <div className='col-12 row' onClick={() => runMyMode(item[0],item[1],item[2],item[3],item[4],item[5],item[6],item[7])}>
-                            <div className='col-12'>
-                                
-                                <i className={`bi ${mode.find(o => o.mode === item[2])["logo"]} logoSavedModes`}></i>
+                <div className="col-12 separator">Modes Sauvegardés</div>
+                    {modeList.map((item, k) => (
+                        <div className={`col-4 myOwnEffects ${"myOwnEffects" +item[7]}`}  key={k}>
+                            <div className='col-12 deleteModeDivLogo' >
+                                {visibility &&
+                                    <i className="bi bi-trash deleteMode" onClick={() =>removeMode(item)}></i>
+                                }
                             </div>
-                            <div className='col-12 savedModeText'>
-                            {item[7]}
+                            <div className='col-12 row' onClick={() => runMyMode(item[0],item[1],item[2],item[3],item[4],item[5],item[6],item[7])}>
+                                <div className='col-12'>
+                                    
+                                    <i className={`bi ${mode.find(o => o.mode === item[2])["logo"]} logoSavedModes`}></i>
+                                </div>
+                                <div className='col-12 savedModeText'>
+                                {item[7]}
+                                </div>
                             </div>
                         </div>
-                        
-                    </div>
-                ))}
-            
-            <div className="col-12 ">
-                {visibility &&
-                    <button className="col-12 btnModifiy d-flex justify-content-center" onClick={changeVisibilityDelete}> Sauvegarder</button>
-                }
-                {!visibility &&
-                    <button className="col-12 btnModifiy d-flex justify-content-center" onClick={changeVisibilityDelete}> Supprimer</button>
-                }
-            </div>
+                    ))}
+                
+                <div className="col-12 ">
+                    {visibility &&
+                        <button className="col-12 btnModifiy d-flex justify-content-center" onClick={changeVisibilityDelete}> Sauvegarder</button>
+                    }
+                    {!visibility &&
+                        <button className="col-12 btnModifiy d-flex justify-content-center" onClick={changeVisibilityDelete}> Supprimer</button>
+                    }
+                </div>
             </>
         }
         </div>
-        
-        
     </div>
     )
 }

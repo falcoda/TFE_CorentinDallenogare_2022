@@ -1,5 +1,9 @@
 import { useState } from 'react';
 
+
+// This component is used to login the user
+// This component comes from a tutorial
+// https://dev.to/nagatodev/how-to-add-login-authentication-to-a-flask-and-react-application-23i7
 function useToken() {
 
   function getToken() {

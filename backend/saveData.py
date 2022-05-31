@@ -4,12 +4,15 @@ path='./config/config.json'
 
 with open(path, 'r+',encoding='utf8') as f:
     data = json.load(f)
-    print(data['number'])
     mode.num_pixels = data['number']*30
     mode.numTriangle =data['number']
 
 def saveCount(count):
-    print("aaaaaaaaaazzzz",count)
+    """
+    Update the number of pixels
+    Param: count: int
+    Update the number of pixels in the config file
+    """
     if(count!='' and count>=0):
         with open(path, 'r+',encoding='utf8') as f:
             data = json.load(f)

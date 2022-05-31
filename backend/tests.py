@@ -1,10 +1,12 @@
 import unittest
 import mode
-import time
 from app import app
 
 class TestStringMethods(unittest.TestCase):
-
+    """
+    Class to test the backend
+    Use unittest to test the backend
+    """
     def testColor(self):
         actual = mode.color('#ff1275')
         expected =(255, 18, 117)
