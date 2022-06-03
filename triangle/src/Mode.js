@@ -28,20 +28,20 @@ function Mode ({token,stepIndex,setStepIndex}){
 
     // The list of modes
     const [mode, setModes] = useState([
-        {identifiant:'un', nom : 'Rainbow Wheel',  param:["speed","onAll"], logo : "bi-bullseye",mode:"rainbowWheel"},
+        {identifiant:'un', nom : 'Roue Arc-En-Ciel',  param:["speed","onAll"], logo : "bi-bullseye",mode:"rainbowWheel"},
         {identifiant:'deux', nom : 'Chase',  param:["speed","size","spacing","rainbow","period"], logo : "bi-shuffle",mode:"chase"},
-        {identifiant:'trois', nom : 'Comet All SameTime',  param:["speed","size"], logo : "bi-star",mode:"cometAllSameTime"},
-        {identifiant:'quatre', nom : 'randomEffects',  param:["speed","size","spacing","rainbow","period"], logo : "bi-qr-code-scan",mode:"randomEffects"},
-        {identifiant:'cinq', nom : 'cote Wipe',  param:["speed","rainbow"], logo : "bi-upc-scan",mode:"coteWipe"},
+        {identifiant:'trois', nom : 'Triangle Wipe',  param:["speed","rainbow"], logo : "bi-star",mode:"cometAllSameTime"},
+        {identifiant:'quatre', nom : 'Effets Alléatoire',  param:["speed","size","spacing","rainbow","period"], logo : "bi-qr-code-scan",mode:"randomEffects"},
+        {identifiant:'cinq', nom : 'Coté Wipe',  param:["speed","rainbow"], logo : "bi-upc-scan",mode:"coteWipe"},
         {identifiant:'six', nom : 'Color Wipe',  param:["speed","spacing"], logo : "bi-rainbow",mode:"colorWipe"},
-        {identifiant:'sept', nom : 'Comet',  param:["speed","size","rainbow","onAll"], logo : "bi-stars",mode:"comet"},
-        {identifiant:'huit', nom : 'Rainbow',  param:["speed","period","onAll"], logo : "bi-rainbow",mode:"rainbow"},
-        {identifiant:'dix', nom : 'Pulse',  param:["speed"], logo : "bi-heart-pulse",mode:"pulse"},
-        {identifiant:'onze', nom : 'Color Cycle',  param:["speed","onAll"], logo : "bi-arrow-repeat",mode:"colorCycle"},
-        {identifiant:'douze', nom : 'Solid',  param:[], logo : "bi-bricks",mode:"solid"},
-        {identifiant:'treize', nom : 'Blink',  param:["speed"], logo : "bi-sun",mode:"blink"},
-        {identifiant:'quatorze', nom : 'Sparkle',  param:["speed","rainbow","period","onAll"], logo : "bi-sun",mode:"sparkle"},
-        {identifiant:'quinze', nom : 'Sparkle Pulse',  param:["speed","period"], logo : "bi-sun",mode:"sparklePulse"},
+        {identifiant:'sept', nom : 'Comète',  param:["speed","size","rainbow","onAll"], logo : "bi-stars",mode:"comet"},
+        {identifiant:'huit', nom : 'Arc-En-Ciel',  param:["speed","period","onAll"], logo : "bi-rainbow",mode:"rainbow"},
+        {identifiant:'dix', nom : 'Pulsation',  param:["speed"], logo : "bi-heart-pulse",mode:"pulse"},
+        {identifiant:'onze', nom : 'Cycle de Couleur',  param:["speed","onAll"], logo : "bi-arrow-repeat",mode:"colorCycle"},
+        {identifiant:'douze', nom : 'Unis',  param:[], logo : "bi-bricks",mode:"solid"},
+        {identifiant:'treize', nom : 'Clignotement',  param:["speed"], logo : "bi-sun",mode:"blink"},
+        {identifiant:'quatorze', nom : 'Étincelle',  param:["speed","rainbow","period","onAll"], logo : "bi-sun",mode:"sparkle"},
+        {identifiant:'quinze', nom : 'Étincelle Pulsante',  param:["speed","period"], logo : "bi-sun",mode:"sparklePulse"},
 
     ]);
 
@@ -124,24 +124,22 @@ function Mode ({token,stepIndex,setStepIndex}){
         }
         rainbow = false
         let data = JSON.stringify({"length":Number(size),"speed":Number(speed),"mode":mode,"spacing":Number(spacing),"period":Number(period),"rainbow":rainbow,"onAll":onAll});
-        if(didCancel == false ){
-            didCancel =true;
-            axios({
-                method: "POST",
-                url:"/api/Mode",
-                data: data,
-                headers: {
-                    "Accept": "application/json",
-                    "Content-Type": "application/json",
-                    Authorization: 'Bearer ' + token
-                }
-            }).then((response) => {
-                const res =response.data;
-                console.log(res);
-                didCancel = false;
-            }).catch(error => console.log(error));
-        } 
-            return false;
+        
+        axios({
+            method: "POST",
+            url:"/api/Mode",
+            data: data,
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                Authorization: 'Bearer ' + token
+            }
+        }).then((response) => {
+            const res =response.data;
+            console.log(res);
+        }).catch(error =>{ console.log(error)})
+        
+        return false;
     }
 
     const changeMode = (mode) =>{

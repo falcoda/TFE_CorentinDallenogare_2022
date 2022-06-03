@@ -49,14 +49,13 @@ function Login(props) {
 
   return (
     <div className='loginPage'>
-      <h1 className='loginTitle'>Login</h1>
+      <h1 className='loginTitle'>Connexion</h1>
         <form className="loginForm row">
           <div className="col-12 loginInput">
             <input onChange={handleChange} 
-              type="email"
               text={loginForm.email} 
               name="email" 
-              placeholder="Email" 
+              placeholder="Utilisateur" 
               value={loginForm.email} 
               className="inputLogin" />
           </div>
@@ -66,13 +65,13 @@ function Login(props) {
                 type="password"
                 text={loginForm.password} 
                 name="password" 
-                placeholder="Password" 
+                placeholder="Mot de passe" 
                 value={loginForm.password}
                 className="inputLogin"/>
           </div>
           
           <div className="col-12 ">
-            <button onClick={setLogin} className="buttonLogin">Submit</button>
+            <button onClick={setLogin} className="buttonLogin">Soumettre</button>
           </div>
       </form>
     </div>

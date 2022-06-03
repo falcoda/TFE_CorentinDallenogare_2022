@@ -1,0 +1,24 @@
+[Unit]
+
+Description=Flask trileds backend
+
+After=network.target
+
+
+
+[Service]
+
+User=pi
+
+WorkingDirectory=/home/pi/Desktop/projet/TFE_CorentinDallenogare_2022/backend
+
+ExecStart=/home/pi/.local/bin/gunicorn --bind 0.0.0.0:5000 app:app
+
+Restart=always
+
+
+
+[Install]
+
+WantedBy=multi-user.target
+

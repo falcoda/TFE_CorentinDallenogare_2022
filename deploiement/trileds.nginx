@@ -1,0 +1,54 @@
+server {
+
+    listen 80;
+
+
+    server_name trileds;
+    root /home/pi/Desktop/projet/TFE_CorentinDallenogare_2022/backend/build;
+
+    index index.html;
+    
+	location / {
+
+        try_files $uri $uri/ /index.html;
+
+    }
+    location /api {
+
+        include proxy_params;
+
+        proxy_pass http://localhost:5000;
+    }
+
+}
+server {
+
+    listen *:443 ssl ;
+
+
+    server_name trileds;
+
+    ssl_certificate /etc/nginx/certificate/nginx-certificate.crt;
+
+    ssl_certificate_key /etc/nginx/certificate/nginx.key;
+
+    root /home/pi/Desktop/projet/TFE_CorentinDallenogare_2022/backend/build;
+
+    index index.html;
+
+
+
+    location / {
+
+        try_files $uri $uri/ /index.html;
+
+    }
+    location /api {
+
+        include proxy_params;
+
+        proxy_pass http://localhost:5000;
+
+    }
+
+}

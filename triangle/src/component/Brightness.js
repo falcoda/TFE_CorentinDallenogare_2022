@@ -3,27 +3,39 @@ import { Form  } from 'react-bootstrap';
 import "../css/colorPicker.css";
 import axios from "axios";
 
-const Brightness = (auth) => {
+const Brightness = ({auth,didCancel}) => {
   // This component is used to change the brightness of the leds
   const [valueBrightness, setValueBrightness] = useState(100); 
-
+  console.log(didCancel)
+  var timeout;
   const setBrigthness=(brigthness) => {
     // This function call the API to change the brightness of the leds
     setValueBrightness(brigthness);
+    
+    console.log(didCancel)
+       
+    
     let data = JSON.stringify({"brightness": brigthness});
-    axios({
-      method: "POST",
-      url:"/api/ChangeBrightness",
-      data: data,
-      headers: {
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        Authorization: 'Bearer ' + auth.token
-      }
-    }).then((response) => {
-      const res =response.data
-      console.log(res)
-    }).catch(error => console.log(error))
+    if(didCancel == false ){
+      didCancel =true;
+      console.log(didCancel)
+      axios({
+        method: "POST",
+        url:"/api/ChangeBrightness",
+        data: data,
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+          Authorization: 'Bearer ' + auth.token
+        }
+      }).then((response) => {
+        
+        const res =response.data
+        console.log(res)
+        didCancel = false;
+      }).catch(error => {console.log(error);didCancel = false;} )
+    } 
+    console.log(didCancel)
   }
 
   return (
