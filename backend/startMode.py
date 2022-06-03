@@ -5,7 +5,7 @@ import json
 from adafruit_led_animation import helper
 from ast import literal_eval
 
-import modeTest
+import modes
 
 ORDER = neopixel.GRB
 pixel_pin = board.D18
@@ -39,21 +39,21 @@ pixels = neopixel.NeoPixel(
 map1 = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
 # Define all the functions for the effects
 function_mappings = {
-    'rainbowWheel':  modeTest.rainbowWheel,
-    'color':  modeTest.color,
-    'colorWipe':  modeTest.colorWipe,
-    'cometAllSameTime':  modeTest.triangleWipe,
-    'randomEffects':  modeTest.randomEffects,# 
-    'coteWipe':  modeTest.coteWipe,
-    'chase':  modeTest.chase,
-    'comet':  modeTest.comet,
-    'rainbow':  modeTest.rainbow,
-    'blink':  modeTest.blink,
-    'solid':  modeTest.solid,
-    'colorCycle':  modeTest.colorCycle,
-    'pulse':  modeTest.pulse,
-    'sparklePulse':  modeTest.sparklePulse,
-    'sparkle':  modeTest.sparkle,
+    'rainbowWheel':  modes.rainbowWheel,
+    'color':  modes.color,
+    'colorWipe':  modes.colorWipe,
+    'cometAllSameTime':  modes.triangleWipe,
+    'randomEffects':  modes.randomEffects,# 
+    'coteWipe':  modes.coteWipe,
+    'chase':  modes.chase,
+    'comet':  modes.comet,
+    'rainbow':  modes.rainbow,
+    'blink':  modes.blink,
+    'solid':  modes.solid,
+    'colorCycle':  modes.colorCycle,
+    'pulse':  modes.pulse,
+    'sparklePulse':  modes.sparklePulse,
+    'sparkle':  modes.sparkle,
 
 }
 if __name__ == '__main__':
