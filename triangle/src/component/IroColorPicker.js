@@ -15,7 +15,6 @@ class IroColorPicker  extends React.Component{
     // call onColorChange prop whenever the color changes
     this.colorPicker.on("color:change", color => {
       if (props.onColorChange) props.onColorChange(color);
-      // console.log(color.hexString)
     });
   }
 

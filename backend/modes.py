@@ -94,9 +94,6 @@ def getColor():
         data = json.load(f)
         allColor = hextorgb.hex_to_rgb(data['color'])
 
-
-
-
 def timeChecker() :
     """
     Update the status of the animation when the time is over
@@ -351,28 +348,18 @@ def coteWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
     while status:
         timeChecker()
         for j in range(0,255,40):
-            if status :
-                for i in range(0,int(30),10):
-                    if status :
-                    
-                        for k in range(numTriangle+1) :
-                            if status :
-                                if rainbow :
-                                    color = wheel(j)
-                                else :
-                                    getColor()
-                                    color = allColor
-                                pixels[(i+(k*30)):(i+(k*30))+10] = [color] * 10
-                                pixels[(i+(k*30))-10:(i+(k*30))+1] = [(0,0,0)] * 11
-                                pixels.show()
-                                time.sleep(0.1-speed)
-                            else :
-                                break
+            for i in range(0,int(30),10):
+                for k in range(numTriangle+1) :
+                    if rainbow :
+                        color = wheel(j)
                     else :
-                        break
-                    
-            else :
-                break
+                        getColor()
+                        color = allColor
+                    pixels[(i+(k*30)):(i+(k*30))+10] = [color] * 10
+                    pixels[(i+(k*30))-10:(i+(k*30))+1] = [(0,0,0)] * 11
+                    pixels.show()
+                    time.sleep(0.1-speed)
+               
     if(status == False) :
         powerOff("#000000")
 
@@ -541,7 +528,6 @@ def colorCycle( speed,size,spacing,period,map_1,rainbow,onAll) :
         speed = adaptSpeed(speed, 2)
         
         for i in range(0,numTriangle) :
-           # random.shuffle(colorList)
             maps=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)         
         
             colorcycle= ColorCycle(maps, speed=2.3-speed,colors=colorList)

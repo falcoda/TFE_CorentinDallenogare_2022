@@ -9,7 +9,7 @@ import "./css/colorPicker.css";
 const Color = (props) => {
   // This component is used to display the home page
   // The page is composed of a color picker, a color choice and a brightness slider
-
+  const [cancel, setCancel] = React.useState(false);
   let didCancel = false
   const displayColor =(color) => {
     // This function is use to call the api to change the color of the leds
@@ -38,7 +38,7 @@ const Color = (props) => {
       <div className="homePage">
         <IroColorPicker taille={window.innerHeight/3} couleur={"#FFFFFF"} onColorChange={ (color) => { displayColor(color.hexString) }}/>
         <ColorChoice token={props.token}></ColorChoice>
-        <Brightness token={props.token} didCancel={didCancel}></Brightness>
+        <Brightness token={props.token} cancel={cancel} setCancel={setCancel} onChange={()=>console.log("aaa")}></Brightness>
       </div>
     
   )

@@ -1,5 +1,5 @@
 from multiprocessing.dummy import Process
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, jsonify, request
 import subprocess, os
 import time
 from jinja2 import Undefined
@@ -23,25 +23,33 @@ limiter = Limiter(
     key_func=get_remote_address,
     default_limits=["2000000000000000 per day", "5000000000 per hour"]
 )
+
 # The last effect on run 
 lastData = {}  
-onLoad = False
+
 # Declare the stop time variable
 stopTime= Undefined
 
+# Create a JWT manager for this application
+app.config["JWT_SECRET_KEY"] = "helloCodaTriangle"
+app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=100)
+jwt = JWTManager(app)
+
 def show_effect(data):
+    """
+    Show the effect on the neopixels
+    Parameter : data (dict)
+    Create a new process to run the effect
+    """
     global process
-    process = subprocess.Popen(["sudo","python3", "demo.py",data], preexec_fn=os.setpgrp, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    process = subprocess.Popen(["sudo","python3", "startMode.py",data], preexec_fn=os.setpgrp, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
 
 @app.route('/')
 def index():
     return app.send_static_file('./index.html')
 
-# Create a JWT manager for this application
-app.config["JWT_SECRET_KEY"] = "helloCodaTriangle"
-app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=100)
-jwt = JWTManager(app)
+
 
 @app.route('/api/Login', methods=["POST"])
 @limiter.limit("1/second", override_defaults=False)
@@ -137,7 +145,7 @@ def setoff():
     global process
     if process is not None:
         pid = process.pid
-        cmd = "sudo killall python3"  # -9 to kill force fully
+        cmd = "sudo killall python3" 
         print(cmd)
         print(os.system(cmd))
         print(process.wait())
@@ -156,7 +164,7 @@ def change_effect():
     global process
     global lastData
     if process is not None:
-        cmd = "sudo killall python3"  # -9 to kill force fully
+        cmd = "sudo killall python3"  
         print(cmd)
         print(os.system(cmd))
         print(process.wait())
@@ -175,6 +183,7 @@ def change_effect():
         print('Invalid function, try again.')
     return (data)
 
+
 @app.route('/api/ChangeBrightness', methods=["POST"])
 @jwt_required()
 def changeBrightness():
@@ -190,22 +199,21 @@ def changeBrightness():
     global process
     global onLoad
     data = request.get_json(force = True)
-    if onLoad == False :
-        onLoad = True
-        if process is not None :
-            cmd = "sudo killall python3"  # -9 to kill force fully
-            print(cmd)
-            print(os.system(cmd))
-            process = None
-        process = subprocess.Popen(["sudo","python3", "saveBrightness.py",str(data['brightness'])], preexec_fn=os.setpgrp)
-        if(lastData !={} ):
-            show_effect(str(lastData)) 
-        brightnessPath='./config/brightness.json'
-        with open(brightnessPath, 'r+',encoding='utf8') as f:
-            data = json.load(f)
-            brightness =float(data['brightness'])/100
-            print(brightness,"aaaa")
-        onLoad = False
+    
+    if process is not None :
+        cmd = "sudo killall python3" 
+        print(cmd)
+        print(os.system(cmd))
+        process = None
+    process = subprocess.Popen(["sudo","python3", "saveBrightness.py",str(data['brightness'])], preexec_fn=os.setpgrp)
+    if(lastData !={} ):
+        show_effect(str(lastData)) 
+    brightnessPath='./config/brightness.json'
+    with open(brightnessPath, 'r+',encoding='utf8') as f:
+        data = json.load(f)
+        brightness =float(data['brightness'])/100
+        print(brightness,"aaaa")
+        
     return (data)
 
 
@@ -221,12 +229,12 @@ def changeNumber():
     """
     global process
     data = request.get_json(force = True)
-    cmd = "sudo killall python3"  # -9 to kill force fully
+    cmd = "sudo killall python3" 
     print(cmd)
     print(os.system(cmd))
     process = None
     process = subprocess.Popen(["sudo","python3", "saveNumber.py",str((data['number']))], preexec_fn=os.setpgrp)
-    cmd = "sudo killall python3"  # -9 to kill force fully
+    cmd = "sudo killall python3" 
     print(cmd)
     process = None
     return (data)
@@ -257,7 +265,7 @@ def timer():
             json.dump(data, f, indent=4,ensure_ascii=False)
     if stopTime != "Undefined":
         if process is not None :
-            cmd = "sudo killall python3"  # -9 to kill force fully
+            cmd = "sudo killall python3" 
             print(cmd)
             print(os.system(cmd))
             process = None
