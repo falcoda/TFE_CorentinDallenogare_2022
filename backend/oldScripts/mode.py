@@ -234,6 +234,7 @@ def colorWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     global status
     speed = adaptSpeed(speed, 0.1)
+    spacing = spacing *(numTriangle//2)
     if(num_pixels ==spacing):
         spacing -=1
     while status:
@@ -250,22 +251,36 @@ def colorWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
         powerOff("#000000")
               
   
-def cometAllSameTime( speed,size,spacing,period,map_1,rainbow,onAll) :
+def triangleWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
     """
     Actually do nothing
     it is for use a microphone
     """
     global allColor
-    
+    speed = adaptSpeed(speed, 0.2)
     while status:
-        if(GPIO.input(MicPin) ==1):
-            print('hight')
-            pixels.fill((255,0,255))
-            pixels.show()
-        else : 
-            print('low')
-            pixels.fill((0,0,0))
-            pixels.show()
+        timeChecker()
+        for j in range(0,255,40):
+            if status :
+                    
+                for k in range(numTriangle+1) :
+                    if status :
+                        if rainbow :
+                            color = wheel(j)
+                        else :
+                            color = allColor
+                        pixels[(k*30):(k*30)+30] = [color] * 30
+                        pixels[(k*30)-30:(k*30)+1] = [(0,0,0)] * 31
+                        pixels.show()
+                        time.sleep(0.2-speed)
+                    
+                    else :
+                        break
+                    
+            else :
+                break
+    if(status == False) :
+        powerOff("#000000")
    
         
 
@@ -342,7 +357,6 @@ def coteWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
     status = True
     while status:
         timeChecker()
-        print(status)
         for j in range(0,255,40):
             if status :
                 for i in range(0,int(30),10):
@@ -350,7 +364,6 @@ def coteWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
                     
                         for k in range(numTriangle+1) :
                             if status :
-                                print(status)
                                 if rainbow :
                                     color = wheel(j)
                                 else :
@@ -358,12 +371,12 @@ def coteWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
                                 pixels[(i+(k*30)):(i+(k*30))+10] = [color] * 10
                                 pixels[(i+(k*30))-10:(i+(k*30))+1] = [(0,0,0)] * 11
                                 pixels.show()
-                            
+                                time.sleep(0.1-speed)
                             else :
                                 break
                     else :
                         break
-                    time.sleep(0.2-speed)
+                    
             else :
                 break
     if(status == False) :
@@ -376,6 +389,8 @@ def chase( speed,size,spacing,period,map_1,rainbow,onAll) :
     status =False
     speed = adaptSpeed(speed, 0.2)
     print(speed)
+    size = size* (numTriangle//2)
+    spacing = spacing* (numTriangle//2)
     if (rainbow == True):
         status = True
         rainbowChase= RainbowChase(map_1, speed=0.2-speed, size=size, spacing=spacing, step=62-round(period)*2)
@@ -424,15 +439,15 @@ def comet( speed,size,spacing,period,map_1,rainbow,onAll) :
     
     else :
         the_animations = []
-        speed = (adaptSpeed(speed, 0.098)/numTriangle)*3
+        speed = (adaptSpeed(speed, 0.098)/numTriangle)
         for i in range(0,numTriangle) :
             maps=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)  
             if(rainbow==False):
-                comet = Comet(maps, speed=(0.11-speed), color=(allColor), tail_length=round(size), bounce=False,ring=True)
+                comet = Comet(maps, speed=(0.15), color=(allColor), tail_length=round(size), bounce=False,ring=True)
                 the_animations.append(comet)
                 
             else : 
-                rainbowCommet= RainbowComet(maps, speed=(0.11-speed), tail_length=size, bounce=True)
+                rainbowCommet= RainbowComet(maps, speed=(0.15), tail_length=size, bounce=True)
                 the_animations.append(rainbowCommet)
 
         group = AnimationGroup(*the_animations)
@@ -466,6 +481,8 @@ def rainbow(speed,size,spacing,period,map_1,rainbow,onAll) :
         while status:
             timeChecker()
             group1.animate()
+        if(status == False) :
+            powerOff("#000000")
     else :
         speed = (adaptSpeed(speed, 0.3)/numTriangle)*4.5
         
@@ -479,6 +496,8 @@ def rainbow(speed,size,spacing,period,map_1,rainbow,onAll) :
         while status:
             timeChecker()
             group.animate()
+        if(status == False) :
+            powerOff("#000000")
 
 
 def blink( speed,size,spacing,period,map_1,rainbow,onAll) :
@@ -491,6 +510,8 @@ def blink( speed,size,spacing,period,map_1,rainbow,onAll) :
         timeChecker()
         group1.color = allColor
         group1.animate()
+    if(status == False) :
+        powerOff("#000000")
 
 def solid( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
@@ -504,8 +525,9 @@ def solid( speed,size,spacing,period,map_1,rainbow,onAll) :
 def colorCycle( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     global status
-    speed = adaptSpeed(speed, 1)
+    
     if(onAll) :
+        speed = adaptSpeed(speed, 1)
         colorcycle= ColorCycle(map_1, speed=1-speed)
         group1 = AnimationSequence(colorcycle)
         while status:
@@ -521,13 +543,13 @@ def colorCycle( speed,size,spacing,period,map_1,rainbow,onAll) :
         colorList = [
         (0,0,255),(0,255,255),(255,0,255),(255,0,0),(255,255,255)
         ]
+        speed = adaptSpeed(speed, 2)
         
         for i in range(0,numTriangle) :
-            random.shuffle(colorList)
-            print((colorList))
+           # random.shuffle(colorList)
             maps=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)         
         
-            colorcycle= ColorCycle(maps, speed=1-speed,colors=colorList)
+            colorcycle= ColorCycle(maps, speed=2.3-speed,colors=colorList)
             the_animations.append(colorcycle)
 
         group = AnimationGroup(*the_animations)
@@ -611,3 +633,19 @@ def sparkle( speed,size,spacing,period,map_1,rainbow,onAll) :
         if(status == False) :
             powerOff("#000000")
 
+def music( speed,size,spacing,period,map_1,rainbow,onAll) :
+    """
+    Actually do nothing
+    it is for use a microphone
+    """
+    global allColor
+    
+    while status:
+        if(GPIO.input(MicPin) ==1):
+            print('hight')
+            pixels.fill((255,0,255))
+            pixels.show()
+        else : 
+            print('low')
+            pixels.fill((0,0,0))
+            pixels.show()

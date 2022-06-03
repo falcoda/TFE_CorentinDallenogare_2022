@@ -1,9 +1,14 @@
-from multiprocessing.dummy import Process
-from flask import Flask, render_template, jsonify, request
-import subprocess, os
-import time
+from flask import Flask
 from jinja2 import Undefined
 import json
+import hextorgb
+import time
+import os
+import saveData
+import neopixel
+import mode
+from adafruit_led_animation import helper
+from flask import Flask, request, jsonify
 from datetime import  timedelta, timezone
 import datetime
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
@@ -15,33 +20,46 @@ from dotenv import load_dotenv
 # Load dotenv variables
 load_dotenv()
 
+# Create the application instance
 app = Flask(__name__,static_folder='build', static_url_path='')
-process = None
+
 # Create a limiter for login attempts
 limiter = Limiter(
     app,
     key_func=get_remote_address,
     default_limits=["2000000000000000 per day", "5000000000 per hour"]
 )
-# The last effect on run 
-lastData = {}  
-onLoad = False
-# Declare the stop time variable
-stopTime= Undefined
+# Define all the functions for the effects
+function_mappings = {
+    'rainbowWheel': mode.rainbowWheel,
+    'color': mode.color,
+    'colorWipe': mode.colorWipe,
+    'cometAllSameTime': mode.triangleWipe,
+    'randomEffects': mode.randomEffects,# 
+    'coteWipe': mode.coteWipe,
+    'chase': mode.chase,
+    'comet': mode.comet,
+    'rainbow': mode.rainbow,
+    'blink': mode.blink,
+    'solid': mode.solid,
+    'colorCycle': mode.colorCycle,
+    'pulse': mode.pulse,
+    'sparklePulse': mode.sparklePulse,
+    'sparkle': mode.sparkle,
 
-def show_effect(data):
-    global process
-    process = subprocess.Popen(["sudo","python3", "demo.py",data], preexec_fn=os.setpgrp, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+}
 
-
+# Defaults route for the frontend
 @app.route('/')
 def index():
     return app.send_static_file('./index.html')
+
 
 # Create a JWT manager for this application
 app.config["JWT_SECRET_KEY"] = "helloCodaTriangle"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=100)
 jwt = JWTManager(app)
+
 
 @app.route('/api/Login', methods=["POST"])
 @limiter.limit("1/second", override_defaults=False)
@@ -83,6 +101,8 @@ def refresh_expiring_jwts(response):
     except (RuntimeError, KeyError):
         return response
 
+
+
 @app.route("/api/Logout", methods=["POST"])
 def logout():
     """
@@ -96,6 +116,7 @@ def logout():
     unset_jwt_cookies(response)
     return response
 
+
 @app.route('/api/ChangeColor', methods=["POST"])
 @jwt_required()
 def changeColor():
@@ -108,19 +129,47 @@ def changeColor():
     ---
     author Corentin Dallenogare <corentda@hotmail.fr>  
     """
-    global process
-    color = request.get_json(force = True)
-    print(color)
-    path='./config/color.json'
-    with open(path, 'r+',encoding='utf8') as f:
-            data = json.load(f)
-            print(data)
-            data['color'] =color
-            f.seek(0)
-            json.dump(data, f, indent=4,ensure_ascii=False)
-
+    data = request.get_json(force = True)
+    print(data)
+    mode.allColor=(hextorgb.hex_to_rgb(data))
+    if(mode.effectOnRun ==False ):
+        mode.color(data)
+        mode.status = True
     
     return (data)
+
+
+
+@app.route('/api/Mode', methods=["POST"])
+@jwt_required()
+def changeMode():
+    """
+    Create a route for changing the effect
+    This route will be used to change the effect of the neopixel
+    The effect will be received from the frontend
+    The function update the effectOnRun and status variable
+    Call this api passing a json with the effect name and parameters
+    ---
+    author Corentin Dallenogare <corentda@hotmail.fr>  
+    """
+    mode.status = False
+    data = request.get_json(force = True)
+    print(data)
+    time.sleep(0.1)
+    modes=data['mode']
+    mode.stopTime = Undefined
+    mode.pixels.fill(hextorgb.hex_to_rgb("#000000"))
+    mode.pixels.show()
+    try:        
+        mode.effectOnRun = True
+        map1 = helper.PixelMap(mode.pixels, [(x,) for x in range(0,mode.num_pixels)], individual_pixels=True)
+        if mode.status == False:
+            mode.status = True
+            function_mappings[modes](float(data["speed"]),int(data["length"]),int(data["spacing"]),int(data["period"]),map1,data["rainbow"],data["onAll"] )
+    except KeyError:
+        print('Invalid function, try again.')
+    return (data)
+
 
 @app.route('/api/Off')
 @jwt_required()
@@ -134,46 +183,41 @@ def setoff():
     ---
     author: Corentin Dallenogare <corentda@hotmail.fr>  
     """
-    global process
-    if process is not None:
-        pid = process.pid
-        cmd = "sudo killall python3"  # -9 to kill force fully
-        print(cmd)
-        print(os.system(cmd))
-        print(process.wait())
-        process = None
-        process = subprocess.Popen(["sudo","python3", "off.py"], preexec_fn=os.setpgrp, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-        process = None
+    if(mode.effectOnRun): 
+        mode.powerOff("#000000") 
+        mode.status = False
+        mode.effectOnRun = False
+    elif(mode.status):
+        mode.status = False
+        mode.powerOff("#000000") 
+        
     else:
-        show_effect(str({'length': 10, 'speed': 1, 'mode': 'solid', 'spacing': 10, 'period': 1, 'rainbow': False, 'onAll': False}))  
-      #  process = subprocess.Popen(["sudo","python3", "colors.py"], preexec_fn=os.setpgrp)
+        mode.status = True
+        mode.powerOff("#ffffff")  
     
     return ('off')
 
-@app.route('/api/Mode', methods=["POST"])
-@jwt_required()
-def change_effect():
-    global process
-    global lastData
-    if process is not None:
-        cmd = "sudo killall python3"  # -9 to kill force fully
-        print(cmd)
-        print(os.system(cmd))
-        print(process.wait())
-        
-        process = None
 
-    
+@app.route('/api/ChangeNumber', methods=["POST"])
+@jwt_required()
+def changeNumber():
+    """
+    Update the number of pixels 
+    Call this api passing a json with the number of pixels
+    ---
+    author: Corentin Dallenogare <corentda@hotmail.fr>  
+
+    """
+    global num_pixels
+    mode.pixels.fill(hextorgb.hex_to_rgb("#000000"))
+    mode.pixels.show()
     data = request.get_json(force = True)
-    time.sleep(0.1)
-    try:    
-        print(data)
-        lastData= data
-        show_effect(str(data))  
-        
-    except KeyError:
-        print('Invalid function, try again.')
+    saveData.saveCount(int(data['number']))
+    num_pixels=int(data['number'])*30
+    print("num", num_pixels)
+    mode.status = False
     return (data)
+
 
 @app.route('/api/ChangeBrightness', methods=["POST"])
 @jwt_required()
@@ -187,48 +231,8 @@ def changeBrightness():
     """
     data = request.get_json(force = True)
     print(data['brightness'])
-    global process
-    global onLoad
-    data = request.get_json(force = True)
-    if onLoad == False :
-        onLoad = True
-        if process is not None :
-            cmd = "sudo killall python3"  # -9 to kill force fully
-            print(cmd)
-            print(os.system(cmd))
-            process = None
-        process = subprocess.Popen(["sudo","python3", "saveBrightness.py",str(data['brightness'])], preexec_fn=os.setpgrp)
-        if(lastData !={} ):
-            show_effect(str(lastData)) 
-        brightnessPath='./config/brightness.json'
-        with open(brightnessPath, 'r+',encoding='utf8') as f:
-            data = json.load(f)
-            brightness =float(data['brightness'])/100
-            print(brightness,"aaaa")
-        onLoad = False
-    return (data)
-
-
-@app.route('/api/ChangeNumber', methods=["POST"])
-@jwt_required()
-def changeNumber():
-    """
-    Update the number of pixels 
-    Call this api passing a json with the number of pixels
-    ---
-    author: Corentin Dallenogare <corentda@hotmail.fr>  
-
-    """
-    global process
-    data = request.get_json(force = True)
-    cmd = "sudo killall python3"  # -9 to kill force fully
-    print(cmd)
-    print(os.system(cmd))
-    process = None
-    process = subprocess.Popen(["sudo","python3", "saveNumber.py",str((data['number']))], preexec_fn=os.setpgrp)
-    cmd = "sudo killall python3"  # -9 to kill force fully
-    print(cmd)
-    process = None
+    mode.setBrightness(data['brightness'])
+    # mode.num_pixels=int(data['number'])*30
     return (data)
 
 @app.route('/api/Timer', methods=["POST"])
@@ -241,28 +245,13 @@ def timer():
     author: Corentin Dallenogare <corentda@hotmail.fr>  
 
     """
-    global process
     data = request.get_json(force = True)
-    timerPath='./config/timer.json'
     print(data)
-    global stopTime
     if data['date'] =="undefined":
-        stopTime = "Undefined"
+        mode.stopTime = Undefined
     
     else:
-        stopTime =data['date'] 
-    with open(timerPath, 'w',encoding='utf8') as f:
-            data ={'time':str(stopTime)} 
-            f.seek(0)
-            json.dump(data, f, indent=4,ensure_ascii=False)
-    if stopTime != "Undefined":
-        if process is not None :
-            cmd = "sudo killall python3"  # -9 to kill force fully
-            print(cmd)
-            print(os.system(cmd))
-            process = None
-        if(lastData !={} ):
-            show_effect(str(lastData)) 
+        mode.stopTime =(datetime.datetime.fromtimestamp(data['date'] / 1000.0))
     return (data)
 
 
@@ -275,17 +264,11 @@ def getTimer():
     author: Corentin Dallenogare <corentda@hotmail.fr>  
 
     """
-    timerPath='./config/timer.json'
-    with open(timerPath, 'r+',encoding='utf8') as f:
-        data = json.load(f)
-        stopTime =data['time']
-    if stopTime == "Undefined":
+    if mode.stopTime == Undefined:
         return ("undefined")
     else: 
-        
-        print(str(stopTime))
-        return (str(datetime.datetime.fromtimestamp(int(data['time'] )/ 1000.0)))
+        return (str(mode.stopTime))
 
 
-if __name__ == "__main__":        # on running python app.py
-    app.run(host='0.0.0.0', debug='true')  # run the flask app
+if __name__ == '__main__':
+    app.run(debug=True)
