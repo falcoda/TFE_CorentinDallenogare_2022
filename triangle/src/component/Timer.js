@@ -37,10 +37,10 @@ const TimeApp = (props) => {
 			}
 		}).then((response) => {
       // If the timer is running, update the timer value
-      const res =response.data;
+      let res =new Date(response.data.replace(/-/g, "/")); 
       timeStart = new Date();
       timeStart.setSeconds(timeStart.getSeconds() + 1000);
-      restart(new Date(res));
+      restart(res);
 		}).catch(error => console.log(error));
     
   }, [])
@@ -53,6 +53,7 @@ const TimeApp = (props) => {
       var setDate=new Date();
       let dateSet =(setDate.getMonth()+1 +"/"+setDate.getDate()+"/"+setDate.getFullYear()+" " );  
       var date1=new Date(dateSet + value );   
+      console.log(date1);
       timeStart = new Date();
       let date2 = 0 ;
       if (value === null || value === "") {

@@ -349,6 +349,14 @@ def coteWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
 
 
 def chase( speed,size,spacing,period,map_1,rainbow,onAll) :
+    """
+    Chase pixels in one direction in a single color, like a theater marquee sign.
+    :param map1: The initialised LED object.
+    :param float speed: Animation speed rate in seconds, e.g. ``0.1``.
+    :param size: Number of pixels to turn on in a row.
+    :param spacing: Number of pixels to turn off in a row.
+    :param rainbow: if the animation is rainbow.
+    """
     global allColor
     global status
     status =False
@@ -378,6 +386,14 @@ def chase( speed,size,spacing,period,map_1,rainbow,onAll) :
     
 
 def comet( speed,size,spacing,period,map_1,rainbow,onAll) :
+    """
+    Draw a line that turns into a triangle
+    A comet animation.
+    :param map_1: The initialised LED object.
+    :param float speed: Animation speed in seconds, e.g. ``0.1``.*.
+    :param size: Number of pixels to turn on in a row.
+    :param rainbow: if the animation is rainbow.
+    """
     global allColor
     global numTriangle
     print(size)
@@ -428,13 +444,9 @@ def comet( speed,size,spacing,period,map_1,rainbow,onAll) :
 def rainbow(speed,size,spacing,period,map_1,rainbow,onAll) :
     """
     The classic rainbow color wheel.
-    :param pixel_object: The initialised LED object.
+    :param map1: The initialised LED object.
     :param float speed: Animation refresh rate in seconds, e.g. ``0.1``.
     :param float period: Period to cycle the rainbow over in seconds.  Default 5.
-    :param float step: Color wheel step.  Default 1.
-    :param str name: Name of animation (optional, useful for sequences and debugging).
-    :param bool precompute_rainbow: Whether to precompute the rainbow.  Uses more memory.
-                                    (default True).
     """
     global allColor
     print(speed)
