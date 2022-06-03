@@ -47,6 +47,8 @@ with open(path, 'r+',encoding='utf8') as f:
     print(data['number']*30 )
     num_pixels = data['number']*30
 numTriangle = int(num_pixels/30)
+
+# Define the order of the pixels
 ORDER = neopixel.GRB
 
 # Declare the states of the animation
@@ -54,7 +56,6 @@ status = True
 effectOnRun = False
 
 # Declare the brightness of the pixels
-
 brightnessPath='./config/brightness.json'
 with open(brightnessPath, 'r+',encoding='utf8') as f:
     data = json.load(f)
@@ -76,7 +77,7 @@ with open(timerPath, 'r+',encoding='utf8') as f:
         stopTime =(datetime.datetime.fromtimestamp(int(stopTime )/ 1000.0))
 
 
-
+# Create a NeoPixel object
 pixels = neopixel.NeoPixel(
     pixel_pin, num_pixels, brightness=brightness, auto_write=False, pixel_order=ORDER
 )
@@ -186,27 +187,25 @@ def rainbowWheel(speed,size,spacing,period,map_1,rainbow,onAll):
         while status:   
             timeChecker()     
             for j in range(255):
-                if status :
-                    for i in range(numTriangle):
-                        for k in range (30):
-                            pixel_index = (((k)+i) *255 //30) + j
-                            pixels[i*30+k] = wheel(pixel_index & 255)
-                    
-                    pixels.show()
-                    
-                    time.sleep(0.001-speed)
+                for i in range(numTriangle):
+                    for k in range (30):
+                        pixel_index = (((k)+i) *255 //30) + j
+                        pixels[i*30+k] = wheel(pixel_index & 255)
+                
+                pixels.show()
+                
+                time.sleep(0.001-speed)
     else :
         speed = (0.007*numTriangle) -numTriangle*(adaptSpeed(speed, 0.007))
         while status:
             timeChecker() 
             for j in range(255):
-                if(status):
-                    for i in range(num_pixels):
-                        pixel_index = (i * 256 // num_pixels) + j
-                        pixels[i] = wheel(pixel_index & 255)
-                    
-                    pixels.show()
-                    time.sleep(speed)
+                for i in range(num_pixels):
+                    pixel_index = (i * 256 // num_pixels) + j
+                    pixels[i] = wheel(pixel_index & 255)
+                
+                pixels.show()
+                time.sleep(speed)
     if(status == False) :
         powerOff("#000000")
         return False
@@ -226,14 +225,11 @@ def colorWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
     while status:
         timeChecker()
         for i in range(int(num_pixels)):
-            if status ==False :
-                break
-            else:
-                pixels[i] = allColor
-                pixels[i-spacing] = (0,0,0)
-                getColor()
-                pixels.show()
-                time.sleep(0.1- speed)
+            pixels[i] = allColor
+            pixels[i-spacing] = (0,0,0)
+            getColor()
+            pixels.show()
+            time.sleep(0.1- speed)
     if(status == False) :
         powerOff("#000000")
               
@@ -248,25 +244,18 @@ def triangleWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
     while status:
         timeChecker()
         for j in range(0,255,40):
-            if status :
-                    
-                for k in range(numTriangle+1) :
-                    if status :
-                        if rainbow :
-                            color = wheel(j)
-                        else :
-                            getColor()
-                            color = allColor
-                        pixels[(k*30):(k*30)+30] = [color] * 30
-                        pixels[(k*30)-30:(k*30)+1] = [(0,0,0)] * 31
-                        pixels.show()
-                        time.sleep(0.2-speed)
-                    
+            for k in range(numTriangle+1) :
+                    if rainbow :
+                        color = wheel(j)
                     else :
-                        break
+                        getColor()
+                        color = allColor
+                    pixels[(k*30):(k*30)+30] = [color] * 30
+                    pixels[(k*30)-30:(k*30)+1] = [(0,0,0)] * 31
+                    pixels.show()
+                    time.sleep(0.2-speed)
                     
-            else :
-                break
+                 
     if(status == False) :
         powerOff("#000000")
    
@@ -284,9 +273,7 @@ def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :
         period -= 1
     
     for i in range(0,numTriangle) :
-        print(size)
         choice = random.choice(["chase", "comet","rainbowChase","pulse"])
-        print(choice)
         maps=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)
         if (choice == "chase"):
             print("chase")
@@ -317,8 +304,6 @@ def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :
             pulse= Pulse(maps, speed=0.03, color=allColor,period=2.1-speedPulse)
             the_animations.append(pulse)
 
-
-    print(the_animations)
     group = AnimationGroup(*the_animations)
     while status:
         timeChecker()
@@ -337,7 +322,6 @@ def coteWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
     """
     Draw a line that turns into a triangle
     """
-    print("a")
     global allColor
     global numTriangle
     global status

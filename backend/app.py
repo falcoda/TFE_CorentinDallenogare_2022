@@ -1,22 +1,28 @@
 from multiprocessing.dummy import Process
 from flask import Flask, jsonify, request
-import subprocess, os
-import time
-from jinja2 import Undefined
-import json
-from datetime import  timedelta, timezone
-import datetime
-from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
-                               unset_jwt_cookies, jwt_required, JWTManager
 from flask_limiter import Limiter
+from jinja2 import Undefined
+import subprocess, os
+from datetime import  timedelta, timezone
+import time
+import json
+import datetime
 from flask_limiter.util import get_remote_address
 from dotenv import load_dotenv
+from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
+                               unset_jwt_cookies, jwt_required, JWTManager
+
+
 
 # Load dotenv variables
 load_dotenv()
 
+# Create the flask app
 app = Flask(__name__,static_folder='build', static_url_path='')
+
+# Global variable to store the child process
 process = None
+
 # Create a limiter for login attempts
 limiter = Limiter(
     app,
@@ -35,6 +41,7 @@ app.config["JWT_SECRET_KEY"] = "helloCodaTriangle"
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=100)
 jwt = JWTManager(app)
 
+
 def show_effect(data):
     """
     Show the effect on the neopixels
@@ -45,12 +52,13 @@ def show_effect(data):
     process = subprocess.Popen(["sudo","python3", "startMode.py",data], preexec_fn=os.setpgrp, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
 
+# Defaults route for the frontend
 @app.route('/')
 def index():
     return app.send_static_file('./index.html')
 
 
-
+#===================== LOGIN ========================
 @app.route('/api/Login', methods=["POST"])
 @limiter.limit("1/second", override_defaults=False)
 def create_token():
@@ -91,6 +99,8 @@ def refresh_expiring_jwts(response):
     except (RuntimeError, KeyError):
         return response
 
+
+#===================== LOGOUT ========================
 @app.route("/api/Logout", methods=["POST"])
 def logout():
     """
@@ -104,6 +114,8 @@ def logout():
     unset_jwt_cookies(response)
     return response
 
+
+#===================== CHANGE THE COLOR ========================
 @app.route('/api/ChangeColor', methods=["POST"])
 @jwt_required()
 def changeColor():
@@ -130,6 +142,8 @@ def changeColor():
     
     return (data)
 
+
+#===================== POWER OFF/ON THE LEDS ========================
 @app.route('/api/Off')
 @jwt_required()
 def setoff():
@@ -143,6 +157,7 @@ def setoff():
     author: Corentin Dallenogare <corentda@hotmail.fr>  
     """
     global process
+    global lastData
     if process is not None:
         pid = process.pid
         cmd = "sudo killall python3" 
@@ -154,10 +169,13 @@ def setoff():
         process = None
     else:
         show_effect(str({'length': 10, 'speed': 1, 'mode': 'solid', 'spacing': 10, 'period': 1, 'rainbow': False, 'onAll': False}))  
+        lastData= {'length': 10, 'speed': 1, 'mode': 'solid', 'spacing': 10, 'period': 1, 'rainbow': False, 'onAll': False}
       #  process = subprocess.Popen(["sudo","python3", "colors.py"], preexec_fn=os.setpgrp)
     
     return ('off')
 
+
+#===================== START A MODE========================
 @app.route('/api/Mode', methods=["POST"])
 @jwt_required()
 def change_effect():
@@ -184,6 +202,7 @@ def change_effect():
     return (data)
 
 
+#===================== SET BRIGHTNESS ========================
 @app.route('/api/ChangeBrightness', methods=["POST"])
 @jwt_required()
 def changeBrightness():
@@ -217,6 +236,7 @@ def changeBrightness():
     return (data)
 
 
+#===================== CHANGE NUMBERS OF TRIANGLES ========================
 @app.route('/api/ChangeNumber', methods=["POST"])
 @jwt_required()
 def changeNumber():
@@ -239,6 +259,8 @@ def changeNumber():
     process = None
     return (data)
 
+
+#===================== SET TIMER ========================
 @app.route('/api/Timer', methods=["POST"])
 @jwt_required()
 def timer():
@@ -274,6 +296,7 @@ def timer():
     return (data)
 
 
+#===================== GET TIMER ========================
 @app.route('/api/GetTimer', methods=["POST"])
 @jwt_required()
 def getTimer():
