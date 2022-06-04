@@ -11,7 +11,8 @@ import hextorgb
 import json
 import random
 import datetime
-
+from cometChase import CometsChase
+import adafruit_fancyled.adafruit_fancyled as fancy
 from adafruit_led_animation.animation.comet import Comet
 from adafruit_led_animation.animation.rainbowcomet import RainbowComet
 from adafruit_led_animation.animation.rainbowchase import RainbowChase
@@ -241,27 +242,66 @@ def triangleWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
     """
     global allColor
     speed = adaptSpeed(speed, 0.2)
+    period = 10//30*period
+    if period >10 :
+        period = 10
+    
+    period = 10-period
     while status:
         timeChecker()
-        for j in range(0,255,40):
+        for j in range(0,(255-(numTriangle*period)),8):
             for k in range(numTriangle+1) :
-                    if rainbow :
-                        color = wheel(j)
-                    else :
-                        getColor()
-                        color = allColor
+                if rainbow :
+                    color = wheel(j)
+                else :
+                    getColor()
+                    color = allColor
+                if onAll :
+                    pixels[(k*30):(k*30)+30] = [(0,0,0)] * 30
+                    pixels[(k*30)-30:(k*30)] = [color] * 30
+                else :
                     pixels[(k*30):(k*30)+30] = [color] * 30
                     pixels[(k*30)-30:(k*30)+1] = [(0,0,0)] * 31
-                    pixels.show()
-                    time.sleep(0.2-speed)
+                j +=period
+                pixels.show()
+                time.sleep(0.2-speed)
                     
                  
     if(status == False) :
         powerOff("#000000")
-   
-        
 
-def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :
+
+def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :   
+    global allColor
+    speed=adaptSpeed(speed, 0.2)
+    sparkle= CometsChase(map_1, speed=0.1-speed, color=allColor, size=size, spacing=0, reverse=True,)
+    group1 = AnimationSequence(sparkle)
+    while status:
+        getColor()
+        timeChecker()
+        group1.color = allColor
+        group1.animate()
+    if(status == False) :
+        powerOff("#000000")
+
+def gradiant(speed,size,spacing,period,map_1,rainbow,onAll) :   
+
+    palette = [
+           fancy.CRGB(255, 255, 0),    # Yellow
+           fancy.CRGB(255, 0, 0)]         # Black
+
+    offset = 0  # Position offset into palette to make it "spin"
+
+    while True:
+        for i in range(num_pixels):
+            color = fancy.palette_lookup(palette, offset + i / num_pixels-1)
+            pixels[i] = color.pack()
+        pixels.show()
+
+        offset += 0.0033  # Bigger number = faster spin
+
+
+def randomEffects2(speed,size,spacing,period,map_1,rainbow,onAll) :
     """
     Display random effects
     """
@@ -331,7 +371,7 @@ def coteWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
     status = True
     while status:
         timeChecker()
-        for j in range(0,255,40):
+        for j in range(0,255,8):
             for i in range(0,int(30),10):
                 for k in range(numTriangle+1) :
                     if rainbow :
