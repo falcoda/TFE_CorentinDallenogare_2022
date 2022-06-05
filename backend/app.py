@@ -275,9 +275,8 @@ def timer():
     global process
     data = request.get_json(force = True)
     timerPath='./config/timer.json'
-    print(data)
     global stopTime
-    if data['date'] =="undefined":
+    if data =="":
         stopTime = "Undefined"
     
     else:

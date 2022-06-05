@@ -295,15 +295,17 @@ def gradiant(speed,colors) :
            fancy.CRGB(colors2[0],colors2[1],colors2[2])]         # Black
 
     offset = 0  # Position offset into palette to make it "spin"
-    speed= adaptSpeed(speed, 0.01)
-    while True:
+    speed= adaptSpeed(speed, 0.02)
+    while status:
+        timeChecker()
         for i in range(num_pixels):
             color = fancy.palette_lookup(palette, offset + i / num_pixels-1)
             pixels[i] = color.pack()
         pixels.show()
 
         offset += speed  # Bigger number = faster spin
-
+    if(status == False) :
+        powerOff("#000000")
 
 def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :
     """
@@ -595,7 +597,7 @@ def pulse( speed,size,spacing,period,map_1,rainbow,onAll) :
 def sparklePulse( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     speed=adaptSpeed(speed, 0.2)
-    sparkle= SparklePulse(map_1, speed=0.1-speed, color=allColor, period=period)
+    sparkle= SparklePulse(map_1, speed=0.21-speed, color=allColor, period=period)
     group1 = AnimationSequence(sparkle)
     while status:
         getColor()
@@ -633,15 +635,15 @@ def sparkle( speed,size,spacing,period,map_1,rainbow,onAll) :
             if(status == False) :
                 powerOff("#000000")
     else :
-        speed= (adaptSpeed(speed, 0.3))
+        speed= (adaptSpeed(speed, 0.5))
         print(speed)
-        if speed <0.12 :
-            speed = 0.12
+        if speed <0.3 :
+            speed = 0.3
         the_animations = []
         for i in range(0,numTriangle) :
             maps=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)         
             
-            sparkle= RainbowSparkle(maps, speed=0.12, period = period, step =1)
+            sparkle= RainbowSparkle(maps, speed=speed, period = period, step =1)
             the_animations.append(sparkle)
 
         group = AnimationGroup(*the_animations)

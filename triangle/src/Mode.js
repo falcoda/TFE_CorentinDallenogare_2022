@@ -439,7 +439,7 @@ function Mode ({token,stepIndex,setStepIndex}){
                                     <i className="bi bi-trash deleteMode" onClick={() =>removeMode(item)}></i>
                                 }
                             </div>
-                            <div className='col-12 row' onClick={() => runMyMode(item[0],item[1],item[2],item[3],item[4],item[5],item[8],[item[6]+","+item[7]])}>
+                            <div className='col-12 row' onClick={() => runMyMode(item[0],item[1],item[2],item[3],item[4],item[5],item[8],[item[6],item[7]])}>
                                 <div className='col-12'>
                                     
                                     <i className={`bi ${mode.find(o => o.mode === item[2])["logo"]} logoSavedModes`}></i>
