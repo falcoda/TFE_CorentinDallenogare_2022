@@ -14,7 +14,7 @@ function Mode ({token,stepIndex,setStepIndex}){
     // Spacing : the space between the leds (number of led off)
     // Rainbow : if the leds are rainbow or not
     // OnAll : if the triangle is on all or not
-    const [colors, setColors]=useState([]);
+    const [colors, setColors]=useState(["#FFFF00","#FF0000"]);
     const [speed, setSpeed] = useState(0.01);
     const [size, setSize] = useState(1);
     const [rainbow, setRainbow] = useState(false);
@@ -52,6 +52,7 @@ function Mode ({token,stepIndex,setStepIndex}){
     useEffect(() => {
         // Get all parameters of the mode
         // The parameters are saved in the local storage
+        // The parameters are used to change the mode
         let saveSpeed = JSON.parse(window.localStorage.getItem("speed"));
         let saveSize = JSON.parse(window.localStorage.getItem("size"));
         let saveRainbow = JSON.parse(window.localStorage.getItem("rainbow"));
@@ -60,6 +61,28 @@ function Mode ({token,stepIndex,setStepIndex}){
         let saveOnAll = JSON.parse(window.localStorage.getItem("onall"));
         let saveColors = window.localStorage.getItem("colors");
 
+        // If the parameters are null => set the parameters to default
+        if (saveSpeed === null){
+            localStorage.setItem("speed",JSON.stringify(speed));
+        }
+        if (saveSize === null){
+            localStorage.setItem("size",JSON.stringify(size));
+        }
+        if (saveRainbow === null){
+            localStorage.setItem("rainbow",JSON.stringify(rainbow));
+        }
+        if (savePeriod === null){
+            localStorage.setItem("period",JSON.stringify(period));
+        }
+        if (saveSpacing === null){
+            localStorage.setItem("spacing",JSON.stringify(spacing));
+        }
+        if (saveOnAll === null){
+            localStorage.setItem("onall",JSON.stringify(onAll));
+        }
+        if (saveColors === null){
+            localStorage.setItem("colors",'#ffff00,#FF0000,');
+        }
         // Set the parameters if they are not null
         if(saveSpeed !== null){
             setSpeed(saveSpeed);
@@ -112,9 +135,6 @@ function Mode ({token,stepIndex,setStepIndex}){
                         res[i][6]= newColor1;
                         res[i][7]= newColor2;
                     }
-                    // console.log(res[6]);
-                    // res[6]= res[6].splice(1,7)
-                    console.log(res);
                     setModeList(res);
                 }
             }
@@ -138,8 +158,7 @@ function Mode ({token,stepIndex,setStepIndex}){
         if (rainbow === 'true'){
             rainbow = true;
         }
-        console.log(colorList)
-        rainbow = false
+        rainbow = false;
         let data = JSON.stringify({"length":Number(size),"speed":Number(speed),"mode":mode,"spacing":Number(spacing),"period":Number(period),"rainbow":rainbow,"onAll":onAll,"colors":colorList});
         
         axios({
@@ -154,7 +173,7 @@ function Mode ({token,stepIndex,setStepIndex}){
         }).then((response) => {
             const res =response.data;
             console.log(res);
-        }).catch(error =>{ console.log(error)})
+        }).catch(error =>{ console.log(error)});
         
         return false;
     }
@@ -172,6 +191,7 @@ function Mode ({token,stepIndex,setStepIndex}){
         window.localStorage.setItem("spacing", spacing);
         window.localStorage.setItem("onall", onAll);
         console.log(colors);
+       
         let data = JSON.stringify({"length":size,"speed":speed,"mode":mode,"spacing":spacing,"period":period,"rainbow":rainbow,"onAll":onAll,'colors':colors});
         axios({
             method: "POST",
@@ -197,6 +217,7 @@ function Mode ({token,stepIndex,setStepIndex}){
         if((newModeName !== ""  && (/^[A-Za-z1-9-'\s]+$/.test(newModeName)))||demoMode !== undefined){
             let data ="";
             let colorsList ="[" +colors.toString() + "]";
+            console.log(colorsList);
             if(demoMode !== undefined &&demoMode[0] === 'Tutorial'  ){
                 // if the mode is a tutorial mode
                 data =`${size},${speed},${demoMode[1]},${spacing},${onAll},${period},${"[#FFFFFF,#FFFFFF]"},${demoMode[1]},${demoMode[0]}/`;

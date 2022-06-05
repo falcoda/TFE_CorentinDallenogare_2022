@@ -43,7 +43,7 @@ const GradiantColorChoice = ({setColors}) => {
   	}
 
 	
-	//   Use for save the color in the local storage
+	//   Use for get the color in the local storage
 	useEffect(() => {
 		if(localStorage.getItem("colors")){
 			let colors = localStorage.getItem("colors").split(",");
@@ -54,6 +54,8 @@ const GradiantColorChoice = ({setColors}) => {
 			}
 			setBtns(temp_state);
 		}
+		// Use for display whitch button is selected
+		document.getElementsByClassName("gradiantChoicebtn1")[0].classList.remove("gradiantChoice");
 	}, []);
 	
 	function setNameToChange(btn){
@@ -67,10 +69,14 @@ const GradiantColorChoice = ({setColors}) => {
 		document.getElementsByClassName("gradiantChoice"+btn)[0].classList.remove("gradiantChoice")
 		setBtnOnEdit(btn);
 	}
+
+	// call function to change the color of the button
 	useEffect(() => {
-		console.log(newColor)
 		setColor(newColor)
 	}, [newColor]);
+
+	
+
 	return (
 		
 		<div className='d-flex justify-content-center row btngradiantDiv'>

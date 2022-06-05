@@ -49,8 +49,6 @@ def show_effect(data):
     Create a new process to run the effect
     """
     global process
-    strdata = str(data)
-    print(strdata.split(','))
     process = subprocess.Popen(["sudo","python3", "startMode.py",str(data)], preexec_fn=os.setpgrp, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     
 
