@@ -21,6 +21,8 @@ const ColorChoice = (props) => {
 									{ nom : 'btn5',  couleur:'#FFB6C1'},
 									{ nom : 'btn6',  couleur:'#FFFFFF'},]);
 
+	let didCancel = false;
+
 	function setColor(color,nom) {
 		// This function is use to change the color of the button or the leds
 		if(onEdit[0]){
@@ -29,6 +31,7 @@ const ColorChoice = (props) => {
 				setBtnOnEdit(nom);
 			}
 			else{
+				console.log(btnOnEdit)
 				// if user don't click on a the color picker => set the color to the default color
 				if(color ===''){
 					color = "#FFFFFF";
@@ -42,18 +45,20 @@ const ColorChoice = (props) => {
 					savedColors += temp_state[i].couleur + ",";
 				
 				}
+				console.log(savedColors);
 				setBtns(temp_state);
 				document.getElementById("closeNameBtn").click();
 				toast.success("Couleur modifiée avec succès");
 				localStorage.setItem("savedColors",savedColors);
-				document.getElementsByClassName("buttonEditColor")[0].click();
-			
 			}
-			
 		}
-		else{
-			// If the user is editing the leds
-			let data = JSON.stringify(color);
+  	}
+	
+	function displayColor(color) {
+		// If the user is not editing the 
+		let data = JSON.stringify(color);
+		if(didCancel == false ){
+			didCancel =true;
 			axios({
 				method: "POST",
 				url:"/api/ChangeColor",
@@ -65,14 +70,14 @@ const ColorChoice = (props) => {
 				}
 			}).then((response) => {
 			const res =response.data;
-			}).catch(error => console.log(error));
+			didCancel = false;
+			
+			}).catch(error => {console.log(error);didCancel = false;});
 		}
-
-  	}
+	}
 
 	// function to display the icons for edit the colors
 	const displayEdit = () => {
-	
 		let button =  document.querySelectorAll('.activeEdit');
 		// class to add or remove to the button
 		let classList= [ "align-items-center", "justify-content-center","d-flex"];
@@ -121,8 +126,8 @@ const ColorChoice = (props) => {
 			</div>
 			<div className="row containButton sectionHome col-11">
 			{btns.map((item, k) => (
-				<div key={k} className="col-2 col-md-4">
-					<button data-bs-toggle={modal[0]} data-bs-target={modal[1]} className='button' onClick={() =>setColor(item.couleur, item.nom)} style={{backgroundColor:item.couleur }}>
+				<div key={k} className="col-2 col-md-4" onClick={() =>{setBtnOnEdit(item.nom);}}>
+					<button disabled={onEdit[0]} data-bs-toggle={modal[0]} data-bs-target={modal[1]} className='button' onClick={() =>{displayColor(item.couleur);toast.success("Couleur modifiée");}} style={{backgroundColor:item.couleur }}>
 						<i className="bi bi-check-circle-fill activeEdit"></i>
 					</button>
 				</div>
@@ -138,11 +143,11 @@ const ColorChoice = (props) => {
 								Choisissez une couleur :
                                 </div>
                                 <div className='col-2 d-flex justify-content-end '>
-                                    <button type="button" className="btn-close " id="closeNameBtn" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    <button type="button" className="btn-close " id="closeNameBtn" data-bs-dismiss="modal" aria-label="Close" onClick={displayEdit}></button>
                                 </div>
                             </div>
                             <div className="modal-body row d-flex justify-content-center">  
-								<IroColorPicker couleur={onEdit[1]} taille={200} onColorChange={ (color) => { setNewColor(color.hexString) }}/>
+								<IroColorPicker couleur={onEdit[1]} taille={200} onColorChange={ (color) => { setNewColor(color.hexString) ; displayColor(color.hexString)}}/>
                                 <div className='col-12 c d-flex justify-content-center'>
                                     <button className="btnSetParamMode" onClick={() =>setColor(newColor,"")}>Sauvegarder</button>
                                 </div>

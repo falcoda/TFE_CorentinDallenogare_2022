@@ -121,7 +121,6 @@ function Mode ({token,stepIndex,setStepIndex}){
         // The list is saved in the local storage
         try{
             let myModes = window.localStorage.getItem("mode")
-            console.log(myModes);
             if(myModes !== null){
                 var myArray = myModes.split("/");
                 if (myModes !=="/"){
@@ -129,7 +128,6 @@ function Mode ({token,stepIndex,setStepIndex}){
                     var res = [];
                     for(var i = 0; i < myArray.length; i++){
                         res.push(myArray[i].split(","));
-                        console.log(res[i][6]);
                         let newColor1 = res[i][6].substring(1,7);
                         let newColor2 = res[i][7].substring(0,6);
                         res[i][6]= newColor1;
