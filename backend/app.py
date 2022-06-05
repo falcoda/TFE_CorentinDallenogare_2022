@@ -49,7 +49,7 @@ def show_effect(data):
     Create a new process to run the effect
     """
     global process
-    process = subprocess.Popen(["sudo","python3", "startMode.py",data], preexec_fn=os.setpgrp, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    process = subprocess.Popen(["sudo","python3", "startMode.py",str(data)], preexec_fn=os.setpgrp, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
 
 
 # Defaults route for the frontend
@@ -168,7 +168,7 @@ def setoff():
         process = subprocess.Popen(["sudo","python3", "off.py"], preexec_fn=os.setpgrp, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
         process = None
     else:
-        show_effect(str({'length': 10, 'speed': 1, 'mode': 'solid', 'spacing': 10, 'period': 1, 'rainbow': False, 'onAll': False}))  
+        show_effect({'length': 10, 'speed': 1, 'mode': 'solid', 'spacing': 10, 'period': 1, 'rainbow': False, 'onAll': False})  
         lastData= {'length': 10, 'speed': 1, 'mode': 'solid', 'spacing': 10, 'period': 1, 'rainbow': False, 'onAll': False}
       #  process = subprocess.Popen(["sudo","python3", "colors.py"], preexec_fn=os.setpgrp)
     
@@ -195,7 +195,7 @@ def change_effect():
     try:    
         print(data)
         lastData= data
-        show_effect(str(data))  
+        show_effect(data)  
         
     except KeyError:
         print('Invalid function, try again.')
@@ -226,7 +226,7 @@ def changeBrightness():
         process = None
     process = subprocess.Popen(["sudo","python3", "saveBrightness.py",str(data['brightness'])], preexec_fn=os.setpgrp)
     if(lastData !={} ):
-        show_effect(str(lastData)) 
+        show_effect(lastData) 
     brightnessPath='./config/brightness.json'
     with open(brightnessPath, 'r+',encoding='utf8') as f:
         data = json.load(f)
@@ -292,7 +292,7 @@ def timer():
             print(os.system(cmd))
             process = None
         if(lastData !={} ):
-            show_effect(str(lastData)) 
+            show_effect(lastData) 
     return (data)
 
 

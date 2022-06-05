@@ -3,6 +3,7 @@ import "./css/mode.css"
 import { Form } from 'react-bootstrap';
 import axios from "axios";
 import toast from 'react-hot-toast';
+import GradiantColorChoice from './component/GradiantColorChoice';
 
 function Mode ({token,stepIndex,setStepIndex}){
     // This component is used to change the mode of the leds 
@@ -13,8 +14,8 @@ function Mode ({token,stepIndex,setStepIndex}){
     // Spacing : the space between the leds (number of led off)
     // Rainbow : if the leds are rainbow or not
     // OnAll : if the triangle is on all or not
-
-
+    console.log("aaaaaaaaaaaaaa")
+    const [colors, setColors]=useState([]);
     const [speed, setSpeed] = useState(0.01);
     const [size, setSize] = useState(1);
     const [rainbow, setRainbow] = useState(false);
@@ -29,11 +30,11 @@ function Mode ({token,stepIndex,setStepIndex}){
     // The list of modes
     const [mode, setModes] = useState([
         {identifiant:'un', nom : 'Roue Arc-En-Ciel',  param:["speed","onAll"], logo : "bi-bullseye",mode:"rainbowWheel"},
-        {identifiant:'deux', nom : 'Chase',  param:["speed","size","spacing","rainbow","period"], logo : "bi-shuffle",mode:"chase"},
-        {identifiant:'trois', nom : 'Triangle Wipe',  param:["speed","rainbow"], logo : "bi-star",mode:"cometAllSameTime"},
-        {identifiant:'quatre', nom : 'Effets Alléatoire',  param:["speed","size","spacing","rainbow","period"], logo : "bi-qr-code-scan",mode:"randomEffects"},
-        {identifiant:'cinq', nom : 'Coté Wipe',  param:["speed","rainbow"], logo : "bi-upc-scan",mode:"coteWipe"},
-        {identifiant:'six', nom : 'Color Wipe',  param:["speed","spacing"], logo : "bi-rainbow",mode:"colorWipe"},
+        {identifiant:'deux', nom : 'Course',  param:["speed","size","spacing","rainbow","period"], logo : "bi-shuffle",mode:"chase"},
+        {identifiant:'trois', nom : 'Saut de Triangle',  param:["speed","rainbow"], logo : "bi-star",mode:"cometAllSameTime"},
+        {identifiant:'quatre', nom : 'Effets Aléatoire',  param:["speed","size","spacing","rainbow","period"], logo : "bi-qr-code-scan",mode:"randomEffects"},
+        {identifiant:'cinq', nom : 'Saut de Coté',  param:["speed","rainbow"], logo : "bi-upc-scan",mode:"coteWipe"},
+        {identifiant:'six', nom : 'Saut de Couleur',  param:["speed","spacing"], logo : "bi-rainbow",mode:"colorWipe"},
         {identifiant:'sept', nom : 'Comète',  param:["speed","size","rainbow","onAll"], logo : "bi-stars",mode:"comet"},
         {identifiant:'huit', nom : 'Arc-En-Ciel',  param:["speed","period","onAll"], logo : "bi-rainbow",mode:"rainbow"},
         {identifiant:'dix', nom : 'Pulsation',  param:["speed"], logo : "bi-heart-pulse",mode:"pulse"},
@@ -42,11 +43,12 @@ function Mode ({token,stepIndex,setStepIndex}){
         {identifiant:'treize', nom : 'Clignotement',  param:["speed"], logo : "bi-sun",mode:"blink"},
         {identifiant:'quatorze', nom : 'Étincelle',  param:["speed","rainbow","period","onAll"], logo : "bi-sun",mode:"sparkle"},
         {identifiant:'quinze', nom : 'Étincelle Pulsante',  param:["speed","period"], logo : "bi-sun",mode:"sparklePulse"},
+        {identifiant:'seize', nom : 'Dégradé',  param:["speed","colors"], logo : "bi-palette-fill",mode:"gradiant"},
+        {identifiant:'dixSept', nom : 'Course de Comète',  param:["speed","size"], logo : "bi-receipt-cutoff",mode:"CometsChase"},
 
     ]);
 
-    // use for check if an other api call is in progress
-    let didCancel = false;
+
     
     useEffect(() => {
         // Get all parameters of the mode
@@ -57,6 +59,7 @@ function Mode ({token,stepIndex,setStepIndex}){
         let savePeriod = JSON.parse(window.localStorage.getItem("period"));
         let saveSpacing = JSON.parse(window.localStorage.getItem("spacing"));
         let saveOnAll = JSON.parse(window.localStorage.getItem("onall"));
+        let saveColors = window.localStorage.getItem("colors");
 
         // Set the parameters if they are not null
         if(saveSpeed !== null){
@@ -77,6 +80,11 @@ function Mode ({token,stepIndex,setStepIndex}){
         if(saveOnAll !== null){
             setOnAll(saveOnAll);
         }
+        if(saveColors !== null){
+            saveColors=  saveColors.split(",");
+            saveColors.splice(-1,1);
+            setColors(saveColors);
+        }
         // set the tutorial mode
         if(!localStorage.getItem("tutorial")){
             saveMode(['Tutorial','chase']);
@@ -91,6 +99,7 @@ function Mode ({token,stepIndex,setStepIndex}){
         // The list is saved in the local storage
         try{
             let myModes = window.localStorage.getItem("mode")
+            console.log(myModes);
             if(myModes !== null){
                 var myArray = myModes.split("/");
                 if (myModes !=="/"){
@@ -98,7 +107,15 @@ function Mode ({token,stepIndex,setStepIndex}){
                     var res = [];
                     for(var i = 0; i < myArray.length; i++){
                         res.push(myArray[i].split(","));
+                        console.log(res[i][6]);
+                        let newColor1 = res[i][6].substring(1,7);
+                        let newColor2 = res[i][7].substring(0,6);
+                        res[i][6]= newColor1;
+                        res[i][7]= newColor2;
                     }
+                    // console.log(res[6]);
+                    // res[6]= res[6].splice(1,7)
+                    console.log(res);
                     setModeList(res);
                 }
             }
@@ -115,15 +132,16 @@ function Mode ({token,stepIndex,setStepIndex}){
         
     }
 
-    const runMyMode= (size,speed,mode,spacing,onAll,period,rainbow) =>{
+    const runMyMode= (size,speed,mode,spacing,onAll,period,rainbow,colorList) =>{
         // This function is used to run the saved mode
         // The function call the api to run the saved mode
         // The function send a json with the parameters of the mode
         if (rainbow === 'true'){
             rainbow = true;
         }
+        console.log(colorList)
         rainbow = false
-        let data = JSON.stringify({"length":Number(size),"speed":Number(speed),"mode":mode,"spacing":Number(spacing),"period":Number(period),"rainbow":rainbow,"onAll":onAll});
+        let data = JSON.stringify({"length":Number(size),"speed":Number(speed),"mode":mode,"spacing":Number(spacing),"period":Number(period),"rainbow":rainbow,"onAll":onAll,"colors":colorList});
         
         axios({
             method: "POST",
@@ -154,8 +172,8 @@ function Mode ({token,stepIndex,setStepIndex}){
         window.localStorage.setItem("period", period);
         window.localStorage.setItem("spacing", spacing);
         window.localStorage.setItem("onall", onAll);
-        console.log(mode)
-        let data = JSON.stringify({"length":size,"speed":speed,"mode":mode,"spacing":spacing,"period":period,"rainbow":rainbow,"onAll":onAll});
+        console.log(colors);
+        let data = JSON.stringify({"length":size,"speed":speed,"mode":mode,"spacing":spacing,"period":period,"rainbow":rainbow,"onAll":onAll,'colors':colors});
         axios({
             method: "POST",
             url:"/api/Mode",
@@ -179,12 +197,13 @@ function Mode ({token,stepIndex,setStepIndex}){
 
         if((newModeName !== ""  && (/^[A-Za-z1-9-'\s]+$/.test(newModeName)))||demoMode !== undefined){
             let data ="";
+            let colorsList ="[" +colors.toString() + "]";
             if(demoMode !== undefined &&demoMode[0] === 'Tutorial'  ){
                 // if the mode is a tutorial mode
-                data =`${size},${speed},${demoMode[1]},${spacing},${onAll},${period},${demoMode[1]},${demoMode[0]}/`;
+                data =`${size},${speed},${demoMode[1]},${spacing},${onAll},${period},${"[#FFFFFF,#FFFFFF]"},${demoMode[1]},${demoMode[0]}/`;
             }
             else{
-                data =`${size},${speed},${newMode[1]},${spacing},${onAll},${period},${rainbow},${newModeName}/`;
+                data =`${size},${speed},${newMode[1]},${spacing},${onAll},${period},${colorsList},${rainbow},${newModeName}/`;
             }
             
             let oldMode = localStorage.getItem("mode");
@@ -287,8 +306,8 @@ function Mode ({token,stepIndex,setStepIndex}){
                          {item.nom}
                     </div>
                     <div  className='modalInfo '>
-                        <div className={`modal modalInfo `} id={item.identifiant} tabIndex="-1" aria-labelledby="choseModeLabel" aria-hidden="true">
-                            <div className="modal-dialog">
+                        <div className={`modal modalInfo`} id={item.identifiant} tabIndex="-1" aria-labelledby="choseModeLabel" aria-hidden="true">
+                            <div className="modal-dialog" >
                                 <div className="modal-content ">
                                     <div className="modal-header">
                                         <div className='col-10 modalTitle'>
@@ -341,6 +360,11 @@ function Mode ({token,stepIndex,setStepIndex}){
                                                     <input className="form-check-input" type="checkbox" checked={onAll}  id="flexCheckDefault" onChange={e => changeOnAll(e)}></input>
                                                 </div>
                                             }
+                                            {params === "colors" && 
+                                                <div className={`${"tourSepare"+item.identifiant}`}>
+                                                    <GradiantColorChoice setColors={setColors}/>
+                                                </div>
+                                            }
                                             </div>
                                         ))
                                         }
@@ -389,19 +413,19 @@ function Mode ({token,stepIndex,setStepIndex}){
             <>
                 <div className="col-12 separator">Modes Sauvegardés</div>
                     {modeList.map((item, k) => (
-                        <div className={`col-4 myOwnEffects ${"myOwnEffects" +item[7]}`}  key={k}>
+                        <div className={`col-4 myOwnEffects ${"myOwnEffects" +item[9]}`}  key={k}>
                             <div className='col-12 deleteModeDivLogo' >
                                 {visibility &&
                                     <i className="bi bi-trash deleteMode" onClick={() =>removeMode(item)}></i>
                                 }
                             </div>
-                            <div className='col-12 row' onClick={() => runMyMode(item[0],item[1],item[2],item[3],item[4],item[5],item[6],item[7])}>
+                            <div className='col-12 row' onClick={() => runMyMode(item[0],item[1],item[2],item[3],item[4],item[5],item[8],[item[6]+","+item[7]])}>
                                 <div className='col-12'>
                                     
                                     <i className={`bi ${mode.find(o => o.mode === item[2])["logo"]} logoSavedModes`}></i>
                                 </div>
                                 <div className='col-12 savedModeText'>
-                                {item[7]}
+                                {item[9]}
                                 </div>
                             </div>
                         </div>

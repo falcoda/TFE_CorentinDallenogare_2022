@@ -271,7 +271,7 @@ def triangleWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
         powerOff("#000000")
 
 
-def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :   
+def cometsChase(speed,size,spacing,period,map_1,rainbow,onAll) :   
     global allColor
     speed=adaptSpeed(speed, 0.2)
     sparkle= CometsChase(map_1, speed=0.1-speed, color=allColor, size=size, spacing=0, reverse=True,)
@@ -284,21 +284,21 @@ def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :
     if(status == False) :
         powerOff("#000000")
 
-def gradiant(speed,size,spacing,period,map_1,rainbow,onAll) :   
-
+def gradiant(speed,colors) :   
+    print(colors)
     palette = [
            fancy.CRGB(255, 255, 0),    # Yellow
            fancy.CRGB(255, 0, 0)]         # Black
 
     offset = 0  # Position offset into palette to make it "spin"
-
+    speed= adaptSpeed(speed, 0.01)
     while True:
         for i in range(num_pixels):
             color = fancy.palette_lookup(palette, offset + i / num_pixels-1)
             pixels[i] = color.pack()
         pixels.show()
 
-        offset += 0.0033  # Bigger number = faster spin
+        offset += speed  # Bigger number = faster spin
 
 
 def randomEffects2(speed,size,spacing,period,map_1,rainbow,onAll) :

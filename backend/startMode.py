@@ -64,9 +64,14 @@ if __name__ == '__main__':
     args = args.effect
     print(args,"argument")
     modeDict = (literal_eval(args))
+    
     modes=modeDict['mode']
-    try:        
-        function_mappings[modes](float(modeDict["speed"]),int(modeDict["length"]),int(modeDict["spacing"]),int(modeDict["period"]),map1,modeDict["rainbow"],modeDict["onAll"] )
+    try:    
+        if(modeDict['mode'] == "gradiant"):
+            print("gradiant")
+            modes.gradiant(float(modeDict["speed"]),modeDict['colors'])
+        else :    
+            function_mappings[modes](float(modeDict["speed"]),int(modeDict["length"]),int(modeDict["spacing"]),int(modeDict["period"]),map1,modeDict["rainbow"],modeDict["onAll"] )
     except KeyError:
         print('Invalid function, try again.')
    

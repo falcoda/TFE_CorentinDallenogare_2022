@@ -105,3 +105,28 @@ input[type=range]::-webkit-slider-thumb {
 .savedModeText{
     text-align: center;
 }
+.buttonGradiantbtn2, .buttonGradiantbtn1{
+    border-radius: 55px;
+    border: 2px solid black;
+    width: 3rem;
+    height: 3rem;
+    padding: 0 ;
+}
+.buttonGradiantbtn2{
+    margin-left: 1rem;
+}
+
+.gradiantChoice{
+    display: none;
+}
+.btngradiantDiv .bi-check-circle-fill{
+    font-size: 2rem;
+}
+.modal {
+    
+    position: fixed;
+}
+
+.hidden {
+    display: none;
+}
