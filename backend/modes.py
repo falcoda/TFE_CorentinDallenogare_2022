@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: MIT
 
 from os import stat
+from sqlite3 import adapt
 import time
 
 from jinja2 import Undefined
@@ -285,10 +286,13 @@ def cometsChase(speed,size,spacing,period,map_1,rainbow,onAll) :
         powerOff("#000000")
 
 def gradiant(speed,colors) :   
-    print(colors)
+    print(colors,"colorsgrad")
+    colors1 = hextorgb.hex_to_rgb(colors[0])
+    colors2 = hextorgb.hex_to_rgb(colors[1])
+    print(colors1)
     palette = [
-           fancy.CRGB(255, 255, 0),    # Yellow
-           fancy.CRGB(255, 0, 0)]         # Black
+           fancy.CRGB(colors1[0],colors1[1],colors1[2]),    # Yellow
+           fancy.CRGB(colors2[0],colors2[1],colors2[2])]         # Black
 
     offset = 0  # Position offset into palette to make it "spin"
     speed= adaptSpeed(speed, 0.01)
@@ -301,7 +305,7 @@ def gradiant(speed,colors) :
         offset += speed  # Bigger number = faster spin
 
 
-def randomEffects2(speed,size,spacing,period,map_1,rainbow,onAll) :
+def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :
     """
     Display random effects
     """
@@ -311,14 +315,14 @@ def randomEffects2(speed,size,spacing,period,map_1,rainbow,onAll) :
     the_animations = []
     if(period ==30):
         period -= 1
-    
+    speed = adaptSpeed(speed, 0.2)
     for i in range(0,numTriangle) :
         choice = random.choice(["chase", "comet","rainbowChase","pulse"])
         maps=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)
         if (choice == "chase"):
             print("chase")
             speedChase = adaptSpeed(speed, 0.2)
-            chase= Chase(maps,color=allColor, speed=0.22-speedChase, size=size, spacing=spacing)
+            chase= Chase(maps,color=allColor, speed=0.32-speedChase, size=size, spacing=spacing)
             the_animations.append(chase)
             
         elif (choice == "comet"):
@@ -328,20 +332,20 @@ def randomEffects2(speed,size,spacing,period,map_1,rainbow,onAll) :
             sizeCommet = size
             if(size ==1):
                 sizeCommet =size+2
-            comet = Comet(maps, speed=(0.11-speedComet), color=(allColor), tail_length=sizeCommet)
+            comet = Comet(maps, speed=(0.1), color=(allColor), tail_length=sizeCommet)
             the_animations.append(comet)
 
         elif (choice =="rainbowChase"):
             speedRainbowChase = adaptSpeed(speed, 0.2)
             print("rainbow")
             print(period)
-            rainbowChase= RainbowChase(maps, speed=0.22-speedRainbowChase, size=size, spacing=spacing, step=round(period))
+            rainbowChase= RainbowChase(maps, speed=0.32-speedRainbowChase, size=size, spacing=spacing, step=round(period))
             the_animations.append(rainbowChase)
         elif (choice =="pulse"):
             print("pulse")
             print(speed)
             speedPulse=adaptSpeed(speed, 2)
-            pulse= Pulse(maps, speed=0.03, color=allColor,period=2.1-speedPulse)
+            pulse= Pulse(maps, speed=0.1, color=allColor,period=2.1-speedPulse)
             the_animations.append(pulse)
 
     group = AnimationGroup(*the_animations)

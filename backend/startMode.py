@@ -54,6 +54,7 @@ function_mappings = {
     'pulse':  modes.pulse,
     'sparklePulse':  modes.sparklePulse,
     'sparkle':  modes.sparkle,
+    'CometsChase': modes.cometsChase,
 
 }
 if __name__ == '__main__':
@@ -65,13 +66,13 @@ if __name__ == '__main__':
     print(args,"argument")
     modeDict = (literal_eval(args))
     
-    modes=modeDict['mode']
+    modesDict=modeDict['mode']
     try:    
         if(modeDict['mode'] == "gradiant"):
             print("gradiant")
             modes.gradiant(float(modeDict["speed"]),modeDict['colors'])
         else :    
-            function_mappings[modes](float(modeDict["speed"]),int(modeDict["length"]),int(modeDict["spacing"]),int(modeDict["period"]),map1,modeDict["rainbow"],modeDict["onAll"] )
+            function_mappings[modesDict](float(modeDict["speed"]),int(modeDict["length"]),int(modeDict["spacing"]),int(modeDict["period"]),map1,modeDict["rainbow"],modeDict["onAll"] )
     except KeyError:
         print('Invalid function, try again.')
    

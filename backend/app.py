@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
                                unset_jwt_cookies, jwt_required, JWTManager
 
-
+import sys
 
 # Load dotenv variables
 load_dotenv()
@@ -49,7 +49,10 @@ def show_effect(data):
     Create a new process to run the effect
     """
     global process
+    strdata = str(data)
+    print(strdata.split(','))
     process = subprocess.Popen(["sudo","python3", "startMode.py",str(data)], preexec_fn=os.setpgrp, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    
 
 
 # Defaults route for the frontend

@@ -14,7 +14,6 @@ function Mode ({token,stepIndex,setStepIndex}){
     // Spacing : the space between the leds (number of led off)
     // Rainbow : if the leds are rainbow or not
     // OnAll : if the triangle is on all or not
-    console.log("aaaaaaaaaaaaaa")
     const [colors, setColors]=useState([]);
     const [speed, setSpeed] = useState(0.01);
     const [size, setSize] = useState(1);
@@ -31,7 +30,7 @@ function Mode ({token,stepIndex,setStepIndex}){
     const [mode, setModes] = useState([
         {identifiant:'un', nom : 'Roue Arc-En-Ciel',  param:["speed","onAll"], logo : "bi-bullseye",mode:"rainbowWheel"},
         {identifiant:'deux', nom : 'Course',  param:["speed","size","spacing","rainbow","period"], logo : "bi-shuffle",mode:"chase"},
-        {identifiant:'trois', nom : 'Saut de Triangle',  param:["speed","rainbow"], logo : "bi-star",mode:"cometAllSameTime"},
+        {identifiant:'trois', nom : 'Saut de Triangle',  param:["speed","rainbow","onAll"], logo : "bi-star",mode:"cometAllSameTime"},
         {identifiant:'quatre', nom : 'Effets Aléatoire',  param:["speed","size","spacing","rainbow","period"], logo : "bi-qr-code-scan",mode:"randomEffects"},
         {identifiant:'cinq', nom : 'Saut de Coté',  param:["speed","rainbow"], logo : "bi-upc-scan",mode:"coteWipe"},
         {identifiant:'six', nom : 'Saut de Couleur',  param:["speed","spacing"], logo : "bi-rainbow",mode:"colorWipe"},
