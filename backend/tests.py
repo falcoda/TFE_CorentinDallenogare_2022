@@ -1,5 +1,5 @@
 import unittest
-import startMode
+import modes
 from app import app
 
 class TestStringMethods(unittest.TestCase):
@@ -8,42 +8,33 @@ class TestStringMethods(unittest.TestCase):
     Use unittest to test the backend
     """
     def testColor(self):
-        actual = startMode.color('#ff1275')
+        actual = modes.color('#ff1275')
         expected =(255, 18, 117)
         self.assertEqual(actual, expected)
 
     def testWheel(self):
-        actual = startMode.wheel(19)
+        actual = modes.wheel(19)
         expected =(57, 198, 0)
         self.assertEqual(actual, expected)
 
     def testEffect(self):
-        startMode.rainbowWheel(1,1,1,1,0,False,False)
-        startMode.status = False
-        actual = startMode.rainbowWheel(1,1,1,1,0,False,False)
+        modes.rainbowWheel(1,1,1,1,0,False,False)
+        modes.status = False
+        actual = modes.rainbowWheel(1,1,1,1,0,False,False)
         expected =(False)
         self.assertEqual(actual, expected)
     
     def testOff(self):
-        actual = startMode.powerOff('#000000')
+        actual = modes.powerOff('#000000')
         expected =('#000000')
         self.assertEqual(actual, expected)
 
     def testSpeed(self):
-        actual = startMode.adaptSpeed(0.5,0.01)
+        actual = modes.adaptSpeed(0.5,0.01)
         expected =0.005
         self.assertEqual(actual, expected)
     
-    def testUpdatePixel(self):
-        actual = startMode.updatePixels(5)
-        expected =True
-        self.assertEqual(actual, expected)
-    
-    def testSetBrightness(self):
-        actual = startMode.setBrightness(50)
-        expected =0.5
-        self.assertEqual(actual, expected)
-    
+   
     def setUp(self):
         self.app = app.test_client()
     
