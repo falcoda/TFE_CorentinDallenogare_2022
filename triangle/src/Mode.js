@@ -14,6 +14,7 @@ function Mode ({token,stepIndex,setStepIndex}){
     // Spacing : the space between the leds (number of led off)
     // Rainbow : if the leds are rainbow or not
     // OnAll : if the triangle is on all or not
+    // Colors : The colors for the gradiant mode
     const [colors, setColors]=useState(["#FFFF00","#FF0000"]);
     const [speed, setSpeed] = useState(0.01);
     const [size, setSize] = useState(1);
@@ -46,7 +47,6 @@ function Mode ({token,stepIndex,setStepIndex}){
         {identifiant:'dixSept', nom : 'Course de Comète',  param:["speed","size"], logo : "bi-receipt-cutoff",mode:"CometsChase"},
 
     ]);
-
 
     
     useEffect(() => {
@@ -188,7 +188,6 @@ function Mode ({token,stepIndex,setStepIndex}){
         window.localStorage.setItem("period", period);
         window.localStorage.setItem("spacing", spacing);
         window.localStorage.setItem("onall", onAll);
-        console.log(colors);
        
         let data = JSON.stringify({"length":size,"speed":speed,"mode":mode,"spacing":spacing,"period":period,"rainbow":rainbow,"onAll":onAll,'colors':colors});
         axios({
@@ -215,7 +214,6 @@ function Mode ({token,stepIndex,setStepIndex}){
         if((newModeName !== ""  && (/^[A-Za-z1-9-'\s]+$/.test(newModeName)))||demoMode !== undefined){
             let data ="";
             let colorsList ="[" +colors.toString() + "]";
-            console.log(colorsList);
             if(demoMode !== undefined &&demoMode[0] === 'Tutorial'  ){
                 // if the mode is a tutorial mode
                 data =`${size},${speed},${demoMode[1]},${spacing},${onAll},${period},${"[#FFFFFF,#FFFFFF]"},${demoMode[1]},${demoMode[0]}/`;

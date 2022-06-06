@@ -31,7 +31,6 @@ const ColorChoice = (props) => {
 				setBtnOnEdit(nom);
 			}
 			else{
-				console.log(btnOnEdit)
 				// if user don't click on a the color picker => set the color to the default color
 				if(color ===''){
 					color = "#FFFFFF";
@@ -45,7 +44,6 @@ const ColorChoice = (props) => {
 					savedColors += temp_state[i].couleur + ",";
 				
 				}
-				console.log(savedColors);
 				setBtns(temp_state);
 				document.getElementById("closeNameBtn").click();
 				toast.success("Couleur modifiée avec succès");
@@ -102,7 +100,7 @@ const ColorChoice = (props) => {
 		
 	}
 
-	//   Use for save the color in the local storage
+	//   Use for get the color in the local storage
 	useEffect(() => {
 		if(localStorage.getItem("savedColors")){
 			let colors = localStorage.getItem("savedColors").split(",");

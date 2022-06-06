@@ -5,7 +5,7 @@ import "../css/colorPicker.css";
 
 const GradiantColorChoice = ({setColors}) => {
 
-	// This component is used to change the color of the fradiant mode
+	// This component is used to change the color of the gradiant mode
 	// The component is composed of 2 buttons, each one representing a color
 	const [ btnOnEdit, setBtnOnEdit] = useState("btn1");
 	const [newColor, setNewColor] = useState("");
@@ -15,7 +15,6 @@ const GradiantColorChoice = ({setColors}) => {
 	function setColor(color) {
 		// This function is use to change the color of the button or the leds
 			
-			// if user don't click on a the color picker => set the color to the default color
 			if(color !=''){
 				let temp_state = [...btns];
 				let savedColors ="";
@@ -64,8 +63,6 @@ const GradiantColorChoice = ({setColors}) => {
 		button.forEach(btn => {
 			btn.classList.add("gradiantChoice");
 		})
-		
-		console.log(document.getElementsByClassName("gradiantBtnHide"))
 		document.getElementsByClassName("gradiantChoice"+btn)[0].classList.remove("gradiantChoice")
 		setBtnOnEdit(btn);
 	}

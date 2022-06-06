@@ -2,13 +2,14 @@ from math import ceil
 from adafruit_led_animation.animation import Animation
 from adafruit_led_animation.color import BLACK, calculate_intensity
 
-
+# Code found on a Discord channel
+# I's a compilation of 2 modes
 class CometsChase(Animation):
     """
     Chase pixels in one direction in a single color, like a theater marquee sign.
 
     :param pixel_object: The initialised LED object.
-    :param float speed: Animation speed rate in seconds, e.g. ``0.1``.
+    :param float speed: Animation speed rate in seconds.
     :param color: Animation color in ``(r, g, b)`` tuple, or ``0x000000`` hex format.
     :param size: Number of pixels to turn on in a row.
     :param spacing: Number of pixels to turn off in a row.

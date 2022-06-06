@@ -23,7 +23,7 @@ const TimeApp = (props) => {
     pause,
     resume,
     restart,
-  } = useTimer({expiryTimestamp, timeStart, onExpire: () => console.warn('onExpire called') });
+  } = useTimer({expiryTimestamp, timeStart });
 
   useEffect(() => {
     // Get the current timer value
@@ -53,7 +53,6 @@ const TimeApp = (props) => {
       var setDate=new Date();
       let dateSet =(setDate.getMonth()+1 +"/"+setDate.getDate()+"/"+setDate.getFullYear()+" " );  
       var date1=new Date(dateSet + value );   
-      console.log(date1);
       timeStart = new Date();
       let date2 = 0 ;
       if (value === null || value === "") {

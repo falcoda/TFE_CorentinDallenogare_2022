@@ -38,7 +38,7 @@ const Color = (props) => {
       <div className="homePage">
         <IroColorPicker taille={window.innerHeight/3} couleur={"#FFFFFF"} onColorChange={ (color) => { displayColor(color.hexString) }}/>
         <ColorChoice token={props.token}></ColorChoice>
-        <Brightness token={props.token} cancel={cancel} setCancel={setCancel} onChange={()=>console.log("aaa")}></Brightness>
+        <Brightness token={props.token} cancel={cancel} setCancel={setCancel}></Brightness>
       </div>
     
   )

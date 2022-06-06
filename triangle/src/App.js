@@ -19,10 +19,12 @@ import {useState}from 'react';
 
 function App() {
 
+  //This is the default component of the app
   const { token, removeToken, setToken } = useToken();
   const [stepIndex, setStepIndex] = useState(0);
  
   return (
+    //router is used to navigate between the different pages of the app
     <Router>
      
     <div className="App">

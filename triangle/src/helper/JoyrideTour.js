@@ -342,7 +342,9 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
     
     
     ])
-
+  
+  // when the tour is running call this function
+  // this function open modal or scroll or change path 
   const handleJoyrideCallback = data => {
     const { action, index, status, type } = data;
     if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
@@ -350,7 +352,7 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
       if(index ===1 && window.location.pathname ==="/"){
         
           let toScroll= document.getElementsByClassName("choseBrightness")[0].offsetTop
-          window.scrollTo(toScroll, toScroll)
+          window.scrollTo(toScroll, toScroll);
       }
       if (index ===3 && action !== 'next' ){
           history("/");
@@ -369,34 +371,31 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
           
       }
       if (window.location.pathname ==="/mode" && action === "next" && index===3){
-        let toScroll= document.getElementsByClassName("settingsTitle")[0].offsetTop
-        window.scrollTo(toScroll, toScroll)
+        let toScroll= document.getElementsByClassName("settingsTitle")[0].offsetTop;
+        window.scrollTo(toScroll, toScroll);
         
       }
       if (index === 4  && action === 'next') {
-          document.getElementById("modalNum1").click()
+          document.getElementById("modalNum1").click();
       }
       if (index === 5 && action === 'prev') {
-          document.getElementById("deuxBtnClose").click()
+          document.getElementById("deuxBtnClose").click();
       }
       if (index === 9 && action === 'next') {
-          document.getElementById("deuxBtnClose").click()
-          console.log("ok")
-          let toScroll= document.getElementsByClassName("separator")[0].offsetTop
-          window.scrollTo(toScroll, toScroll)
+          document.getElementById("deuxBtnClose").click();
+          let toScroll= document.getElementsByClassName("separator")[0].offsetTop;
+          window.scrollTo(toScroll, toScroll);
       }
       
       if (index === 10 && action === 'next') {
-       console.log("ok")
-        console.log(document.getElementsByClassName("btnModifiy")[0])
-        let toScroll= document.getElementsByClassName("btnModifiy")[0].offsetTop
-        window.scrollTo(toScroll, toScroll)
+        let toScroll= document.getElementsByClassName("btnModifiy")[0].offsetTop;
+        window.scrollTo(toScroll, toScroll);
           
       }
       if (index === 10 && action === 'prev') {
-          document.getElementById("modalNum1").click()
-          let toScroll= document.getElementById("modePageId").offsetTop
-          window.scrollTo(toScroll, toScroll)
+          document.getElementById("modalNum1").click();
+          let toScroll= document.getElementById("modePageId").offsetTop;
+          window.scrollTo(toScroll, toScroll);
       }
     }
     else if ([STATUS.FINISHED, STATUS.SKIPPED].includes(status)) {

@@ -1,11 +1,4 @@
-# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
-# SPDX-License-Identifier: MIT
-
-from os import stat
-from sqlite3 import adapt
 import time
-
-from jinja2 import Undefined
 import board
 import neopixel
 import hextorgb
@@ -22,17 +15,14 @@ from adafruit_led_animation.animation.chase import Chase
 from adafruit_led_animation.animation.rainbow import Rainbow
 from adafruit_led_animation.sequence import AnimationSequence
 from adafruit_led_animation.animation.blink import Blink
-from adafruit_led_animation.animation.solid import Solid
 from adafruit_led_animation.animation.pulse import Pulse
 from adafruit_led_animation.animation.sparkle import Sparkle
 from adafruit_led_animation.animation.sparklepulse import SparklePulse
 from adafruit_led_animation.animation.colorcycle import ColorCycle
 from adafruit_led_animation import helper
 from adafruit_led_animation.group import AnimationGroup
-from adafruit_led_animation.color import PURPLE, JADE, AMBER
 import RPi.GPIO as GPIO
-# On CircuitPlayground Express, and boards with built in status NeoPixel -> board.NEOPIXEL
-# Otherwise choose an open pin connected to the Data In of the NeoPixel strip, i.e. board.D1
+
 pixel_pin = board.D18
 
 # Define the pin for the microphone
@@ -46,7 +36,6 @@ GPIO.setup(MicPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 path='./config/config.json'
 with open(path, 'r+',encoding='utf8') as f:
     data = json.load(f)
-    print(data['number']*30 )
     num_pixels = data['number']*30
 numTriangle = int(num_pixels/30)
 
@@ -62,7 +51,6 @@ brightnessPath='./config/brightness.json'
 with open(brightnessPath, 'r+',encoding='utf8') as f:
     data = json.load(f)
     brightness =float(data['brightness'])/100
-    print(brightness,"aaaa")
 
 # Declare the color variable
 colorPath='./config/color.json'
@@ -103,8 +91,7 @@ def timeChecker() :
     """
     currentTime=(datetime.datetime.now())
     global stopTime
-    global status        
-    
+    global status       
     
     if stopTime != "Undefined":
         if(currentTime<stopTime):
@@ -195,7 +182,6 @@ def rainbowWheel(speed,size,spacing,period,map_1,rainbow,onAll):
                         pixels[i*30+k] = wheel(pixel_index & 255)
                 
                 pixels.show()
-                
                 time.sleep(0.001-speed)
     else :
         speed = (0.007*numTriangle) -numTriangle*(adaptSpeed(speed, 0.007))
@@ -266,13 +252,17 @@ def triangleWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
                 j +=period
                 pixels.show()
                 time.sleep(0.2-speed)
-                    
                  
     if(status == False) :
         powerOff("#000000")
 
 
 def cometsChase(speed,size,spacing,period,map_1,rainbow,onAll) :   
+    """
+    Draw a line in the specified color across the whole display.
+    param : speed: the speed of the animation
+    param : size : the size of the comet
+    """
     global allColor
     speed=adaptSpeed(speed, 0.2)
     sparkle= CometsChase(map_1, speed=0.1-speed, color=allColor, size=size, spacing=0, reverse=True,)
@@ -286,13 +276,16 @@ def cometsChase(speed,size,spacing,period,map_1,rainbow,onAll) :
         powerOff("#000000")
 
 def gradiant(speed,colors) :   
-    print(colors,"colorsgrad")
+    """
+    Draw a gradiant with two colors
+    param : speed: the speed of the animation
+    param : colors : the colors of the gradiant
+    """
     colors1 = hextorgb.hex_to_rgb(colors[0])
     colors2 = hextorgb.hex_to_rgb(colors[1])
-    print(colors1)
     palette = [
-           fancy.CRGB(colors1[0],colors1[1],colors1[2]),    # Yellow
-           fancy.CRGB(colors2[0],colors2[1],colors2[2])]         # Black
+           fancy.CRGB(colors1[0],colors1[1],colors1[2]),    
+           fancy.CRGB(colors2[0],colors2[1],colors2[2])]     
 
     offset = 0  # Position offset into palette to make it "spin"
     speed= adaptSpeed(speed, 0.02)
@@ -322,15 +315,11 @@ def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :
         choice = random.choice(["chase", "comet","rainbowChase","pulse"])
         maps=helper.PixelMap(pixels, [(x,) for x in range(i*30,(i+1)*30)], individual_pixels=True)
         if (choice == "chase"):
-            print("chase")
             speedChase = adaptSpeed(speed, 0.2)
             chase= Chase(maps,color=allColor, speed=0.32-speedChase, size=size, spacing=spacing)
             the_animations.append(chase)
             
         elif (choice == "comet"):
-            print("comet")
-            speedComet = (adaptSpeed(speed, 0.1)/numTriangle)*3
-            print(size)
             sizeCommet = size
             if(size ==1):
                 sizeCommet =size+2
@@ -339,13 +328,9 @@ def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :
 
         elif (choice =="rainbowChase"):
             speedRainbowChase = adaptSpeed(speed, 0.2)
-            print("rainbow")
-            print(period)
             rainbowChase= RainbowChase(maps, speed=0.32-speedRainbowChase, size=size, spacing=spacing, step=round(period))
             the_animations.append(rainbowChase)
         elif (choice =="pulse"):
-            print("pulse")
-            print(speed)
             speedPulse=adaptSpeed(speed, 2)
             pulse= Pulse(maps, speed=0.1, color=allColor,period=2.1-speedPulse)
             the_animations.append(pulse)
@@ -367,14 +352,13 @@ def randomEffects(speed,size,spacing,period,map_1,rainbow,onAll) :
 def coteWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
     """
     Draw a line that turns into a triangle
+    param : speed: the speed of the animation
+    param : rainbow : if the animation is rainbow
     """
     global allColor
     global numTriangle
     global status
-    status = False
     speed = adaptSpeed(speed, 0.1)
-    time.sleep(0.5)
-    status = True
     while status:
         timeChecker()
         for j in range(0,255,8):
@@ -398,27 +382,23 @@ def chase( speed,size,spacing,period,map_1,rainbow,onAll) :
     """
     Chase pixels in one direction in a single color, like a theater marquee sign.
     :param map1: The initialised LED object.
-    :param float speed: Animation speed rate in seconds, e.g. ``0.1``.
+    :param float speed: Animation speed rate in seconds.
     :param size: Number of pixels to turn on in a row.
     :param spacing: Number of pixels to turn off in a row.
     :param rainbow: if the animation is rainbow.
     """
     global allColor
     global status
-    status =False
     speed = adaptSpeed(speed, 0.2)
-    print(speed)
     size = size* (numTriangle//2)
     spacing = spacing* (numTriangle//2)
-    if (rainbow == True):
-        status = True
+    if (rainbow):
         rainbowChase= RainbowChase(map_1, speed=0.2-speed, size=size, spacing=spacing, step=62-round(period)*2)
         group1 = AnimationSequence(rainbowChase)
         while status:
             timeChecker()
             group1.animate()
     else :
-        status = True
         chase = Chase(map_1, speed=0.2-speed ,size=size, spacing=spacing, color=allColor)
         group1 = AnimationSequence(chase)
         while status:
@@ -436,13 +416,12 @@ def comet( speed,size,spacing,period,map_1,rainbow,onAll) :
     Draw a line that turns into a triangle
     A comet animation.
     :param map_1: The initialised LED object.
-    :param float speed: Animation speed in seconds, e.g. ``0.1``.*.
+    :param float speed: Animation speed in seconds.*.
     :param size: Number of pixels to turn on in a row.
     :param rainbow: if the animation is rainbow.
     """
     global allColor
     global numTriangle
-    print(size)
     
     if(size ==1):
         size +=1
@@ -491,11 +470,10 @@ def rainbow(speed,size,spacing,period,map_1,rainbow,onAll) :
     """
     The classic rainbow color wheel.
     :param map1: The initialised LED object.
-    :param float speed: Animation refresh rate in seconds, e.g. ``0.1``.
-    :param float period: Period to cycle the rainbow over in seconds.  Default 5.
+    :param float speed: Animation refresh rate in seconds.
+    :param float period: Period to cycle the rainbow over in seconds.
     """
     global allColor
-    print(speed)
     global numTriangle
     period =int(period+1/2)
     if (onAll== True):
@@ -526,13 +504,20 @@ def rainbow(speed,size,spacing,period,map_1,rainbow,onAll) :
 
 
 def blink( speed,size,spacing,period,map_1,rainbow,onAll) :
+    """
+    Blink the pixels in and out.
+    :param speed: Animation speed in seconds.
+
+    """
     global allColor
     if(speed ==1):
         speed -=0.02
     blink= Blink(map_1, speed=(1-speed), color=allColor)
     group1 = AnimationSequence(blink)
     while status:
+        # Check if the color has changed
         getColor()
+        # Check if the animation should be stopped
         timeChecker()
         group1.color = allColor
         group1.animate()
@@ -540,6 +525,9 @@ def blink( speed,size,spacing,period,map_1,rainbow,onAll) :
         powerOff("#000000")
 
 def solid( speed,size,spacing,period,map_1,rainbow,onAll) :
+    """
+    Solid color.
+    """
     global allColor
     while status:
         getColor()
@@ -547,6 +535,12 @@ def solid( speed,size,spacing,period,map_1,rainbow,onAll) :
         pixels.show()
 
 def colorCycle( speed,size,spacing,period,map_1,rainbow,onAll) :
+    """
+    Display a color cycle.
+    :param map_1: The initialised LED object.
+    :param float speed: Animation speed in seconds.
+    :param onAll: use a defined color cycle or not.
+    """
     global allColor
     global status
     
@@ -581,9 +575,13 @@ def colorCycle( speed,size,spacing,period,map_1,rainbow,onAll) :
             group.animate()
 
 def pulse( speed,size,spacing,period,map_1,rainbow,onAll) :
+    """
+    Create a pulse effect.
+    :param map_1: The initialised LED object.
+    :param float speed: Animation speed in seconds.
+    """
     global allColor
     speed=adaptSpeed(speed, 1)
-    print(speed)
     pulse= Pulse(map_1, speed=0.001, color=allColor,period=1.01-speed)
     group1 = AnimationSequence(pulse)
     while status:
@@ -595,6 +593,12 @@ def pulse( speed,size,spacing,period,map_1,rainbow,onAll) :
         powerOff("#000000")
 
 def sparklePulse( speed,size,spacing,period,map_1,rainbow,onAll) :
+    """
+    Create a effecct with sparkles and pulses.  
+    :param map_1: The initialised LED object.
+    :param float speed: Animation speed in seconds.
+    :param period: Period to cycle the rainbow over in seconds. 
+    """
     global allColor
     speed=adaptSpeed(speed, 0.2)
     sparkle= SparklePulse(map_1, speed=0.21-speed, color=allColor, period=period)
@@ -609,10 +613,17 @@ def sparklePulse( speed,size,spacing,period,map_1,rainbow,onAll) :
     
 
 def sparkle( speed,size,spacing,period,map_1,rainbow,onAll) :
+    """
+    Create a effecct with sparkles.
+    :param map_1: The initialised LED object.
+    :param float speed: Animation speed in seconds.
+    :param period: Period to cycle the rainbow over in seconds.
+    :param onAll: if on all triangles or not.
+    :rainbow: if rainbow or not.
+    """
     global allColor
     global numTriangle
     
-    print(rainbow)
     if (onAll == False):
         speed=adaptSpeed(speed, 0.2)
         if (rainbow == False):
@@ -636,7 +647,6 @@ def sparkle( speed,size,spacing,period,map_1,rainbow,onAll) :
                 powerOff("#000000")
     else :
         speed= (adaptSpeed(speed, 0.5))
-        print(speed)
         if speed <0.3 :
             speed = 0.3
         the_animations = []
@@ -667,11 +677,11 @@ def music( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     
     while status:
+        # hight
         if(GPIO.input(MicPin) ==1):
-            print('hight')
             pixels.fill((255,0,255))
             pixels.show()
+        # low
         else : 
-            print('low')
             pixels.fill((0,0,0))
             pixels.show()

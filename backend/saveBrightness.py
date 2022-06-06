@@ -3,9 +3,9 @@ import argparse
 path='./config/brightness.json'
 if __name__ == '__main__':
     """
-    Update the number of pixels
+    Update the brightness
     Param: count: int
-    Update the number of pixels in the config file
+    Update the brightness in the config file
     """
     parser = argparse.ArgumentParser(description="Input effects for ws2812b/neopixel")
     

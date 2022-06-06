@@ -28,10 +28,7 @@ pixels = neopixel.NeoPixel(
     pixel_pin, num_pixels, brightness=brightness, auto_write=False, pixel_order=ORDER
 )
 
-map1 = helper.PixelMap(pixels, [(x,) for x in range(0,num_pixels)], individual_pixels=True)
-# Define all the functions for the effects
-
-print("a")
+# Shut down the NeoPixels
 if __name__ == '__main__':
     
     """

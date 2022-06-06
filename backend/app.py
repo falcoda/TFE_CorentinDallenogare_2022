@@ -12,7 +12,6 @@ from dotenv import load_dotenv
 from flask_jwt_extended import create_access_token,get_jwt,get_jwt_identity, \
                                unset_jwt_cookies, jwt_required, JWTManager
 
-import sys
 
 # Load dotenv variables
 load_dotenv()
@@ -27,7 +26,7 @@ process = None
 limiter = Limiter(
     app,
     key_func=get_remote_address,
-    default_limits=["2000000000000000 per day", "5000000000 per hour"]
+    default_limits=["2000000000000000 per day", "5000000000000 per hour"]
 )
 
 # The last effect on run 
@@ -75,7 +74,6 @@ def create_token():
     """
     email = request.json.get("email", None)
     password = request.json.get("password", None)
-    print(os.environ.get("PASSWORD"))
     if email != os.environ.get("USERS") or password != os.environ.get("PASSWORD"):
         return {"msg": "Wrong email or password"}, 401
 
@@ -83,7 +81,7 @@ def create_token():
     response = {"access_token":access_token}
     return response
 
-
+# Code found on a web tutorial
 @app.after_request
 def refresh_expiring_jwts(response):
     try:
@@ -131,11 +129,9 @@ def changeColor():
     """
     global process
     color = request.get_json(force = True)
-    print(color)
     path='./config/color.json'
     with open(path, 'r+',encoding='utf8') as f:
             data = json.load(f)
-            print(data)
             data['color'] =color
             f.seek(0)
             json.dump(data, f, indent=4,ensure_ascii=False)
@@ -194,7 +190,6 @@ def change_effect():
     data = request.get_json(force = True)
     time.sleep(0.1)
     try:    
-        print(data)
         lastData= data
         show_effect(data)  
         
@@ -215,7 +210,6 @@ def changeBrightness():
 
     """
     data = request.get_json(force = True)
-    print(data['brightness'])
     global process
     global onLoad
     data = request.get_json(force = True)
@@ -232,7 +226,6 @@ def changeBrightness():
     with open(brightnessPath, 'r+',encoding='utf8') as f:
         data = json.load(f)
         brightness =float(data['brightness'])/100
-        print(brightness,"aaaa")
         
     return (data)
 
@@ -313,8 +306,6 @@ def getTimer():
     if stopTime == "Undefined":
         return ("undefined")
     else: 
-        
-        print(str(stopTime))
         return (str(datetime.datetime.fromtimestamp(int(data['time'] )/ 1000.0)))
 
 
