@@ -79,9 +79,9 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
     {
       content: (
         <div>
-          Cliquez sur un icone afin de changer de page
+          Cliquez sur une icône afin de changer de page
           <br />
-          Click sur l'icone en dessous
+          Clic sur l'icône en dessous
         </div>
       ),
       disableOverlayClose: true,
@@ -178,7 +178,7 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
       },
       target: ".tourSpacingdeux",
       title: 'Modifier l\'espacement',
-      content: 'Choix du nombre de leds eteintes entre chaques leds allumées',
+      content: 'Choix du nombre de leds éteintes entre chaque LEDs allumées',
       locale: { 
         next: <span>Suivant</span>,
         back: <span>Précédent</span>,
@@ -200,7 +200,7 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
       },
       target: ".tourRainbowdeux",
       title: 'Activer le mode arc-en-ciel',
-      content: 'Permet de choisir si l\'animation est en mode arc-en-ciel',
+      content: 'Permets de choisir si l\'animation est en mode arc-en-ciel',
       locale: { 
         next: <span>Suivant</span>,
         back: <span>Précédent</span>,
@@ -221,7 +221,7 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
       },
       target: ".tourPerioddeux",
       title: 'Modifier le mode arc-en-ciel',
-      content: 'Permet de choisir la vitesse du changement de couleur lors d\'une animation arc-en-ciel',
+      content: 'Permets de choisir la vitesse du changement de couleur lors d\'une animation arc-en-ciel',
       locale: { 
         next: <span>Suivant</span>,
         back: <span>Précédent</span>,
@@ -241,8 +241,8 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
         },
       },
       target: ".separator",
-      title: 'Section mode sauvegardé',
-      content: 'Permet de retrouver ses modes sauvegardés',
+      title: 'Section modes sauvegardés',
+      content: 'Permets de retrouver ses modes sauvegardés',
       locale: { 
         next: <span>Suivant</span>,
         back: <span>Précédent</span>,
@@ -263,7 +263,7 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
       },
       target: ".myOwnEffectsTutorial",
       title: 'Mode sauvegardé',
-      content: "Démarrez un mode sauvegarder en cliquant dessus",
+      content: "Démarrez un mode sauvegardé en cliquant dessus",
       locale: { 
         next: <span>Suivant</span>,
         back: <span>Précédent</span>,
@@ -320,7 +320,7 @@ const JoyrideTour = ({stepIndex,setStepIndex}) => {
     },
     {
       title: 'Modifier les paramètres',
-      content: "Cliquez sur le bouton pour accèder à la page de paramètres",
+      content: "Cliquez sur le bouton pour accéder à la page de paramètres",
       disableOverlayClose: true,
       hideCloseButton: true,
       placement: 'right',
