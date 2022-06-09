@@ -4,21 +4,10 @@ server {
 
 
     server_name trileds;
-    root /home/pi/Desktop/projet/TFE_CorentinDallenogare_2022/backend/build;
 
     index index.html;
     
-	location / {
-
-        try_files $uri $uri/ /index.html;
-
-    }
-    location /api {
-
-        include proxy_params;
-
-        proxy_pass http://localhost:5000;
-    }
+	return 301 https://$host$request_uri;
 
 }
 server {
@@ -32,7 +21,7 @@ server {
 
     ssl_certificate_key /etc/nginx/certificate/nginx.key;
 
-    root /home/pi/Desktop/projet/TFE_CorentinDallenogare_2022/backend/build;
+    root /home/pi/Desktop/TFE_CorentinDallenogare_2022/backend/build;
 
     index index.html;
 

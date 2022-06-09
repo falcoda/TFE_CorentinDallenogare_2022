@@ -36,7 +36,7 @@ lastData = {}
 stopTime= Undefined
 
 # Create a JWT manager for this application
-app.config["JWT_SECRET_KEY"] = "helloCodaTriangle"
+app.config["JWT_SECRET_KEY"] = os.environ.get("KEY")
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=100)
 jwt = JWTManager(app)
 

@@ -10,7 +10,7 @@ After=network.target
 
 User=pi
 
-WorkingDirectory=/home/pi/Desktop/projet/TFE_CorentinDallenogare_2022/backend
+WorkingDirectory=/home/pi/Desktop/TFE_CorentinDallenogare_2022/backend
 
 ExecStart=/home/pi/.local/bin/gunicorn --bind 0.0.0.0:5000 app:app
 
