@@ -41,6 +41,7 @@ const TimeApp = (props) => {
       timeStart = new Date();
       timeStart.setSeconds(timeStart.getSeconds() + 1000);
       restart(res);
+      console.log(res)
 		}).catch(error => console.log(error));
     
   }, [])
