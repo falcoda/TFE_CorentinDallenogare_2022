@@ -530,6 +530,7 @@ def solid( speed,size,spacing,period,map_1,rainbow,onAll) :
     """
     global allColor
     while status:
+        timeChecker()
         getColor()
         pixels.fill(allColor)
         pixels.show()
