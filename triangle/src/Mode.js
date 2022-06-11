@@ -133,6 +133,7 @@ function Mode ({token,stepIndex,setStepIndex}){
                         res[i][6]= newColor1;
                         res[i][7]= newColor2;
                     }
+                    console.log(res)
                     setModeList(res);
                 }
             }
@@ -156,9 +157,17 @@ function Mode ({token,stepIndex,setStepIndex}){
         if (rainbow === 'true'){
             rainbow = true;
         }
-        rainbow = false;
+        else{
+            rainbow = false;
+        }
+        if (onAll === 'true'){
+            onAll = true;
+        }
+        else{
+            onAll = false;
+        }
         let data = JSON.stringify({"length":Number(size),"speed":Number(speed),"mode":mode,"spacing":Number(spacing),"period":Number(period),"rainbow":rainbow,"onAll":onAll,"colors":colorList});
-        
+        console.log(data)
         axios({
             method: "POST",
             url:"/api/Mode",

@@ -191,7 +191,7 @@ def change_effect():
     time.sleep(0.1)
     try:    
         lastData= data
-        show_effect(data)  
+        # show_effect(data)  
         
     except KeyError:
         print('Invalid function, try again.')
