@@ -63,7 +63,7 @@ timerPath='./config/timer.json'
 with open(timerPath, 'r+',encoding='utf8') as f:
     data = json.load(f)
     stopTime =data['time']
-    if stopTime != "Undefined":
+    if stopTime != "undefined":
         stopTime =(datetime.datetime.fromtimestamp(int(stopTime )/ 1000.0))
 
 
@@ -93,13 +93,13 @@ def timeChecker() :
     global stopTime
     global status       
     
-    if stopTime != "Undefined" or stopTime != "undefined":
+    if  stopTime != "undefined":
         if(currentTime<stopTime):
             status = True
             return True
         else :
             with open(timerPath, 'w',encoding='utf8') as f:
-                data ={'time':"Undefined"} 
+                data ={'time':"undefined"} 
                 f.seek(0)
                 json.dump(data, f, indent=4,ensure_ascii=False)
             status = False

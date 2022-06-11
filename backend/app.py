@@ -33,7 +33,7 @@ limiter = Limiter(
 lastData = {}  
 
 # Declare the stop time variable
-stopTime= Undefined
+stopTime= "undefined"
 
 # Create a JWT manager for this application
 app.config["JWT_SECRET_KEY"] = os.environ.get("KEY")
@@ -270,7 +270,7 @@ def timer():
     timerPath='./config/timer.json'
     global stopTime
     if data =="":
-        stopTime = "Undefined"
+        stopTime = "undefined"
     
     else:
         stopTime =data['date'] 
@@ -278,7 +278,7 @@ def timer():
             data ={'time':str(stopTime)} 
             f.seek(0)
             json.dump(data, f, indent=4,ensure_ascii=False)
-    if stopTime != "Undefined":
+    if stopTime != "undefined":
         if process is not None :
             cmd = "sudo killall python3" 
             print(cmd)
@@ -303,7 +303,7 @@ def getTimer():
     with open(timerPath, 'r+',encoding='utf8') as f:
         data = json.load(f)
         stopTime =data['time']
-    if stopTime == "Undefined":
+    if stopTime == "undefined":
         return ("undefined")
     else: 
         return (str(datetime.datetime.fromtimestamp(int(data['time'] )/ 1000.0)))
