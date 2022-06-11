@@ -5,6 +5,7 @@ import hextorgb
 import json
 import random
 import datetime
+import subprocess, os
 from cometChase import CometsChase
 import adafruit_fancyled.adafruit_fancyled as fancy
 from adafruit_led_animation.animation.comet import Comet
@@ -103,6 +104,12 @@ def timeChecker() :
                 f.seek(0)
                 json.dump(data, f, indent=4,ensure_ascii=False)
             status = False
+            cmd = "sudo killall python3" 
+            print(cmd)
+            print(os.system(cmd))
+            print(process.wait())
+            process = None
+            process = subprocess.Popen(["sudo","python3", "off.py"], preexec_fn=os.setpgrp, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
             return False
 
 def adaptSpeed(speed, maxSpeed): 
@@ -574,6 +581,7 @@ def colorCycle( speed,size,spacing,period,map_1,rainbow,onAll) :
         while status:
             timeChecker()
             group.animate()
+        
 
 def pulse( speed,size,spacing,period,map_1,rainbow,onAll) :
     """
