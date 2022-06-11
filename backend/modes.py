@@ -93,7 +93,7 @@ def timeChecker() :
     global stopTime
     global status       
     
-    if stopTime != "Undefined":
+    if stopTime != "Undefined" or stopTime != "undefined":
         if(currentTime<stopTime):
             status = True
             return True
