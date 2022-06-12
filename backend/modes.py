@@ -207,7 +207,8 @@ def colorWipe( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     global status
     speed = adaptSpeed(speed, 0.1)
-    spacing = spacing *(numTriangle//2)
+    if numTriangle>1 :
+        spacing = spacing *(numTriangle//2)
     if(num_pixels ==spacing):
         spacing -=1
     while status:
@@ -390,8 +391,9 @@ def chase( speed,size,spacing,period,map_1,rainbow,onAll) :
     global allColor
     global status
     speed = adaptSpeed(speed, 0.2)
-    size = size* (numTriangle//2)
-    spacing = spacing* (numTriangle//2)
+    if(numTriangle >1):
+        size = size* (numTriangle//2)
+        spacing = spacing* (numTriangle//2)
     if (rainbow):
         rainbowChase= RainbowChase(map_1, speed=0.2-speed, size=size, spacing=spacing, step=62-round(period)*2)
         group1 = AnimationSequence(rainbowChase)
