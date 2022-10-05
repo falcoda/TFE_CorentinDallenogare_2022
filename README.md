@@ -4,24 +4,26 @@
 
 ## install dependencies
 
-sudo pip3 install Flask-Limiter
-sudo pip3 install adafruit-circuitpython-led-animation
-sudo pip3 install adafruit-circuitpython-fancyled
-sudo pip3 install Flask
-sudo pip3 install python-dotenv
-sudo pip3 install flask-jwt-extended
-sudo pip3 install adafruit-circuitpython-neopixel
-sudo pip3 install typing-extensions --upgrade
+1) sudo pip3 install Flask-Limiter
+1) sudo pip3 install adafruit-circuitpython-led-animation
+1) sudo pip3 install adafruit-circuitpython-fancyled
+1) sudo pip3 install Flask
+1) sudo pip3 install python-dotenv
+1) sudo pip3 install flask-jwt-extended
+1) sudo pip3 install adafruit-circuitpython-neopixel
+1) sudo pip3 install typing-extensions --upgrade
 
 ## create your .env (check .env.exemple)
 
 ## setup ngnix service
 
+=> check config file 
+
 ## change raspberry hostname 
 
-sudo nano /etc/hosts
-sudo nano /etc/hostname
-sudo /etc/init.d/hostname.sh
-sudo reboot
+1) sudo nano /etc/hosts
+1) sudo nano /etc/hostname
+1) sudo /etc/init.d/hostname.sh
+1) sudo reboot
 
 => acces with XXXX.local
