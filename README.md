@@ -17,7 +17,13 @@
 
 ## setup ngnix service
 
-=> check config file 
+=> check deploiement/ngnix.service
+
+## Create app service
+
+You need to create a service for starting the backend when raspberry start.
+
+Check deploiement/trileds.service
 
 ## change raspberry hostname 
 
