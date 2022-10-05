@@ -17,10 +17,8 @@ server {
 
     server_name trileds;
 
-    ssl_certificate /etc/nginx/certificate/nginx-certificate.crt;
-
-    ssl_certificate_key /etc/nginx/certificate/nginx.key;
-
+    include snippets/self-signed.conf;
+    include snippets/ssl-params.conf;
     root /home/pi/Desktop/TFE_CorentinDallenogare_2022/backend/build;
 
     index index.html;
